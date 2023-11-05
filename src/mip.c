@@ -67,11 +67,12 @@ int main(int argc, char **argv)
 			case 's':
 				solicit = 1;
 				break;
-#ifdef RDISC_SERVER
-			case 'r':
-				responder = 1;
+			case 'm':
+				agent_advert = 1;
 				break;
-#endif
+			case 'r':
+				req_request = 1;
+				break;
 			case 'a':
 				best_preference = 0;
 				break;
@@ -132,7 +133,7 @@ next:
 		if (support_multicast()) {
 			sendaddress = ALL_ROUTERS_ADDRESS;
 #ifdef RDISC_SERVER
-			if (responder)
+			if (agent_advert)
 				sendaddress = ALL_HOSTS_ADDRESS;
 #endif
 		} else
@@ -146,7 +147,7 @@ next:
 		if (support_multicast()) {
 			recvaddress = ALL_HOSTS_ADDRESS;
 #ifdef RDISC_SERVER
-			if (responder)
+			if (agent_advert)
 				recvaddress = ALL_ROUTERS_ADDRESS;
 #endif
 		} else
@@ -162,7 +163,7 @@ next:
 	}
 
 #ifdef RDISC_SERVER
-	if (solicit && responder) {
+	if (solicit && agent_advert) {
 		prusage();
 		/* NOTREACHED */
 	}
@@ -282,11 +283,11 @@ solicitor(struct sockaddr_in *sin)
 	
 }
 
-#ifdef RDISC_SERVER
+
 /*
- * 			A V E R T I S E
+ * 		A G E N T	A D V E R T I S E M E N T
  *
- * Compose and transmit an ICMP ROUTER ADVERTISEMENT packet.
+ * Compose and transmit an ICMP AGENT ADVERTISEMENT packet.
  * The IP packet will be added on by the kernel.
  */
 void
@@ -294,6 +295,7 @@ advertise(struct sockaddr_in *sin, int lft)
 {
 	static unsigned char outpack[MAXPACKET];
 	struct icmp_ra *rap = (struct icmp_ra *) ALLIGN(outpack);
+	struct icmp_ra_ext *rap_ext = (struct icmp_ra_ext *) ALLIGN(outpack);
 	struct icmp_ra_addr *ap;
 	int packetlen, i, cc;
 
@@ -304,12 +306,14 @@ advertise(struct sockaddr_in *sin, int lft)
 
 	for (i = 0; i < num_interfaces; i++) {
 		rap->icmp_type = ICMP_ROUTERADVERT;
-		rap->icmp_code = 0;
+		rap->icmp_code = ICMP_AGENTADVERT;
 		rap->icmp_cksum = 0;
 		rap->icmp_num_addrs = 0;
 		rap->icmp_wpa = 2;
 		rap->icmp_lifetime = htons(lft);
 		packetlen = 8;
+	/*	rap_ext->mip_adv_ext_type = ICMP_REGREQUEST;*/
+
 
 		/*
 		 * TODO handle multiple logical interfaces per
@@ -362,7 +366,7 @@ advertise(struct sockaddr_in *sin, int lft)
 		}
 	}
 }
-#endif
+
 
 int sendmcast(int socket, char *packet, int packetlen, struct sockaddr_in *sin)
 {
@@ -923,7 +927,7 @@ void timer()
 		left_until_getifconf = GETIFCONF_TIMER;
 	}
 #ifdef RDISC_SERVER
-	if (responder && left_until_advertise <= 0) {
+	if (agent_advert && left_until_advertise <= 0) {
 		ntransmitted++;
 		advertise(&whereto, lifetime);
 		if (ntransmitted < initial_advertisements)
@@ -977,14 +981,11 @@ void prusage(void)
 		"  -d               enable debug syslog messages\n"
 		"  -f               run forever\n"
 		"  -x               reiimfTse this. only for testing copilling\n"
-#ifdef RDISC_SERVER
-		"  -r               responder mode\n"
-#endif
+		"  -m               Agent Advertising mode\n"
+		"  -r               Registration Request mode\n"
 		"  -s               send solicitation messages at startup\n"
-#ifdef RDISC_SERVER
 		"  -p <preference>  set <preference> in advertisement\n"
 		"  -T <seconds>     set max advertisement interval in <seconds>\n"
-#endif
 		"  -t               test mode, do not go background\n"
 		"  -v               verbose mode\n"
 		"  -V               print version and exit\n"
@@ -1040,7 +1041,7 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 		struct icmp_ra_addr *ap;
 
 #ifdef RDISC_SERVER
-		if (responder)
+		if (agent_advert)
 			break;
 #endif
 
@@ -1129,7 +1130,7 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 	{
 		struct sockaddr_in sin;
 
-		if (!responder)
+		if (!agent_advert)
 			break;
 
 		/* TBD verify that the link is multicast or broadcast */
@@ -1251,7 +1252,7 @@ void
 finish()
 {
 #ifdef RDISC_SERVER
-        if (responder) {
+        if (agent_advert) {
                 /* Send out a packet with a preference so that all
                  * hosts will know that we are dead.
                  *
@@ -1263,7 +1264,7 @@ finish()
                 advertise(&whereto, 0);
         }
 #endif
-        logmsg(LOG_INFO, "\n----%s rdisc Statistics----\n"
+        logmsg(LOG_INFO, "\n----%s MIP Statistics----\n"
                          "%d packets transmitted, "
                          "%d packets received, \n",
                          sendaddress, ntransmitted, nreceived);
