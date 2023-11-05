@@ -71,7 +71,7 @@ int main(int argc, char **argv)
 				agent_advert = 1;
 				break;
 			case 'r':
-				req_request = 1;
+				reg_request = 1;
 				break;
 			case 'a':
 				best_preference = 0;
@@ -133,7 +133,7 @@ next:
 		if (support_multicast()) {
 			sendaddress = ALL_ROUTERS_ADDRESS;
 #ifdef RDISC_SERVER
-			if (agent_advert)
+			if (agent_advert || reg_request)
 				sendaddress = ALL_HOSTS_ADDRESS;
 #endif
 		} else
@@ -146,10 +146,11 @@ next:
 	if (argc < 1) {
 		if (support_multicast()) {
 			recvaddress = ALL_HOSTS_ADDRESS;
-#ifdef RDISC_SERVER
-			if (agent_advert)
+			
+			if (agent_advert || reg_request)
 				recvaddress = ALL_ROUTERS_ADDRESS;
-#endif
+		
+
 		} else
 			recvaddress = "255.255.255.255";
 	} else {
@@ -163,7 +164,7 @@ next:
 	}
 
 #ifdef RDISC_SERVER
-	if (solicit && agent_advert) {
+	if (solicit && agent_advert && reg_request) {
 		prusage();
 		/* NOTREACHED */
 	}
@@ -367,6 +368,89 @@ advertise(struct sockaddr_in *sin, int lft)
 	}
 }
 
+/*
+ *  M O B I L E   R E G I S T R A T I O N     R E Q U E S T
+ *
+ * Compose and transmit an ICMP MOBILE REGISTRATION REQUEST  packet.
+ * The IP packet will be added on by the kernel.
+ */
+
+void
+registration_request(struct sockaddr_in *sin, int lft)
+{
+	static unsigned char outpack[MAXPACKET];
+	struct icmp_ra *rap = (struct icmp_ra *) ALLIGN(outpack);
+	struct icmp_ra_ext *rap_ext = (struct icmp_ra_ext *) ALLIGN(outpack);
+	struct icmp_ra_addr *ap;
+	int packetlen, i, cc;
+
+	if (verbose) {
+		logmsg(LOG_INFO, "Sending advertisement to %s\n",
+			 pr_name(sin->sin_addr));
+	}
+
+	for (i = 0; i < num_interfaces; i++) {
+		rap->icmp_type = ICMP_ROUTERADVERT;
+		rap->icmp_code = ICMP_AGENTADVERT;
+		rap->icmp_cksum = 0;
+		rap->icmp_num_addrs = 0;
+		rap->icmp_wpa = 2;
+		rap->icmp_lifetime = htons(lft);
+		packetlen = 8;
+		rap_ext->mip_adv_ext_type = ICMP_REGREQUEST;
+
+
+		/*
+		 * TODO handle multiple logical interfaces per
+		 * physical interface. (increment with rap->icmp_wpa * 4 for
+		 * each address.)
+		 */
+		ap = (struct icmp_ra_addr *)ALLIGN(outpack + ICMP_MINLEN);
+		ap->ira_addr = interfaces[i].localaddr.s_addr;
+		ap->ira_preference = htonl(interfaces[i].preference);
+		packetlen += rap->icmp_wpa * 4;
+		rap->icmp_num_addrs++;
+
+		/* Compute ICMP checksum here */
+		rap->icmp_cksum = in_cksum( (unsigned short *)rap, packetlen );
+
+		if (isbroadcast(sin))
+			cc = sendbcastif(socketfd, (char *)outpack, packetlen,
+					&interfaces[i]);
+		else if (ismulticast(sin))
+			cc = sendmcastif(socketfd, (char *)outpack, packetlen, sin,
+					&interfaces[i]);
+		else {
+			struct interface *ifp = &interfaces[i];
+			/*
+			 * Verify that the interface matches the destination
+			 * address.
+			 */
+			if ((sin->sin_addr.s_addr & ifp->netmask.s_addr) ==
+			    (ifp->address.s_addr & ifp->netmask.s_addr)) {
+				if (debug) {
+					logmsg(LOG_DEBUG, "Unicast to %s ",
+						 pr_name(sin->sin_addr));
+					logmsg(LOG_DEBUG, "on interface %s, %s\n",
+						 ifp->name,
+						 pr_name(ifp->address));
+				}
+				cc = sendto(socketfd, (char *)outpack, packetlen, 0,
+					    (struct sockaddr *)sin,
+					    sizeof(struct sockaddr));
+			} else
+				cc = packetlen;
+		}
+		if( cc < 0 || cc != packetlen )  {
+			if (cc < 0) {
+				logperror("sendto");
+			} else {
+				logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n",
+				       sendaddress, packetlen, cc );
+			}
+		}
+	}
+}
 
 int sendmcast(int socket, char *packet, int packetlen, struct sockaddr_in *sin)
 {
@@ -927,9 +1011,13 @@ void timer()
 		left_until_getifconf = GETIFCONF_TIMER;
 	}
 #ifdef RDISC_SERVER
-	if (agent_advert && left_until_advertise <= 0) {
+	if ((agent_advert || reg_request) && left_until_advertise <= 0) {
 		ntransmitted++;
-		advertise(&whereto, lifetime);
+		if (agent_advert)
+                        advertise(&whereto, lifetime);
+                if (reg_request)
+                        registration_request(&whereto, lifetime);
+
 		if (ntransmitted < initial_advertisements)
 			left_until_advertise = initial_advert_interval;
 		else
@@ -1041,7 +1129,7 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 		struct icmp_ra_addr *ap;
 
 #ifdef RDISC_SERVER
-		if (agent_advert)
+		if (agent_advert || reg_request)
 			break;
 #endif
 
@@ -1130,7 +1218,7 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 	{
 		struct sockaddr_in sin;
 
-		if (!agent_advert)
+		if (!agent_advert || !reg_request)
 			break;
 
 		/* TBD verify that the link is multicast or broadcast */
@@ -1195,7 +1283,11 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 		}
 		nreceived++;
 		ntransmitted++;
-		advertise(&sin, lifetime);
+		if (agent_advert)
+                        advertise(&sin, lifetime);
+                if (reg_request)
+                        registration_request(&sin, lifetime);
+
 		break;
 	}
 #endif
@@ -1252,7 +1344,7 @@ void
 finish()
 {
 #ifdef RDISC_SERVER
-        if (agent_advert) {
+        if (agent_advert || reg_request) {
                 /* Send out a packet with a preference so that all
                  * hosts will know that we are dead.
                  *
@@ -1261,7 +1353,11 @@ finish()
                  */
                 logmsg(LOG_ERR, "terminated\n");
                 ntransmitted++;
-                advertise(&whereto, 0);
+                if (agent_advert)
+			advertise(&whereto, 0);
+		if (reg_request)
+                        registration_request(&whereto, 0);
+
         }
 #endif
         logmsg(LOG_INFO, "\n----%s MIP Statistics----\n"

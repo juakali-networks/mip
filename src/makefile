@@ -12,7 +12,7 @@ LDIR =../lib
 
 # LIBS=-lm
 
-_DEPS = rdisc.h
+_DEPS = mip.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = mip.o

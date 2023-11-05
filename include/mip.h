@@ -50,9 +50,8 @@ int forever = 0;	/* Never give up on host. If 0 defer fork until
 			 */
 
 /* Router variables */
-int responder;
 int agent_advert;
-int req_request;
+int reg_request;
 int max_adv_int = MAX_ADV_INT;
 int min_adv_int;
 int lifetime;
@@ -75,10 +74,8 @@ struct sockaddr_in whereto;/* Address to send to */
 struct table *table;
 
 static void solicitor(struct sockaddr_in *sin);
-
-#ifdef RDISC_SERVER
 static void advertise(struct sockaddr_in *sin, int lft);
-#endif
+static void registration_request(struct sockaddr_in *sin, int lft);
 
 static void prusage(void);
 static char *pr_name(struct in_addr addr);
