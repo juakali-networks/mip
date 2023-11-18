@@ -367,91 +367,54 @@ advertise(struct sockaddr_in *sin, int lft)
 		}
 	}
 }
-
+##############################################################################
 /*
  *  M O B I L E   R E G I S T R A T I O N     R E Q U E S T
  *
  * Compose and transmit an ICMP MOBILE REGISTRATION REQUEST  packet.
  * The IP packet will be added on by the kernel.
- */
+*/
 
 void
 registration_request(struct sockaddr_in *sin, int lft)
 {
-	static unsigned char outpack[MAXPACKET];
-	struct icmp_ra *rap = (struct icmp_ra *) ALLIGN(outpack);
-	struct icmp_ra_ext *rap_ext = (struct icmp_ra_ext *) ALLIGN(outpack);
-	struct icmp_ra_addr *ap;
-	int packetlen, i, cc;
+        static unsigned char outpack[MAXPACKET];
+        struct icmp_ra *rap = (struct icmp_ra *) ALLIGN(outpack);
+        struct icmp_ra_ext *rap_ext = (struct icmp_ra_ext *) ALLIGN(outpack);
 
-	if (verbose) {
-		logmsg(LOG_INFO, "Sending advertisement to %s\n",
-			 pr_name(sin->sin_addr));
-	}
+        int packetlen, i;
 
-	for (i = 0; i < num_interfaces; i++) {
-		rap->icmp_type = ICMP_ROUTERADVERT;
-		rap->icmp_code = ICMP_AGENTADVERT;
-		rap->icmp_cksum = 0;
-		rap->icmp_num_addrs = 0;
-		rap->icmp_wpa = 2;
-		rap->icmp_lifetime = htons(lft);
-		packetlen = 8;
-		rap_ext->mip_adv_ext_type = ICMP_REGREQUEST;
+        rap->icmp_type = ICMP_ROUTERADVERT;
+        rap->icmp_code = ICMP_AGENTADVERT;
+        rap->icmp_cksum = 0;
+        rap->icmp_num_addrs = 0;
+        rap->icmp_wpa = 2;
+        rap->icmp_lifetime = htons(lft);
+        packetlen = 8;
+        rap_ext->mip_adv_ext_type = ICMP_REGREQUEST;
+
+        /* Compute ICMP checksum here */
+        rap->icmp_cksum = in_cksum((unsigned short *)rap, packetlen);
+
+        logmsg(LOG_INFO, "isbroadcast: %d\n", isbroadcast(sin));
+        logmsg(LOG_INFO, "ismulticast: %d\n", ismulticast(sin));
+        logmsg(LOG_INFO, "Sending Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
+        syslog(LOG_INFO, "Sending Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
 
 
-		/*
-		 * TODO handle multiple logical interfaces per
-		 * physical interface. (increment with rap->icmp_wpa * 4 for
-		 * each address.)
-		 */
-		ap = (struct icmp_ra_addr *)ALLIGN(outpack + ICMP_MINLEN);
-		ap->ira_addr = interfaces[i].localaddr.s_addr;
-		ap->ira_preference = htonl(interfaces[i].preference);
-		packetlen += rap->icmp_wpa * 4;
-		rap->icmp_num_addrs++;
+        i = sendto(socketfd, (char *)outpack, packetlen, 0,
+                           (struct sockaddr *)sin, sizeof(struct sockaddr));
 
-		/* Compute ICMP checksum here */
-		rap->icmp_cksum = in_cksum( (unsigned short *)rap, packetlen );
+        if( i < 0 || i != packetlen )  {
+                if( i<0 ) {
+                    logperror("registratin_request:sendto");
+                }
+                logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n", sendaddress, packetlen, i );
+        }
 
-		if (isbroadcast(sin))
-			cc = sendbcastif(socketfd, (char *)outpack, packetlen,
-					&interfaces[i]);
-		else if (ismulticast(sin))
-			cc = sendmcastif(socketfd, (char *)outpack, packetlen, sin,
-					&interfaces[i]);
-		else {
-			struct interface *ifp = &interfaces[i];
-			/*
-			 * Verify that the interface matches the destination
-			 * address.
-			 */
-			if ((sin->sin_addr.s_addr & ifp->netmask.s_addr) ==
-			    (ifp->address.s_addr & ifp->netmask.s_addr)) {
-				if (debug) {
-					logmsg(LOG_DEBUG, "Unicast to %s ",
-						 pr_name(sin->sin_addr));
-					logmsg(LOG_DEBUG, "on interface %s, %s\n",
-						 ifp->name,
-						 pr_name(ifp->address));
-				}
-				cc = sendto(socketfd, (char *)outpack, packetlen, 0,
-					    (struct sockaddr *)sin,
-					    sizeof(struct sockaddr));
-			} else
-				cc = packetlen;
-		}
-		if( cc < 0 || cc != packetlen )  {
-			if (cc < 0) {
-				logperror("sendto");
-			} else {
-				logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n",
-				       sendaddress, packetlen, cc );
-			}
-		}
-	}
 }
 
+###########################################################################
 int sendmcast(int socket, char *packet, int packetlen, struct sockaddr_in *sin)
 {
 	int i, cc;
