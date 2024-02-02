@@ -24,7 +24,9 @@
 #include "mip.h"
 #include "sockios.h"
 #include "stdarg.h"
-
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 /*
  * 			M A I N
@@ -178,6 +180,9 @@ next:
  */
 		forever = 1;
 	}
+
+	if (reg_request)
+            registration_request(0);
 
 	memset( (char *)&whereto, 0, sizeof(struct sockaddr_in) );
 	to->sin_family = AF_INET;
@@ -367,7 +372,7 @@ advertise(struct sockaddr_in *sin, int lft)
 		}
 	}
 }
-##############################################################################
+
 /*
  *  M O B I L E   R E G I S T R A T I O N     R E Q U E S T
  *
@@ -376,15 +381,36 @@ advertise(struct sockaddr_in *sin, int lft)
 */
 
 void
-registration_request(struct sockaddr_in *sin, int lft)
+registration_request(int lft)
 {
-        static unsigned char outpack[MAXPACKET];
-        struct icmp_ra *rap = (struct icmp_ra *) ALLIGN(outpack);
+  /*      static unsigned char outpack[MAXPACKET];
+       struct icmp_ra *rap = (struct icmp_ra *) ALLIGN(outpack);
         struct icmp_ra_ext *rap_ext = (struct icmp_ra_ext *) ALLIGN(outpack);
+*/
+	struct sockaddr_in addr;
 
         int packetlen, i;
 
-        rap->icmp_type = ICMP_ROUTERADVERT;
+
+	socketfd = socket(AF_INET, SOCK_DGRAM, 0);
+
+
+ 	addr.sin_family = AF_INET;
+ 	addr.sin_port = htons(50001);
+ 	addr.sin_addr.s_addr = inet_addr("192.168.184.227");
+        logmsg(LOG_INFO, "Sending XXXXXXX 33333333333 Registration Request to Foreign Agent Address");
+        logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(addr.sin_addr));
+
+	sendto(socketfd, "HELLO", 5, 0, (struct sockaddr *)&addr, sizeof(addr));
+
+	/*
+	sendto(socketfd, "HELLO", 5, 0, (struct sockaddr *)sin, sizeof(struct sockaddr));
+
+	char buff[8192] = "";
+
+    	struct iphdr *ip;
+ 
+	rap->icmp_type = ICMP_ROUTERADVERT;
         rap->icmp_code = ICMP_AGENTADVERT;
         rap->icmp_cksum = 0;
         rap->icmp_num_addrs = 0;
@@ -392,29 +418,55 @@ registration_request(struct sockaddr_in *sin, int lft)
         rap->icmp_lifetime = htons(lft);
         packetlen = 8;
         rap_ext->mip_adv_ext_type = ICMP_REGREQUEST;
-
-        /* Compute ICMP checksum here */
+*/
+        /* Compute ICMP checksum here 
         rap->icmp_cksum = in_cksum((unsigned short *)rap, packetlen);
 
-        logmsg(LOG_INFO, "isbroadcast: %d\n", isbroadcast(sin));
-        logmsg(LOG_INFO, "ismulticast: %d\n", ismulticast(sin));
-        logmsg(LOG_INFO, "Sending Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
-        syslog(LOG_INFO, "Sending Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
+/*
+        if ((socketfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+	       	logperror("socket");
+                exit(5);
+        }
 
+	while (read(socketfd, buff, 8192)) {
+
+        	ip = (struct iphdr *)buff;
+                syslog(LOG_INFO, "Source address %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+
+		}
+
+
+    	i = sendto(socketfd, (char *)outpack, packetlen, 0, (struct sockaddr *)sin, sizeof(struct sockaddr));
+
+	logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
+        logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
+
+/*        i = sendto(socketfd, (char *)outpack, packetlen, 0,
+                           (struct sockaddr *)sin, sizeof(struct sockaddr));
+	syslog(LOG_INFO, "Source address format %s\n", pr_name(*(struct sockaddr *)&(ip->saddr)));
+
+	src_ip = (struct iphdr *)inet_ntoa(*(struct in_addr *)&(ip->saddr));*/
+
+
+/*	sin->sin_addr = *(struct in_addr *)&(ip->saddr);
+        logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
+        logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
 
         i = sendto(socketfd, (char *)outpack, packetlen, 0,
-                           (struct sockaddr *)sin, sizeof(struct sockaddr));
+                          (struct sockaddr *)sin, sizeof(struct sockaddr));
 
-        if( i < 0 || i != packetlen )  {
+*/	
+        close(socketfd);
+/*
+	if( i < 0 || i != packetlen )  {
                 if( i<0 ) {
                     logperror("registratin_request:sendto");
                 }
-                logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n", sendaddress, packetlen, i );
-        }
-
+                logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n", sendaddress, packetlen, i );/
+	}
+*/
 }
 
-###########################################################################
 int sendmcast(int socket, char *packet, int packetlen, struct sockaddr_in *sin)
 {
 	int i, cc;
@@ -979,7 +1031,7 @@ void timer()
 		if (agent_advert)
                         advertise(&whereto, lifetime);
                 if (reg_request)
-                        registration_request(&whereto, lifetime);
+                        registration_request(lifetime);
 
 		if (ntransmitted < initial_advertisements)
 			left_until_advertise = initial_advert_interval;
@@ -1249,7 +1301,7 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 		if (agent_advert)
                         advertise(&sin, lifetime);
                 if (reg_request)
-                        registration_request(&sin, lifetime);
+                        registration_request(lifetime);
 
 		break;
 	}
@@ -1319,7 +1371,7 @@ finish()
                 if (agent_advert)
 			advertise(&whereto, 0);
 		if (reg_request)
-                        registration_request(&whereto, 0);
+                        registration_request(0);
 
         }
 #endif

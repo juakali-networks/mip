@@ -14,7 +14,9 @@
 /* Types for Router Discovery*/
 #define ICMP_ROUTERSOLICIT          10       /* ICMP Router Solicitation  */
 #define ICMP_ROUTERADVERT           9        /* ICMP Router Advertisement */
-#define ICMP_REGREQUEST           36        /* ICMP Registration Request */
+#define ICMP_REGREQUEST           35        /* ICMP Registration Request */
+#define ICMP_REGREPLY           36        /* ICMP Registration Reply */
+
 
 /* Codes for Router Discovery*/
 #define ICMP_AGENTADVERT           16        /* ICMP Router Advertisement */
@@ -75,7 +77,7 @@ struct table *table;
 
 static void solicitor(struct sockaddr_in *sin);
 static void advertise(struct sockaddr_in *sin, int lft);
-static void registration_request(struct sockaddr_in *sin, int lft);
+static void registration_request(int lft);
 
 static void prusage(void);
 static char *pr_name(struct in_addr addr);
