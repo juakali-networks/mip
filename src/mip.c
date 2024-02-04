@@ -390,9 +390,19 @@ registration_request(int lft)
 	struct sockaddr_in addr;
 
         int packetlen, i;
+	int sock;
+	struct iphdr *ip;
+	char buff[8192] = "";
+
+ 	if ((socketfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+     		logperror("socket failed");
+		exit(5);
+    	 }
 
 
-	socketfd = socket(AF_INET, SOCK_DGRAM, 0);
+
+
+/*	socketfd = socket(AF_INET, SOCK_DGRAM, 0);
 
 
  	addr.sin_family = AF_INET;
@@ -401,9 +411,9 @@ registration_request(int lft)
         logmsg(LOG_INFO, "Sending XXXXXXX 33333333333 Registration Request to Foreign Agent Address");
         logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(addr.sin_addr));
 
-	sendto(socketfd, "HELLO", 5, 0, (struct sockaddr *)&addr, sizeof(addr));
+	sendto(socketfd, "HELLO", packetlen, 0, (struct sockaddr *)&addr, sizeof(addr));
 
-	/*
+
 	sendto(socketfd, "HELLO", 5, 0, (struct sockaddr *)sin, sizeof(struct sockaddr));
 
 	char buff[8192] = "";
@@ -418,37 +428,23 @@ registration_request(int lft)
         rap->icmp_lifetime = htons(lft);
         packetlen = 8;
         rap_ext->mip_adv_ext_type = ICMP_REGREQUEST;
-*/
+
         /* Compute ICMP checksum here 
         rap->icmp_cksum = in_cksum((unsigned short *)rap, packetlen);
 
-/*
-        if ((socketfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-	       	logperror("socket");
-                exit(5);
-        }
-
-	while (read(socketfd, buff, 8192)) {
-
-        	ip = (struct iphdr *)buff;
-                syslog(LOG_INFO, "Source address %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-
-		}
 
 
     	i = sendto(socketfd, (char *)outpack, packetlen, 0, (struct sockaddr *)sin, sizeof(struct sockaddr));
 
-	logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
-        logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
 
-/*        i = sendto(socketfd, (char *)outpack, packetlen, 0,
+        i = sendto(socketfd, (char *)outpack, packetlen, 0,
                            (struct sockaddr *)sin, sizeof(struct sockaddr));
 	syslog(LOG_INFO, "Source address format %s\n", pr_name(*(struct sockaddr *)&(ip->saddr)));
 
-	src_ip = (struct iphdr *)inet_ntoa(*(struct in_addr *)&(ip->saddr));*/
+	src_ip = (struct iphdr *)inet_ntoa(*(struct in_addr *)&(ip->saddr));
 
 
-/*	sin->sin_addr = *(struct in_addr *)&(ip->saddr);
+	sin->sin_addr = *(struct in_addr *)&(ip->saddr);
         logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
         logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
 
@@ -456,16 +452,43 @@ registration_request(int lft)
                           (struct sockaddr *)sin, sizeof(struct sockaddr));
 
 */	
-        close(socketfd);
-/*
+        
+
+ while (read(socketfd, buff, 8192)) {
+
+      ip = (struct iphdr *)buff;
+
+
+      syslog(LOG_INFO, "Source Address of Agent Advertiser %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+      syslog(LOG_INFO, "Destination Address %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+
+
+      /* UDP Code */
+      sock = socket(AF_INET, SOCK_DGRAM, 0);
+
+      addr.sin_family = AF_INET;
+      addr.sin_port = htons(50001);
+      /*  addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr))); */
+      addr.sin_addr.s_addr = inet_addr("192.168.184.227");
+
+      sendto(sock, "HELLO", 5, 0, (struct sockaddr *)&addr, sizeof(addr));
+
+      close(sock);
+      }
+
+	
+      close(socketfd);
+
+
 	if( i < 0 || i != packetlen )  {
                 if( i<0 ) {
                     logperror("registratin_request:sendto");
                 }
-                logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n", sendaddress, packetlen, i );/
+                logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n", sendaddress, packetlen, i);
 	}
-*/
+
 }
+
 
 int sendmcast(int socket, char *packet, int packetlen, struct sockaddr_in *sin)
 {
