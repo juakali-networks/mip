@@ -240,7 +240,7 @@ next:
 		}
 
 		sigprocmask(SIG_SETMASK, &sset, NULL);
-		pr_pack( (char *)packet, cc, &from );
+	        pr_pack( (char *)packet, cc, &from );
 		sigprocmask(SIG_SETMASK, &sset_empty, NULL);
 	}
 	/*NOTREACHED*/
@@ -383,10 +383,10 @@ advertise(struct sockaddr_in *sin, int lft)
 void
 registration_request(int lft)
 {
-  /*      static unsigned char outpack[MAXPACKET];
-       struct icmp_ra *rap = (struct icmp_ra *) ALLIGN(outpack);
-        struct icmp_ra_ext *rap_ext = (struct icmp_ra_ext *) ALLIGN(outpack);
-*/
+  	static unsigned char outpack[MAXPACKET];
+        struct reg_req *rreq = (struct reg_req *) ALLIGN(outpack);
+
+
 	struct sockaddr_in addr;
 
         int packetlen, i;
@@ -394,97 +394,67 @@ registration_request(int lft)
 	struct iphdr *ip;
 	char buff[8192] = "";
 
- 	if ((socketfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+ 	if ((sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
      		logperror("socket failed");
 		exit(5);
     	 }
 
+	
+
+	while (read(sock, buff, 8192)) {
+
+		ip = (struct iphdr *)buff;
 
 
 
-/*	socketfd = socket(AF_INET, SOCK_DGRAM, 0);
+       		logmsg(LOG_INFO, "Destination Address %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+
+      		logmsg(LOG_INFO, "Source Address of Agent Advertiser %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 
 
- 	addr.sin_family = AF_INET;
- 	addr.sin_port = htons(50001);
- 	addr.sin_addr.s_addr = inet_addr("192.168.184.227");
-        logmsg(LOG_INFO, "Sending XXXXXXX 33333333333 Registration Request to Foreign Agent Address");
-        logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(addr.sin_addr));
+      		socketfd = socket(AF_INET, SOCK_DGRAM, 0);
 
-	sendto(socketfd, "HELLO", packetlen, 0, (struct sockaddr *)&addr, sizeof(addr));
+      		addr.sin_family = AF_INET;
+      		addr.sin_port = htons(434);
+      		addr.sin_addr.s_addr = inet_addr("192.168.184.227");
 
+      		rreq->reg_req_type = ICMP_REGREQUEST;
+      		rreq->sb=0;
+      		rreq->bd=0;
+      		rreq->dx=0;
+      		rreq->mx=0;
+      		rreq->gre=0;
+      		rreq->rzero=0;
+      		rreq->rtun=0;
+      		rreq->xzero=0;
+		rreq->reg_req_lifetime=htons(lft);
+    		rreq->home_addr=inet_addr("192.168.185.227");
+    		rreq-> gw_fa_addr=inet_addr("192.168.186.227");
+    		rreq->care_of_addr=inet_addr("192.168.187.227");
+   		rreq->reg_req_id=5;
+          
 
-	sendto(socketfd, "HELLO", 5, 0, (struct sockaddr *)sin, sizeof(struct sockaddr));
+		logmsg(LOG_INFO, "start logginggggg \n");
 
-	char buff[8192] = "";
+       		logmsg(LOG_INFO, "Registration home Address %d\n", rreq->reg_req_type);
 
-    	struct iphdr *ip;
- 
-	rap->icmp_type = ICMP_ROUTERADVERT;
-        rap->icmp_code = ICMP_AGENTADVERT;
-        rap->icmp_cksum = 0;
-        rap->icmp_num_addrs = 0;
-        rap->icmp_wpa = 2;
-        rap->icmp_lifetime = htons(lft);
-        packetlen = 8;
-        rap_ext->mip_adv_ext_type = ICMP_REGREQUEST;
+		logmsg(LOG_INFO, "stopp logginggggg");
 
-        /* Compute ICMP checksum here 
-        rap->icmp_cksum = in_cksum((unsigned short *)rap, packetlen);
+   
+      		sendto(socketfd, (char *)outpack, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr));
 
-
-
-    	i = sendto(socketfd, (char *)outpack, packetlen, 0, (struct sockaddr *)sin, sizeof(struct sockaddr));
-
-
-        i = sendto(socketfd, (char *)outpack, packetlen, 0,
-                           (struct sockaddr *)sin, sizeof(struct sockaddr));
-	syslog(LOG_INFO, "Source address format %s\n", pr_name(*(struct sockaddr *)&(ip->saddr)));
-
-	src_ip = (struct iphdr *)inet_ntoa(*(struct in_addr *)&(ip->saddr));
-
-
-	sin->sin_addr = *(struct in_addr *)&(ip->saddr);
-        logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
-        logmsg(LOG_INFO, "Sending 33333333333 Registration Request to Foreign Agent Address %s\n", pr_name(sin->sin_addr));
-
-        i = sendto(socketfd, (char *)outpack, packetlen, 0,
-                          (struct sockaddr *)sin, sizeof(struct sockaddr));
-
-*/	
-        
-
- while (read(socketfd, buff, 8192)) {
-
-      ip = (struct iphdr *)buff;
-
-
-      syslog(LOG_INFO, "Source Address of Agent Advertiser %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-      syslog(LOG_INFO, "Destination Address %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-
-
-      /* UDP Code */
-      sock = socket(AF_INET, SOCK_DGRAM, 0);
-
-      addr.sin_family = AF_INET;
-      addr.sin_port = htons(50001);
-      /*  addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr))); */
-      addr.sin_addr.s_addr = inet_addr("192.168.184.227");
-
-      sendto(sock, "HELLO", 5, 0, (struct sockaddr *)&addr, sizeof(addr));
-
-      close(sock);
-      }
+		close(socketfd);
+      		}
 
 	
-      close(socketfd);
+      		close(sock);
 
 
-	if( i < 0 || i != packetlen )  {
-                if( i<0 ) {
-                    logperror("registratin_request:sendto");
-                }
-                logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n", sendaddress, packetlen, i);
+		if( i < 0 || i != packetlen )  {
+                	if( i<0 ) {
+                    	logperror("registratin_request:sendto");
+               	 }
+                	logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n", sendaddress, packetlen, i);
 	}
 
 }

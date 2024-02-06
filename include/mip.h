@@ -14,7 +14,7 @@
 /* Types for Router Discovery*/
 #define ICMP_ROUTERSOLICIT          10       /* ICMP Router Solicitation  */
 #define ICMP_ROUTERADVERT           9        /* ICMP Router Advertisement */
-#define ICMP_REGREQUEST           35        /* ICMP Registration Request */
+#define ICMP_REGREQUEST           18        /* ICMP Registration Request */
 #define ICMP_REGREPLY           36        /* ICMP Registration Reply */
 
 
@@ -201,6 +201,27 @@ struct mip_advext
   };
 
 #define icmp_ra_ext mip_advext
+
+/* Registration Request */
+struct reg_req
+  {
+    uint8_t reg_req_type;
+    int sb;
+    int bd;
+    int dx;
+    int mx;
+    int gre;
+    int rzero;
+    int rtun;
+    int xzero;
+    uint16_t  reg_req_lifetime;
+    uint32_t home_addr;
+    uint32_t gw_fa_addr;
+    uint32_t care_of_addr;
+    uint32_t reg_req_id;
+  };
+
+/* #define rreq reg_req*/
 #endif
 
 
