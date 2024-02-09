@@ -85,6 +85,7 @@ static void pr_pack(char *buf, int cc, struct sockaddr_in *from);
 
 static char *pr_type(int t);
 static unsigned short in_cksum(unsigned short *addr, int len);
+unsigned short csum(unsigned short *buf, int nwords);
 static void record_router(struct in_addr router, int preference, int ttl);
 static void add_route(struct in_addr addr);
 static void del_route(struct in_addr addr);

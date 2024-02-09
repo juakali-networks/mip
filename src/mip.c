@@ -21,12 +21,13 @@
 #include <linux/route.h> 
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
-#include "mip.h"
+#include <mip.h>
 #include "sockios.h"
 #include "stdarg.h"
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <linux/udp.h>
 
 /*
  * 			M A I N
@@ -384,15 +385,21 @@ void
 registration_request(int lft)
 {
   	static unsigned char outpack[MAXPACKET];
-        struct reg_req *rreq = (struct reg_req *) ALLIGN(outpack);
+    struct reg_req *rreq = (struct reg_req *) ALLIGN(outpack);
 
 
 	struct sockaddr_in addr;
 
-        int packetlen, i;
+    int packetlen, i;
 	int sock;
 	struct iphdr *ip;
 	char buff[8192] = "";
+
+  	int one = 1;
+  	const int *val = &one;
+
+	u_int16_t src_port;
+	// src_port = atoi(argv[2]);
 
  	if ((sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
      		logperror("socket failed");
@@ -403,20 +410,56 @@ registration_request(int lft)
 
 	while (read(sock, buff, 8192)) {
 
-		ip = (struct iphdr *)buff;
-
+			ip = (struct iphdr *)buff; 
+			struct udphdr *udp = (struct udphdr *) (buff + sizeof(struct iphdr));
 
 
        		logmsg(LOG_INFO, "Destination Address %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
       		logmsg(LOG_INFO, "Source Address of Agent Advertiser %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 
+			  // create a raw socket with UDP protocol
 
-      		socketfd = socket(AF_INET, SOCK_DGRAM, 0);
+			socketfd = socket(PF_INET, SOCK_RAW, IPPROTO_UDP);
+
+	  		if (socketfd < 0) {
+    			perror("socket() error");
+    			exit(2);
+  			}
+
+
+			printf("OK: a raw socket is created.\n");
+
+  			// inform the kernel do not fill up the packet structure, we will build our own
+ 			if(setsockopt(socketfd, IPPROTO_IP, IP_HDRINCL, val, sizeof(one)) < 0) {
+    			perror("setsockopt() error");
+    			exit(2);
+			  }
+  			//socket option IP_HDRINCL is set
 
       		addr.sin_family = AF_INET;
       		addr.sin_port = htons(434);
       		addr.sin_addr.s_addr = inet_addr("192.168.184.227");
+	
+    		ip->ihl      = 5;
+  		    ip->version  = 4;
+      		ip->tos      = 16; // low delay*/
+      		ip->tot_len  = sizeof(struct iphdr) + sizeof(struct udphdr);
+      		ip->id       = htons(54321);
+      		ip->ttl      = 64; // hops
+     		ip->protocol = 17; // UDP
+        // source IP address, can use spoofed address here
+      		ip->saddr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+      		ip->daddr = inet_addr("192.168.184.227");
+
+      		udp->source = htons(18502);
+      		udp->dest = htons(434);
+      		udp->len = htons(sizeof(struct udphdr));
+      		ip->check = csum((unsigned short *)buff,
+                   sizeof(struct iphdr) + sizeof(struct udphdr));
+
+      		udp->check = csum((unsigned short *)buff, sizeof(struct udphdr));
+
 
       		rreq->reg_req_type = ICMP_REGREQUEST;
       		rreq->sb=0;
@@ -427,23 +470,30 @@ registration_request(int lft)
       		rreq->rzero=0;
       		rreq->rtun=0;
       		rreq->xzero=0;
-		rreq->reg_req_lifetime=htons(lft);
+			rreq->reg_req_lifetime=htons(lft);
     		rreq->home_addr=inet_addr("192.168.185.227");
     		rreq-> gw_fa_addr=inet_addr("192.168.186.227");
     		rreq->care_of_addr=inet_addr("192.168.187.227");
-   		rreq->reg_req_id=5;
+   			rreq->reg_req_id=5;
           
-
-		logmsg(LOG_INFO, "start logginggggg \n");
+			logmsg(LOG_INFO, "start logginggggg \n");
 
        		logmsg(LOG_INFO, "Registration home Address %d\n", rreq->reg_req_type);
 
-		logmsg(LOG_INFO, "stopp logginggggg");
+			logmsg(LOG_INFO, "stopp logginggggg");
 
    
-      		sendto(socketfd, (char *)outpack, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr));
+      		/*sendto(socketfd, (char *)outpack, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr));*/
 
-		close(socketfd);
+	       if (sendto(socketfd, buff, ip->tot_len, 0,
+    	         (struct sockaddr *)&addr, sizeof(addr)) < 0)
+        	 {
+            	     perror("sendto()");
+                	 exit(3);
+        	}
+
+
+			close(socketfd);
       		}
 
 	
@@ -861,6 +911,17 @@ unsigned short in_cksum(unsigned short *addr, int len)
 	answer = ~sum;				/* truncate to 16 bits */
 	return (answer);
 }
+
+unsigned short csum(unsigned short *buf, int nwords)
+{
+  unsigned long sum;
+  for(sum=0; nwords>0; nwords--)
+    sum += *buf++;
+  sum = (sum >> 16) + (sum &0xffff);
+  sum += (sum >> 16);
+  return (unsigned short)(~sum);
+}
+
 
 void init()
 {
