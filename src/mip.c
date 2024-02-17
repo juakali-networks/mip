@@ -37,10 +37,7 @@ char    *sendaddress, *recvaddress;
 
 int main(int argc, char **argv) 
 {
-
-  
-
-
+ 
 	struct sockaddr_in from = { 0 };
 	char **av = argv;
 	struct sockaddr_in *to = &whereto;
@@ -183,14 +180,20 @@ next:
 	}
 
 	if (reg_request)
-            registration_request(0);
+            registration_request(60);
 
 	memset( (char *)&whereto, 0, sizeof(struct sockaddr_in) );
 	to->sin_family = AF_INET;
+	logmsg(LOG_INFO, "set memory 1111 %d", agent_advert);
+	logmsg(LOG_INFO, "set memory 1111 %d", reg_request);
+
 	to->sin_addr.s_addr = inet_addr(sendaddress);
 
 	memset( (char *)&joinaddr, 0, sizeof(struct sockaddr_in) );
 	joinaddr.sin_family = AF_INET;
+	logmsg(LOG_INFO, "set memory 2222 %d", agent_advert);
+	logmsg(LOG_INFO, "set memory 2222 %d", reg_request);
+
 	joinaddr.sin_addr.s_addr = inet_addr(recvaddress);
 /*Cleanup: Reactivate this code
  #ifdef RDISC_SERVER
@@ -385,7 +388,7 @@ void
 registration_request(int lft)
 {
   	static unsigned char outpack[MAXPACKET];
-    struct reg_req *rreq = (struct reg_req *) ALLIGN(outpack);
+    //struct reg_req *rreq = (struct reg_req *) ALLIGN(outpack);
 
 
 	struct sockaddr_in addr;
@@ -393,113 +396,66 @@ registration_request(int lft)
     int packetlen, i;
 	int sock;
 	struct iphdr *ip;
-	char buff[8192] = "";
+    char buff[PCKT_LEN];
 
-  	int one = 1;
-  	const int *val = &one;
-
-	u_int16_t src_port;
-	// src_port = atoi(argv[2]);
-
- 	if ((sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+ 	if ((socketfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
      		logperror("socket failed");
 		exit(5);
     	 }
 
-	
+	memset(buff, 0, PCKT_LEN);
 
-	while (read(sock, buff, 8192)) {
+    logmsg(LOG_INFO, "Start logging 1111\n");
+	ip = (struct iphdr *)buff;
 
-			ip = (struct iphdr *)buff; 
-			struct udphdr *udp = (struct udphdr *) (buff + sizeof(struct iphdr));
+	struct reg_req  *rreq = (struct reg_req *)buff;
 
 
-       		logmsg(LOG_INFO, "Destination Address %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+	while (read(socketfd, buff, PCKT_LEN)) {
+    		logmsg(LOG_INFO, "Start logging 2222\n");
 
-      		logmsg(LOG_INFO, "Source Address of Agent Advertiser %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+    		logmsg(LOG_INFO, "Start logging 3333\n");
 
-			  // create a raw socket with UDP protocol
+       		logmsg(LOG_INFO, "Destination Address %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 
-			socketfd = socket(PF_INET, SOCK_RAW, IPPROTO_UDP);
+			// create a raw socket with UDP protocol
+    		logmsg(LOG_INFO, "Start logging 4444\n");
 
-	  		if (socketfd < 0) {
+			sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+	  		if (sock < 0) {
     			perror("socket() error");
     			exit(2);
   			}
 
-
-			printf("OK: a raw socket is created.\n");
-
-  			// inform the kernel do not fill up the packet structure, we will build our own
- 			if(setsockopt(socketfd, IPPROTO_IP, IP_HDRINCL, val, sizeof(one)) < 0) {
-    			perror("setsockopt() error");
-    			exit(2);
-			  }
-  			//socket option IP_HDRINCL is set
+			logmsg(LOG_INFO, "Raw socket is created.\n");
 
       		addr.sin_family = AF_INET;
       		addr.sin_port = htons(434);
-      		addr.sin_addr.s_addr = inet_addr("192.168.184.227");
-	
-    		ip->ihl      = 5;
-  		    ip->version  = 4;
-      		ip->tos      = 16; // low delay*/
-      		ip->tot_len  = sizeof(struct iphdr) + sizeof(struct udphdr);
-      		ip->id       = htons(54321);
-      		ip->ttl      = 64; // hops
-     		ip->protocol = 17; // UDP
-        // source IP address, can use spoofed address here
-      		ip->saddr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-      		ip->daddr = inet_addr("192.168.184.227");
+      		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+	   		
+			rreq->reg_req_type = ICMP_REGREQUEST;
+			rreq->flags = 0;
+			rreq->reg_req_lifetime = htons(10);
+			//rreq->home_addr=inet_addr("172.20.10.4");
+ 			rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			rreq->reg_req_id = 19;
 
-      		udp->source = htons(18502);
-      		udp->dest = htons(434);
-      		udp->len = htons(sizeof(struct udphdr));
-      		ip->check = csum((unsigned short *)buff,
-                   sizeof(struct iphdr) + sizeof(struct udphdr));
+	  		packetlen = sizeof(struct reg_req);
 
-      		udp->check = csum((unsigned short *)buff, sizeof(struct udphdr));
+      		if (sendto(sock, buff, packetlen, 0,
+             	(struct sockaddr *)&addr, sizeof(addr)) < 0)
+         		{
+                 	perror("sendto()");
+                 	exit(3);
+        		}
 
-
-      		rreq->reg_req_type = ICMP_REGREQUEST;
-      		rreq->sb=0;
-      		rreq->bd=0;
-      		rreq->dx=0;
-      		rreq->mx=0;
-      		rreq->gre=0;
-      		rreq->rzero=0;
-      		rreq->rtun=0;
-      		rreq->xzero=0;
-			rreq->reg_req_lifetime=htons(lft);
-    		rreq->home_addr=inet_addr("192.168.185.227");
-    		rreq-> gw_fa_addr=inet_addr("192.168.186.227");
-    		rreq->care_of_addr=inet_addr("192.168.187.227");
-   			rreq->reg_req_id=5;
-          
-			logmsg(LOG_INFO, "start logginggggg \n");
-
-       		logmsg(LOG_INFO, "Registration home Address %d\n", rreq->reg_req_type);
-
-			logmsg(LOG_INFO, "stopp logginggggg");
-
-   
-      		/*sendto(socketfd, (char *)outpack, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr));*/
-
-	       if (sendto(socketfd, buff, ip->tot_len, 0,
-    	         (struct sockaddr *)&addr, sizeof(addr)) < 0)
-        	 {
-            	     perror("sendto()");
-                	 exit(3);
-        	}
-
-
-			close(socketfd);
+			close(sock);
       		}
 
-	
-      		close(sock);
-
-
+      		close(socketfd);
 		if( i < 0 || i != packetlen )  {
                 	if( i<0 ) {
                     	logperror("registratin_request:sendto");
@@ -508,7 +464,6 @@ registration_request(int lft)
 	}
 
 }
-
 
 int sendmcast(int socket, char *packet, int packetlen, struct sockaddr_in *sin)
 {

@@ -22,7 +22,9 @@
 #define ICMP_AGENTADVERT           16        /* ICMP Router Advertisement */
 
 
-#define	MAXPACKET	4096	/* max packet size */			
+#define	MAXPACKET	4096	/* max packet size */	
+#define PCKT_LEN 8192
+
 
 /* Router constants */
 #define	MAX_INITIAL_ADVERT_INTERVAL	16
@@ -206,21 +208,16 @@ struct mip_advext
 /* Registration Request */
 struct reg_req
   {
-    uint8_t reg_req_type;
-    int sb;
-    int bd;
-    int dx;
-    int mx;
-    int gre;
-    int rzero;
-    int rtun;
-    int xzero;
-    uint16_t  reg_req_lifetime;
-    uint32_t home_addr;
-    uint32_t gw_fa_addr;
-    uint32_t care_of_addr;
-    uint32_t reg_req_id;
+    __u8 reg_req_type;
+    __u8 flags;
+    __be16 reg_req_lifetime;
+    __be32 home_addr;
+    __be32 gw_fa_addr;
+    __be32 care_of_addr;
+    __be32 reg_req_id;
   };
+
+
 
 /* #define rreq reg_req*/
 #endif
