@@ -1,0 +1,8 @@
+https://askubuntu.com/questions/46930/how-can-i-set-up-password-less-ssh-login
+
+On host PC run the followig commands
+
+>>ssh-keygen
+>>ssh-copy-id vm_username@vm_IP
+finished
+
