@@ -6,3 +6,9 @@ On host PC run the followig commands
 >>ssh-copy-id vm_username@vm_IP
 finished
 
+
+pip3 install --upgrade pip
+pip3 install pyshark
+
+python3.8 -m pip install pyshark
+
