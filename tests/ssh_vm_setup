@@ -6,9 +6,20 @@ On host PC run the followig commands
 >>ssh-copy-id vm_username@vm_IP
 finished
 
-
+On host PC run the followig commands
 pip3 install --upgrade pip
 pip3 install pyshark
+tshark
 
 python3.8 -m pip install pyshark
 
+pip3 install paramiko
+python3.8 -m pip install paramiko
+pip3 install scpclient
+python3.8 -m pip install scpclient
+
+
+https://github.com/jbardin/scp.py
+
+from ndsatcom.common.ssh.Scp import Scp
+self.__scp = Scp(host=self.__skywanidu_ip, port=int(self.__config.get(self.__device, "SSH_Port")),
