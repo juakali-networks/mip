@@ -13,20 +13,24 @@ class net_scan():
 
     def __init__(self):
 
+        # Configs. Change your settings here
         self._pwd = "admin"
         self._ip1 = "admin@172.20.10.14"
         self._ip2 = "admin@172.20.10.5"
         self._all_host_mcast_addr = "224.0.0.1"
         self._agent_advert_type = "9"
         self._agent_advert_code = "16"
-        aa_process = None
-        ma_process = None
+        self._file = 'agent_adv.pcap'
+        self._local_path = '/home/peter/mip/tests/Results'
+
  
     def step_1(self):
 
         closed_port_list = list()
         result_list = list()
-
+     
+        subprocess.run(["rm Results/agent_adv.pcap"], shell=True, capture_output=False)
+        
         cmd_1 = "./mip/src/mip -m"
         cmd_2 = "./mip/src/mip -r"
 
@@ -36,64 +40,84 @@ class net_scan():
         try:
 
 
-            aa_process = subprocess.Popen(['ssh','-tt', self._ip1],
+            aa_process = subprocess.Popen(['ssh','-tt', self._ip1, "echo 'admin' | sudo -S  ./mip/src/mip -m"],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-
-
+            
+            results_output, results_error = aa_process.communicate()
+            aa_process.kill()
+            
         except Exception as err:
             self._test_reporting.add_actual_msg("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
 
         print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
 
+        time.sleep(5)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', self._ip2],
+            ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo 'admin' | sudo -S  ./mip/src/mip -r"],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
                                 bufsize=0)
 
+            results_output, results_error = ma_process.communicate()
+            ma_process.kill()
+
         except Exception as err:
             self._test_reporting.add_actual_msg("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
     
-        aa_process.stdin.write("echo 'admin' | sudo -S  ./mip/src/mip -m\n")
 
-        time.sleep(5)
-        ma_process.stdin.write("echo 'admin' | sudo -S  ./mip/src/mip -r\n")
+        state = self.check_packet_header()
 
-        ma_process.stdin.write("uptime\n")
-        time.sleep(30)
-
-
-
-        state = self.check_packet_header(ma_process)
-
-        self.clean_up(ma_process, aa_process)
+       #  self.clean_up(ma_process, aa_process)
 
         return state
 
 
-    def check_packet_header(self, ma_process):
+    def check_packet_header(self):
         """
         Check IP packet header
         """
         state = list()
 
-        local_path = '/home/peter/mip/tests/Results'
-        ma_process.stdin.write("echo 'admin' | sudo -S  tcpdump -i enp0s3 -c 1 -w agent_adv.pcap")
+        self._local_path = '/home/peter/mip/tests/Results'
 
-        remote_path = 'agent_adv.pcap'
+        try:
+            ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo 'admin' | sudo -S  tcpdump -i enp0s3 icmp -c 1 -w agent_adv.pcap\n"],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+
+            results_output, results_error = ma_process.communicate()
+
+            ma_process.kill()
+
+        except Exception as err:
+             self._test_reporting.add_actual_msg("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
+             return False
+
+        
         ssh = self.createSSHClient("172.20.10.5", 22, "admin", "admin")
         scp = SCPClient(ssh.get_transport())
-        scp.get(remote_path=remote_path, local_path=local_path)
-        ma_process.stdin.write("recho 'admin' | sudo -S m agent_adv.pcap\n")
-
+        scp.get(remote_path=self._file, local_path=self._local_path)
         scp.close()
+
+
+        ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo 'admin' | sudo -S rm agent_adv.pcap\n"],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                    bufsize=0)
+        results_output, results_error = ma_process.communicate()
+
+        ma_process.kill()
+
 
         # read pcap file and read packet fields
         pcap_file = pyshark.FileCapture('/home/peter/mip/tests/Results/agent_adv.pcap')
@@ -131,15 +155,10 @@ class net_scan():
                     state.append(False)
 
 
-
-
-
-
         except Exception as err:
             print("Failed to  captured packet with error %s" % err)
-        #
-        #    state.append(False)
-        #
+            state.append(False)
+        
         return all(state) if state else False
 
 
@@ -155,7 +174,7 @@ class net_scan():
         Restore the VMs to there original state
         """
         try:
-            ma_process.kill()
+            aa_process.kill()
         except Exception as err:
             print("Failed to kill process  with error %s" % err)
 
