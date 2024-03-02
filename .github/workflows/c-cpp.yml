@@ -26,8 +26,9 @@ jobs:
         git clone https://github.com/jbardin/scp.py
         mv scp.py scp
         ls -la
-        import sys
-        print(sys.path)
+        ls /usr/lib/python3
+        #import sys
+        #print(sys.path)
 
 
     - name: Run tests
