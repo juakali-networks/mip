@@ -25,7 +25,7 @@ jobs:
         pip install paramiko
         ls -la
         cd /usr/lib/python3/dist-packages
-        git clone https://github.com/jbardin/scp.py
+        sudo git clone https://github.com/jbardin/scp.py
         mv scp.py scp
         ls -la
         cd
