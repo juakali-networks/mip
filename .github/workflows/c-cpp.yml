@@ -9,7 +9,8 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v3
@@ -19,17 +20,17 @@ jobs:
     #  run: make
     #- name: make check
     #  run: make check
-    - name: Install dependencies
-      run: |
-        pip install pyshark
-        pip install paramiko
-        ls -la
-        cd /usr/lib/python3/dist-packages
-        sudo git clone https://github.com/jbardin/scp.py
-        sudo mv scp.py scp
-        ls -la
-        cd
-        ls -la
+    #- name: Install dependencies
+    #  run: |
+    #    pip install pyshark
+     #   pip install paramiko
+      #  ls -la
+       # cd /usr/lib/python3/dist-packages
+        #sudo git clone https://github.com/jbardin/scp.py
+        #sudo mv scp.py scp
+        #ls -la
+        #cd
+        #ls -la
 
 
 
