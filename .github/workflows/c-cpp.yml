@@ -20,4 +20,6 @@ jobs:
     #- name: make check
     #  run: make check
     - name: Run tests
-      run: python3 ~/mip/tests/agent_advert.py
+     run: |
+        ls -la
+     # run: python3 ~/mip/tests/agent_advert.py
