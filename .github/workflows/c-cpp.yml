@@ -23,6 +23,8 @@ jobs:
       run: |
         pip install pyshark
         pip install paramiko
+        git clone https://github.com/jbardin/scp.py
+
 
     - name: Run tests
       run: python3 tests/agent_advert.py
