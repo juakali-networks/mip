@@ -26,7 +26,7 @@ jobs:
         ls -la
         cd /usr/lib/python3/dist-packages
         sudo git clone https://github.com/jbardin/scp.py
-        mv scp.py scp
+        sudo mv scp.py scp
         ls -la
         cd
         ls -la
