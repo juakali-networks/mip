@@ -24,6 +24,7 @@ jobs:
         pip install pyshark
         pip install paramiko
         git clone https://github.com/jbardin/scp.py
+        ls -la
 
 
     - name: Run tests
