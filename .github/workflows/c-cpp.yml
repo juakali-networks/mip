@@ -23,7 +23,6 @@ jobs:
       run: |
         pip install pyshark
         pip install paramiko
-        git clone https://github.com/jbardin/scp.py
         mv scp.py scp
         ls -la
         cd /usr/lib/python3/dist-packages
