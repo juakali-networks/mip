@@ -21,7 +21,8 @@ jobs:
     #  run: make check
     - name: Install dependencies
       run: |
-        pip3 install pyshark
+        pip install pyshark
+        pip install paramiko
 
     - name: Run tests
       run: python3 tests/agent_advert.py
