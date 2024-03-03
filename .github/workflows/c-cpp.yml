@@ -38,5 +38,5 @@ jobs:
 
 
     - name: Run tests
-      run: python3 /mip/tests/agent_advert.py
+      run: python3 tests/agent_advert.py
      # run: python3 ~/mip/tests/agent_advert.py
