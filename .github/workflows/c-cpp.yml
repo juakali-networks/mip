@@ -10,8 +10,8 @@ jobs:
   build:
 
     # runs-on: ubuntu-latest
-    # runs-on: self-hosted
-    runs-on: [self-hosted, linux, x64, gpu]
+    runs-on: self-hosted
+    # runs-on: [self-hosted, linux, x64, gpu]
 
     steps:
     - uses: actions/checkout@v3
