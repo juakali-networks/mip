@@ -9,7 +9,7 @@ import paramiko
 from scp.scp import SCPClient
 # from scp.SCPClient import SCPClient
 
-class agent_adv():
+class reg_req():
 
     def __init__(self):
 
@@ -17,16 +17,17 @@ class agent_adv():
         self._pwd = "admin"
         self._ip1 = "admin@172.20.10.14"
         self._ip2 = "admin@172.20.10.5"
-        self._all_host_mcast_addr = "224.0.0.1"
-        self._agent_advert_type = "9"
-        self._agent_advert_code = "16"
-        self._file = 'agent_adv.pcap'
+        self._dest_addr = "172.20.10.14"
+        # self._rreq_type = "9"
+        self._dest_port = "434"
+        self._rreq_code = "18"
+        self._file = 'reg_req.pcap'
         self._local_path = '/home/peter/mip/tests/Results'
 
  
     def step_1(self):
-
-        subprocess.run(["rm Results/agent_adv.pcap"], shell=True, capture_output=False)
+     
+        subprocess.run(["rm Results/reg_req.pcap"], shell=True, capture_output=False)
 
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
         
@@ -83,7 +84,7 @@ class agent_adv():
         self._local_path = '/home/peter/mip/tests/Results'
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo 'admin' | sudo -S  tcpdump -i enp0s3 icmp -c 1 -w agent_adv.pcap\n"],
+            ma_process = subprocess.Popen(['ssh','-tt', self._ip1, "echo 'admin' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w reg_req.pcap\n"],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -98,13 +99,13 @@ class agent_adv():
              return False
 
         
-        ssh = self.createSSHClient("172.20.10.5", 22, "admin", "admin")
+        ssh = self.createSSHClient("172.20.10.14", 22, "admin", "admin")
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._file, local_path=self._local_path)
         scp.close()
 
 
-        ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo 'admin' | sudo -S rm agent_adv.pcap\n"],
+        ma_process = subprocess.Popen(['ssh','-tt', self._ip1, "echo 'admin' | sudo -S rm reg_req.pcap\n"],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -115,39 +116,49 @@ class agent_adv():
 
 
         # read pcap file and read packet fields
-        pcap_file = pyshark.FileCapture('/home/peter/mip/tests/Results/agent_adv.pcap')
+        pcap_file = pyshark.FileCapture('/home/peter/mip/tests/Results/reg_req.pcap')
 
         try:
             for packet in pcap_file:
 
-                tos_hex_value = int(packet.layers[1].dsfield, 16)
+                # tos_hex_value = int(packet.layers[1].dsfield, 16)
                 dst_addr = packet.layers[1].dst
-                icmp_type = packet.layers[2].type
-                icmp_code = packet.layers[2].code
+                dst_port = packet.layers[2].dstport
+
+                #rreq_type = packet.layers[2].type
+                # rreq_code = packet.layers[2].code
 
 
 
-                if dst_addr == self._all_host_mcast_addr:
-                    print("\nForeign agent sent Agent Advert message to Mobile Node on all host multicast IP address %s as expected\n" % dst_addr)
+                if dst_addr == self._dest_addr:
+                    print("\nForeign agent received registration request message from Mobile Node on its IP address %s as expected\n" % dst_addr)
                     state.append(True)
                 else:
-                    print("\nAgent advert message is Not sent to all host multicast IP address %s but to destination address %s\n" % (self._all_host_mcast_addr, dst_addr))
+                    print("\nRegistration request message is Not sent to the Foreign agent IP address %s but to another destination address %s\n" % (self._dest_addr, dst_addr))
                     state.append(False)
-        
-                if icmp_type == self._agent_advert_type:
-                    print("\nAgent Advert message is sent with correct ICMP type number %s\n" % icmp_type)
+
+                if dst_port == self._dest_port:
+                    print("\nReceived registration request message is sent to the correct port %s as expected\n" % dst_addr)
                     state.append(True)
                 else:
-                    print("\ngent Advert message is sent with wrong ICMP type number %s and not type number %s\n" % (self._agent_advert_type, icmp_type))
+                    print("\nReceived registration request message is not sent to the expected port %s but to wrong port %s\n" % (self._dest_port, dst_port))
                     state.append(False)
 
 
-                if icmp_code == self._agent_advert_code:
-                    print("\nAgent Advert message is sent with correct ICMP code %s\n" % icmp_code)
-                    state.append(True)
-                else:
-                    print("\ngent Advert message is sent with wrong ICMP code %s and not code %s\n" % (self._agent_advert_type, icmp_type))
-                    state.append(False)
+                        # if icmp_type == self._agent_advert_type:
+                #     print("\nAgent Advert message is sent with correct ICMP type number %s\n" % icmp_type)
+                #     state.append(True)
+                # else:
+                #     print("\ngent Advert message is sent with wrong ICMP type number %s and not type number %s\n" % (self._agent_advert_type, icmp_type))
+                #     state.append(False)
+                #
+                #
+                # if icmp_code == self._agent_advert_code:
+                #     print("\nAgent Advert message is sent with correct ICMP code %s\n" % icmp_code)
+                #     state.append(True)
+                # else:
+                #     print("\ngent Advert message is sent with wrong ICMP code %s and not code %s\n" % (self._agent_advert_type, icmp_type))
+                #     state.append(False)
 
 
         except Exception as err:
@@ -181,7 +192,7 @@ class agent_adv():
 
         return True
 
-agent_adv().step_1()
+reg_req().step_1()
 
 
 
