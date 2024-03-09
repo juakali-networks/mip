@@ -15,8 +15,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    #- name: configure
-    #  run: ./configure
+    - name: login into VM with IP 172.20.10.14
+      run: ssh admin@172.20.10.14
+    - name: Change directory
+      run: cd mip
+    - name: pull changes
+      run: git pull https://github.com/juakali-networks/mip.git
+    - name: Change directory
+      run: cd src
+    - name: make
+      run: make
+    - name: Exist VM
+      run: exit
+
+
+    #  run: ./configure"admin@172.20.10.14"
     #- name: make
     #  run: make
     #- name: make check
