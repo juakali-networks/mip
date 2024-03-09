@@ -15,43 +15,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: login into VM with IP 172.20.10.14
-      run: ssh admin@172.20.10.14
-    - name: list
-      run: pwd
-    - name: Change directory
-      run: cd mip
-    - name: pull changes
-      run: git pull https://github.com/juakali-networks/mip.git
-    - name: Change directory
-      run: cd src
-    - name: make
-      run: make
-    - name: Exist VM
-      run: exit
-
-
-    #  run: ./configure"admin@172.20.10.14"
-    #- name: make
-    #  run: make
-    #- name: make check
-    #  run: make check
-    #- name: Install dependencies
-    #  run: |
-    #    pip install pyshark
-     #   pip install paramiko
-      #  ls -la
-       # cd /usr/lib/python3/dist-packages
-        #sudo git clone https://github.com/jbardin/scp.py
-        #sudo mv scp.py scp
-        #ls -la
-        #cd
-        #ls -la
-
-        #import sys
-        #print(sys.path)
-
-
+    - name: Configure VM 1
+      run:  ./tests/configure_vm1.sh
+    - name: Configure VM 2
+      run: ./tests/configure_vm1.sh
+    
     - name: Run Agent Advert test
       run: python3 tests/agent_advert.py
     - name: Run Registration Request test
