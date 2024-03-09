@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: mip CI
 
 on:
   push:
@@ -37,6 +37,7 @@ jobs:
         #print(sys.path)
 
 
-    - name: Run tests
+    - name: Run Agent Advert test
       run: python3 tests/agent_advert.py
-     # run: python3 ~/mip/tests/agent_advert.py
+    - name: Run Registration Request test
+      run: python3 tests/registration_request.py
