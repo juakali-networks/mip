@@ -28,6 +28,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <linux/udp.h>
+#include <stdint.h>
+#include <time.h>
+
 
 /*
  * 			M A I N
@@ -441,7 +444,7 @@ registration_request(int lft)
  			rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			rreq->reg_req_id = 19;
+			rreq->reg_req_id = get_time();
 
 	  		packetlen = sizeof(struct reg_req);
 
@@ -1422,4 +1425,25 @@ void logperror(char *str)
         else
                 (void) fprintf(stderr, "%s: %s\n", str, strerror(errno));
 }
+
+int get_time()
+        {
+
+struct timespec tms;
+
+/* POSIX.1-2008 way */
+    if (clock_gettime(CLOCK_REALTIME,&tms)) {
+        return -1;
+    }
+    /* seconds, multiplied with 1 million */
+    int64_t micros = tms.tv_sec * 1000000;
+    /* Add full microseconds */
+    micros += tms.tv_nsec/1000;
+    /* round up if necessary */
+    if (tms.tv_nsec % 1000 >= 500) {
+        ++micros;
+    }
+
+    return micros;
+ }
 

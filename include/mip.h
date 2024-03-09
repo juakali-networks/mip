@@ -79,8 +79,10 @@ struct table *table;
 
 static void solicitor(struct sockaddr_in *sin);
 static void advertise(struct sockaddr_in *sin, int lft);
-static void registration_request(int lft);
+static void registration_request(int lft);int get_time();
 
+
+int get_time();
 static void prusage(void);
 static char *pr_name(struct in_addr addr);
 static void pr_pack(char *buf, int cc, struct sockaddr_in *from);
