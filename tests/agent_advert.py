@@ -38,7 +38,7 @@ class agent_adv():
                                     universal_newlines=True,
                                 bufsize=0)
             
-            results_output, results_error = aa_process.communicate()
+            aa_process.communicate()
             aa_process.kill()
             
         except Exception as err:
@@ -56,13 +56,12 @@ class agent_adv():
                                    universal_newlines=True,
                                 bufsize=0)
 
-            results_output, results_error = ma_process.communicate()
+            ma_process.communicate()
             ma_process.kill()
 
         except Exception as err:
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
-    
 
         state = self.check_packet_header()
 
@@ -82,6 +81,7 @@ class agent_adv():
 
         self._local_path = '/home/peter/mip/tests/Results'
 
+
         try:
             ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo 'admin' | sudo -S  tcpdump -i enp0s3 icmp -c 1 -w agent_adv.pcap\n"],
                                     stdin=subprocess.PIPE,
@@ -89,27 +89,25 @@ class agent_adv():
                                     universal_newlines=True,
                                 bufsize=0)
 
-            results_output, results_error = ma_process.communicate()
+            ma_process.communicate()
 
             ma_process.kill()
 
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
              return False
-
         
         ssh = self.createSSHClient("172.20.10.5", 22, "admin", "admin")
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._file, local_path=self._local_path)
         scp.close()
 
-
         ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo 'admin' | sudo -S rm agent_adv.pcap\n"],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                     bufsize=0)
-        results_output, results_error = ma_process.communicate()
+        ma_process.communicate()
 
         ma_process.kill()
 
@@ -126,14 +124,12 @@ class agent_adv():
                 icmp_code = packet.layers[2].code
 
 
-
                 if dst_addr == self._all_host_mcast_addr:
                     print("\nForeign agent sent Agent Advert message to Mobile Node on all host multicast IP address %s as expected\n" % dst_addr)
                     state.append(True)
                 else:
                     print("\nAgent advert message is Not sent to all host multicast IP address %s but to destination address %s\n" % (self._all_host_mcast_addr, dst_addr))
                     state.append(False)
-        
                 if icmp_type == self._agent_advert_type:
                     print("\nAgent Advert message is sent with correct ICMP type number %s\n" % icmp_type)
                     state.append(True)
