@@ -18,7 +18,7 @@ jobs:
     - name: login into VM with IP 172.20.10.14
       run: ssh admin@172.20.10.14
     - name: list
-      run: ls
+      run: pwd
     - name: Change directory
       run: cd mip
     - name: pull changes
