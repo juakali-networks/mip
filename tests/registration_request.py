@@ -15,12 +15,11 @@ class reg_req():
 
         # Configs. Change your settings here
         self._pwd = "admin"
-        self._ip1 = "admin@172.20.10.14"
-        self._ip2 = "admin@172.20.10.5"
-        self._dest_addr = "172.20.10.14"
-        # self._rreq_type = "9"
+        self._ip1 = "172.20.10.14"
+        self._ip2 = "172.20.10.5"
+  
+        self._rreq_msg_type = 1
         self._dest_port = "434"
-        self._rreq_code = "18"
         self._file = 'reg_req.pcap'
         self._local_path = '/home/peter/mip/tests/Results'
 
@@ -30,16 +29,16 @@ class reg_req():
         subprocess.run(["rm Results/reg_req.pcap"], shell=True, capture_output=False)
 
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
-        
+       
+        vm_user = "admin@%s" % self._ip1
         try:
-
-            aa_process = subprocess.Popen(['ssh','-tt', self._ip1, "echo 'admin' | sudo -S  ./mip/src/mip -m"],
+            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo 'admin' | sudo -S  ./mip/src/mip -m"],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
             
-            results_output, results_error = aa_process.communicate()
+            aa_process.communicate()
             aa_process.kill()
             
         except Exception as err:
@@ -50,16 +49,17 @@ class reg_req():
 
         time.sleep(5)
 
+        vm_user = "admin@%s" % self._ip2
+
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo 'admin' | sudo -S  ./mip/src/mip -r"],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo 'admin' | sudo -S  ./mip/src/mip -r"],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
                                 bufsize=0)
-
-            results_output, results_error = ma_process.communicate()
+            ma_process.communicate()
             ma_process.kill()
-
+        
         except Exception as err:
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
@@ -82,16 +82,18 @@ class reg_req():
         state = list()
 
         self._local_path = '/home/peter/mip/tests/Results'
+ 
+        vm_user = "admin@%s" % self._ip1
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', self._ip1, "echo 'admin' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w reg_req.pcap\n"],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo 'admin' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w reg_req.pcap\n"],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-
-            results_output, results_error = ma_process.communicate()
-
+            
+            ma_process.communicate()
+            
             ma_process.kill()
 
         except Exception as err:
@@ -104,65 +106,79 @@ class reg_req():
         scp.get(remote_path=self._file, local_path=self._local_path)
         scp.close()
 
+        vm_user = "admin@%s" % self._ip1
 
-        ma_process = subprocess.Popen(['ssh','-tt', self._ip1, "echo 'admin' | sudo -S rm reg_req.pcap\n"],
+        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo 'admin' | sudo -S rm reg_req.pcap\n"],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                     bufsize=0)
-        results_output, results_error = ma_process.communicate()
+        ma_process.communicate()
 
         ma_process.kill()
 
-
         # read pcap file and read packet fields
         pcap_file = pyshark.FileCapture('/home/peter/mip/tests/Results/reg_req.pcap')
-
+        
         try:
             for packet in pcap_file:
 
-                # tos_hex_value = int(packet.layers[1].dsfield, 16)
                 dst_addr = packet.layers[1].dst
                 dst_port = packet.layers[2].dstport
-
-                #rreq_type = packet.layers[2].type
-                # rreq_code = packet.layers[2].code
-
-
-
+                mip_type = packet.layers[3].mip.type
+                care_off_addr = packet.layers[3].coa
+                home_addr = packet.layers[3].homeaddr
+                home_agent = packet.layers[3].haaddr
+                
                 if dst_addr == self._dest_addr:
                     print("\nForeign agent received registration request message from Mobile Node on its IP address %s as expected\n" % dst_addr)
                     state.append(True)
                 else:
-                    print("\nRegistration request message is Not sent to the Foreign agent IP address %s but to another destination address %s\n" % (self._dest_addr, dst_addr))
+                    print("\nRegistration request message is Not sent to the Foreign agent IP address %s but to another destination address %s -- Test Failed\n"% (self._dest_addr, dst_addr))
                     state.append(False)
 
                 if dst_port == self._dest_port:
                     print("\nReceived registration request message is sent to the correct port %s as expected\n" % dst_addr)
                     state.append(True)
                 else:
-                    print("\nReceived registration request message is not sent to the expected port %s but to wrong port %s\n" % (self._dest_port, dst_port))
+                    print("\nReceived registration request message is not sent to the expected port %s but to wrong port %s - Test Failed\n" % (self._dest_port, dst_port))
                     state.append(False)
 
 
-                        # if icmp_type == self._agent_advert_type:
-                #     print("\nAgent Advert message is sent with correct ICMP type number %s\n" % icmp_type)
-                #     state.append(True)
-                # else:
-                #     print("\ngent Advert message is sent with wrong ICMP type number %s and not type number %s\n" % (self._agent_advert_type, icmp_type))
-                #     state.append(False)
-                #
-                #
-                # if icmp_code == self._agent_advert_code:
-                #     print("\nAgent Advert message is sent with correct ICMP code %s\n" % icmp_code)
-                #     state.append(True)
-                # else:
-                #     print("\ngent Advert message is sent with wrong ICMP code %s and not code %s\n" % (self._agent_advert_type, icmp_type))
-                #     state.append(False)
+                if mip_type == self._rreq_msg_type:
+                    print("\nRegistration Request message is sent with the correct message type %s\n" % self._rreq_msg_type)
+                    state.append(True)
+                else:
+                    print("\nRegistration Request message is sent with wrong message type number %s and not type number %s --Test Failed\n" % (mip_type, self._rreq_msg_type))
+                    state.append(False)
+
+                if  care_off_addr == self._ip2:
+                    print("\nForeign agent received registration with the correct Care of IP address %s as expected\n" % care_off_addr)
+                    state.append(True)
+                else:
+                    print("\nRegistration request message is sent to the Foreign agent with the wrong care of address IPP %s, Not the expected address %s -- Test Failed\n" % (self._ip2, care_off_addr))
+                    state.append(False)
+
+
+                if  home_addr == self._ip2:
+                    print("\nForeign agent received registration with the correct Home address IP address %s as expected\n" % home_addr)
+                    state.append(True)
+                else:
+                    print("\nRegistration request message is sent to the Foreign agent with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (self._ip2, home_addr))
+                    state.append(False)
+
+                if  home_agent == self._ip2:
+                    print("\nForeign agent received registration with the correct Home Agent IP address %s as expected\n" % home_agent)
+                    state.append(True)
+                else:
+                    print("\nRegistration request message is sent to the Foreign agent with the wrong Home Agent IP %s, Not the expected address %s -- Test Failed\n" % (self._ip2, home_agent))
+                    state.append(False)
+
+
 
 
         except Exception as err:
-            print("Failed to  captured packet with error %s" % err)
+            print("Failed to read packet with error %s" % err)
             state.append(False)
         
         return all(state) if state else False
