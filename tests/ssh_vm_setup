@@ -21,7 +21,10 @@ pip3 install scpclient
 python3.8 -m pip install scpclient
 
 
-https://github.com/jbardin/scp.py
+cd /usr/local/lib/python3.8/dist-packages
+sudo git clone https://github.com/jbardin/scp.py
+mv scp.py scp
+
 
 from ndsatcom.common.ssh.Scp import Scp
 self.__scp = Scp(host=self.__skywanidu_ip, port=int(self.__config.get(self.__device, "SSH_Port")),

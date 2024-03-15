@@ -14,7 +14,7 @@ class agent_adv():
     def __init__(self):
 
         # Configs. Change your settings here
-        self._pwd = "admin"
+        self._pwd = "lubuntu"
         self._ip1 = "admin@192.168.0.34"
         self._ip2 = "admin@192.168.0.53"
         self._all_host_mcast_addr = "224.0.0.1"

@@ -14,7 +14,7 @@ class reg_req():
     def __init__(self):
 
         # Configs. Change your settings here
-        self._pwd = "admin"
+        self._pwd = "lubuntu"
         self._ip1 = "192.168.0.34"
         self._ip2 = "192.168.0.53"
   
