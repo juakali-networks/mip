@@ -25,3 +25,9 @@ https://github.com/jbardin/scp.py
 
 from ndsatcom.common.ssh.Scp import Scp
 self.__scp = Scp(host=self.__skywanidu_ip, port=int(self.__config.get(self.__device, "SSH_Port")),
+
+
+# git repositories
+Install git
+
+
