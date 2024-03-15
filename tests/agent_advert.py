@@ -15,8 +15,8 @@ class agent_adv():
 
         # Configs. Change your settings here
         self._pwd = "admin"
-        self._ip1 = "admin@172.20.10.14"
-        self._ip2 = "admin@172.20.10.5"
+        self._ip1 = "admin@192.168.0.34"
+        self._ip2 = "admin@192.168.0.53"
         self._all_host_mcast_addr = "224.0.0.1"
         self._agent_advert_type = "9"
         self._agent_advert_code = "16"

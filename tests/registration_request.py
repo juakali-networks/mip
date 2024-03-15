@@ -15,8 +15,8 @@ class reg_req():
 
         # Configs. Change your settings here
         self._pwd = "admin"
-        self._ip1 = "172.20.10.14"
-        self._ip2 = "172.20.10.5"
+        self._ip1 = "192.168.0.34"
+        self._ip2 = "192.168.0.53"
   
         self._rreq_msg_type = 1
         self._dest_port = "434"
