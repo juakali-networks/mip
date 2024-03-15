@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Hello, world!"
-ssh admin@172.20.10.5 << EOF
+ssh admin@192.168.0.34 << EOF
 
 cd mip
 git pull https://github.com/juakali-networks/mip.git

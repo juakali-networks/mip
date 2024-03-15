@@ -9,6 +9,8 @@ finished
 On host PC run the followig commands
 pip3 install --upgrade pip
 pip3 install pyshark
+sudo apt install tshark
+
 tshark
 
 python3.8 -m pip install pyshark
