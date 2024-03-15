@@ -15,8 +15,8 @@ class agent_adv():
 
         # Configs. Change your settings here
         self._pwd = "lubuntu"
-        self._ip1 = "admin@192.168.0.34"
-        self._ip2 = "admin@192.168.0.53"
+        self._ip1 = "192.168.0.34"
+        self._ip2 = "192.168.0.53"
         self._all_host_mcast_addr = "224.0.0.1"
         self._agent_advert_type = "9"
         self._agent_advert_code = "16"
@@ -32,7 +32,7 @@ class agent_adv():
         
         try:
 
-            aa_process = subprocess.Popen(['ssh','-tt', self._ip1, "echo 'admin' | sudo -S  ./mip/src/mip -m"],
+            aa_process = subprocess.Popen(['ssh','-tt', self._ip1, "echo %s | sudo -S  ./mip/src/mip -m" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -50,7 +50,7 @@ class agent_adv():
         time.sleep(5)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo 'admin' | sudo -S  ./mip/src/mip -r"],
+            ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo %s | sudo -S  ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
@@ -81,28 +81,29 @@ class agent_adv():
 
         self._local_path = '/home/peter/mip/tests/Results'
 
-
+        print("aaaaaaaaaaaaaa")
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo 'admin' | sudo -S  tcpdump -i enp0s3 icmp -c 1 -w agent_adv.pcap\n"],
+            ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo %s | sudo -S  tcpdump -i enp0s3 icmp -c 1 -w agent_adv.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-
+            print("ggggggggggggggggggg")
             ma_process.communicate()
-
+            print("ttttttttttttt")
             ma_process.kill()
 
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
              return False
-        
-        ssh = self.createSSHClient("172.20.10.5", 22, "admin", "admin")
+        print("bbbbbbbbbbbbbbbbbbb")
+        # username = "%s" % self._pwd
+        ssh = self.createSSHClient("172.20.10.5", 22, "%s" % self._.pwd, "%s" % self._pwd)
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._file, local_path=self._local_path)
         scp.close()
 
-        ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo 'admin' | sudo -S rm agent_adv.pcap\n"],
+        ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo %s | sudo -S rm agent_adv.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -118,7 +119,7 @@ class agent_adv():
         try:
             for packet in pcap_file:
 
-                tos_hex_value = int(packet.layers[1].dsfield, 16)
+           #     tos_hex_value = int(packet.layers[1].dsfield, 16)
                 dst_addr = packet.layers[1].dst
                 icmp_type = packet.layers[2].type
                 icmp_code = packet.layers[2].code
