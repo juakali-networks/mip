@@ -15,13 +15,15 @@ class reg_req():
 
         # Configs. Change your settings here
         self._pwd = "lubuntu"
+        self._user_name = "lubuntu"
+
         self._ip1 = "192.168.0.34"
         self._ip2 = "192.168.0.53"
   
         self._rreq_msg_type = 1
         self._dest_port = "434"
         self._file = 'reg_req.pcap'
-        self._local_path = '/home/peter/mip/tests/Results'
+        self._local_path = '/home/dancer/mip/tests/Results'
 
  
     def step_1(self):
@@ -30,9 +32,10 @@ class reg_req():
 
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
        
-        vm_user = "admin@%s" % self._ip1
+        vm_user = "%s@%s" % (self._user_name, self._ip1)
+    
         try:
-            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo 'admin' | sudo -S  ./mip/src/mip -m"],
+            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -49,10 +52,9 @@ class reg_req():
 
         time.sleep(5)
 
-        vm_user = "admin@%s" % self._ip2
-
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo 'admin' | sudo -S  ./mip/src/mip -r"],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
@@ -64,7 +66,7 @@ class reg_req():
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
     
-
+        print("ffffffffff")
         state = self.check_packet_header()
 
         if state is True:
@@ -81,34 +83,31 @@ class reg_req():
         """
         state = list()
 
-        self._local_path = '/home/peter/mip/tests/Results'
  
-        vm_user = "admin@%s" % self._ip1
+        vm_user = "%s@%s" % (self._user_name, self._ip1)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo 'admin' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w reg_req.pcap\n"],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w reg_req.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            
+
             ma_process.communicate()
-            
             ma_process.kill()
 
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
              return False
 
-        
-        ssh = self.createSSHClient("172.20.10.14", 22, "admin", "admin")
+        ssh = self.createSSHClient(self._ip1, 22, self._user_name, self._pwd)
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._file, local_path=self._local_path)
         scp.close()
 
-        vm_user = "admin@%s" % self._ip1
+        vm_user = "%s@%s" % (self._user_name, self._ip1)
 
-        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo 'admin' | sudo -S rm reg_req.pcap\n"],
+        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S rm reg_req.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -118,17 +117,23 @@ class reg_req():
         ma_process.kill()
 
         # read pcap file and read packet fields
-        pcap_file = pyshark.FileCapture('/home/peter/mip/tests/Results/reg_req.pcap')
+        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/reg_req.pcap')
         
         try:
             for packet in pcap_file:
 
                 dst_addr = packet.layers[1].dst
+                print("Destination Address %s" % dst_addr)
                 dst_port = packet.layers[2].dstport
+                print("Destination Port %s" % dst_port)
                 mip_type = packet.layers[3].mip.type
+                print("Mobile IP Type %s" % mip_type)
                 care_off_addr = packet.layers[3].coa
+                print("Care of Address %s" % care_off_addr)
                 home_addr = packet.layers[3].homeaddr
+                print("Home Address %s" % home_addr)
                 home_agent = packet.layers[3].haaddr
+                print("Home Agent %s" % home_agent)
                 
                 if dst_addr == self._dest_addr:
                     print("\nForeign agent received registration request message from Mobile Node on its IP address %s as expected\n" % dst_addr)
@@ -173,8 +178,6 @@ class reg_req():
                 else:
                     print("\nRegistration request message is sent to the Foreign agent with the wrong Home Agent IP %s, Not the expected address %s -- Test Failed\n" % (self._ip2, home_agent))
                     state.append(False)
-
-
 
 
         except Exception as err:

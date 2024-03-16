@@ -14,6 +14,7 @@ class agent_adv():
     def __init__(self):
 
         # Configs. Change your settings here
+        self._user_name = "lubuntu"
         self._pwd = "lubuntu"
         self._ip1 = "192.168.0.34"
         self._ip2 = "192.168.0.53"
@@ -21,7 +22,7 @@ class agent_adv():
         self._agent_advert_type = "9"
         self._agent_advert_code = "16"
         self._file = 'agent_adv.pcap'
-        self._local_path = '/home/peter/mip/tests/Results'
+        self._local_path = '/home/dancer/mip/tests/Results'
 
  
     def step_1(self):
@@ -30,9 +31,11 @@ class agent_adv():
 
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
         
+        vm_user = "%s@%s" % (self._user_name, self._ip1)
+
         try:
 
-            aa_process = subprocess.Popen(['ssh','-tt', self._ip1, "echo %s | sudo -S  ./mip/src/mip -m" % self._pwd],
+            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -49,8 +52,10 @@ class agent_adv():
 
         time.sleep(5)
 
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
+
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo %s | sudo -S  ./mip/src/mip -r" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo %s | sudo -S  ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
@@ -79,31 +84,30 @@ class agent_adv():
         """
         state = list()
 
-        self._local_path = '/home/peter/mip/tests/Results'
 
-        print("aaaaaaaaaaaaaa")
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
+
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo %s | sudo -S  tcpdump -i enp0s3 icmp -c 1 -w agent_adv.pcap\n" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 icmp -c 1 -w agent_adv.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            print("ggggggggggggggggggg")
             ma_process.communicate()
-            print("ttttttttttttt")
             ma_process.kill()
 
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
              return False
-        print("bbbbbbbbbbbbbbbbbbb")
         # username = "%s" % self._pwd
-        ssh = self.createSSHClient("172.20.10.5", 22, "%s" % self._.pwd, "%s" % self._pwd)
+        ssh = self.createSSHClient(self._ip2, 22, self._pwd, self._pwd)
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._file, local_path=self._local_path)
         scp.close()
+    
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
 
-        ma_process = subprocess.Popen(['ssh','-tt', self._ip2, "echo %s | sudo -S rm agent_adv.pcap\n" % self._pwd],
+        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo %s | sudo -S rm agent_adv.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -114,7 +118,7 @@ class agent_adv():
 
 
         # read pcap file and read packet fields
-        pcap_file = pyshark.FileCapture('/home/peter/mip/tests/Results/agent_adv.pcap')
+        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/agent_adv.pcap')
 
         try:
             for packet in pcap_file:
