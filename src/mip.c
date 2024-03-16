@@ -439,7 +439,7 @@ registration_request(int lft)
 	   		
 			rreq->reg_req_type = ICMP_REGREQUEST;
 			rreq->flags = 0;
-			rreq->reg_req_lifetime = htons(10);
+			rreq->reg_req_lifetime = htons(60);
 			//rreq->home_addr=inet_addr("172.20.10.4");
  			rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));

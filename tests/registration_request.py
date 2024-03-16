@@ -66,7 +66,6 @@ class reg_req():
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
     
-        print("ffffffffff")
         state = self.check_packet_header()
 
         if state is True:
