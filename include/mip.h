@@ -14,7 +14,7 @@
 /* Types for Router Discovery*/
 #define ICMP_ROUTERSOLICIT          10       /* ICMP Router Solicitation  */
 #define ICMP_ROUTERADVERT           9        /* ICMP Router Advertisement */
-#define ICMP_REGREQUEST           18        /* ICMP Registration Request */
+#define ICMP_REGREQUEST           1         /* ICMP Registration Request */
 #define ICMP_REGREPLY           36        /* ICMP Registration Reply */
 
 
