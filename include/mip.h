@@ -216,7 +216,7 @@ struct reg_req
     __be32 home_addr;
     __be32 gw_fa_addr;
     __be32 care_of_addr;
-    __be32 reg_req_id;
+    __be64 reg_req_id;
   };
 
 
