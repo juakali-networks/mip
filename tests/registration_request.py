@@ -22,6 +22,8 @@ class reg_req():
   
         self._rreq_msg_type = 1
         self._dest_port = "434"
+        self._dest_addr = self._ip1
+    
         self._file = 'reg_req.pcap'
         self._local_path = '/home/dancer/mip/tests/Results'
 
@@ -125,14 +127,15 @@ class reg_req():
                 print("Destination Address %s" % dst_addr)
                 dst_port = packet.layers[2].dstport
                 print("Destination Port %s" % dst_port)
-                mip_type = packet.layers[3].mip.type
-                print("Mobile IP Type %s" % mip_type)
+                mip_type = int(packet.layers[3].type, 16)
+                print("Mobile IP Type %s" % type(mip_type))
                 care_off_addr = packet.layers[3].coa
                 print("Care of Address %s" % care_off_addr)
                 home_addr = packet.layers[3].homeaddr
                 print("Home Address %s" % home_addr)
                 home_agent = packet.layers[3].haaddr
                 print("Home Agent %s" % home_agent)
+
                 
                 if dst_addr == self._dest_addr:
                     print("\nForeign agent received registration request message from Mobile Node on its IP address %s as expected\n" % dst_addr)
@@ -142,7 +145,7 @@ class reg_req():
                     state.append(False)
 
                 if dst_port == self._dest_port:
-                    print("\nReceived registration request message is sent to the correct port %s as expected\n" % dst_addr)
+                    print("\nReceived registration request message is sent to the correct port %s as expected\n" % dst_port)
                     state.append(True)
                 else:
                     print("\nReceived registration request message is not sent to the expected port %s but to wrong port %s - Test Failed\n" % (self._dest_port, dst_port))
