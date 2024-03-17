@@ -441,8 +441,8 @@ registration_request(int lft)
 			rreq->flags = 0;
 			rreq->reg_req_lifetime = htons(60);
 			//rreq->home_addr=inet_addr("172.20.10.4");
- 			rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+ 			rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+			rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			rreq->reg_req_id = get_time();
 

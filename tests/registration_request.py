@@ -159,7 +159,7 @@ class reg_req():
                     print("\nRegistration Request message is sent with wrong message type number %s and not type number %s --Test Failed\n" % (mip_type, self._rreq_msg_type))
                     state.append(False)
 
-                if  care_off_addr == self._ip2:
+                if  care_off_addr == self._ip1:
                     print("\nForeign agent received registration with the correct Care of IP address %s as expected\n" % care_off_addr)
                     state.append(True)
                 else:
