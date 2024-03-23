@@ -4,10 +4,13 @@ echo "Hello, world!"
 ssh lubuntu@192.168.0.53 << EOF
 
 cd mip
+echo $(ls)
 git pull
 cd src
 rm mip
-rm obj/mip.o
+cd obj
+rm mip.o
+cd ..
 make clean
 make
 
