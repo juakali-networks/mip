@@ -452,8 +452,8 @@ registration_request(int lft, int sockfd)
     			perror("socket() error");
     			exit(2);
   			}
-			logmsg(LOG_INFO, "Source address %s\n", inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr))));
-			logmsg(LOG_INFO, "Destination address %s\n", inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr))));
+			logmsg(LOG_INFO, "Source address A %s\n", inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr))));
+			logmsg(LOG_INFO, "Destination address B %s\n", inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr))));
 
 
       		addr.sin_family = AF_INET;
