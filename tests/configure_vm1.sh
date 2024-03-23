@@ -3,7 +3,8 @@
 echo "Hello, world!"
 ssh lubuntu@192.168.0.53 << EOF
 
-cd "mip"
+echo $(pwd)
+cd mip
 echo "aa!"
 
 echo $(pwd)
