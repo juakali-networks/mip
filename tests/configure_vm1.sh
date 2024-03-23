@@ -4,16 +4,18 @@ echo "Hello, world!"
 ssh lubuntu@192.168.0.53 << EOF
 
 cd mip
-echo "$(ls)"
 echo $(pwd)
 git pull
 cd src
-echo "$(ls)"
+echo $(pwd)
 rm mip
-echo "$(ls)"
+echo $(pwd)
 cd obj
+echo $(pwd)
 rm mip.o
+echo $(pwd)
 cd ..
+echo $(pwd)
 make clean
 make
 
