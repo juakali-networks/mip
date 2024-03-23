@@ -19,7 +19,7 @@ echo "ddd!"
 echo $(pwd)
 echo "eee!"
 
-rm mip
+rm src/mip
 echo $(pwd)
 cd "obj"
 echo $(pwd)
