@@ -2,7 +2,7 @@
 
 echo "Hello, world!"
 
-source_dir="/path/to/source"
+source_dir="mip/src"
 ssh lubuntu@192.168.0.53 << EOF
 
 echo $(pwd)
