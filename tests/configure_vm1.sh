@@ -3,7 +3,7 @@
 echo "Hello, world!"
 ssh lubuntu@192.168.0.53 << EOF
 
-cd mip
+cd "mip"
 echo "aa!"
 
 echo $(pwd)
@@ -12,7 +12,7 @@ echo "bbb!"
 git pull
 echo "ccc!"
 
-cd src
+cd "src"
 echo "ddd!"
 
 echo $(pwd)
@@ -20,7 +20,7 @@ echo "eee!"
 
 rm mip
 echo $(pwd)
-cd obj
+cd "obj"
 echo $(pwd)
 rm mip.o
 echo $(pwd)
