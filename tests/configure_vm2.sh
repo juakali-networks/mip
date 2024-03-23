@@ -6,8 +6,10 @@ ssh lubuntu@192.168.0.34 << EOF
 cd mip
 git pull
 cd src
-m mip
-rm obj/mip.o
+rm mip
+cd obj
+rm mip.o
+cd ..
 make clean
 make
 
