@@ -1,6 +1,8 @@
 #!/bin/bash
 
 echo "Hello, world!"
+
+source_dir="/path/to/source"
 ssh lubuntu@192.168.0.53 << EOF
 
 echo $(pwd)
@@ -13,7 +15,7 @@ echo "bbb!"
 git pull
 echo "ccc!"
 
-cd "src"
+cd source_dir
 echo "ddd!"
 
 echo "$(ls)"
