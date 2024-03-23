@@ -21,7 +21,7 @@ echo "$(ls)"
 echo $(pwd)
 echo "eee!"
 
-rm src/mip
+rm "src/mip"
 echo $(pwd)
 cd "obj"
 echo $(pwd)
