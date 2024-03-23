@@ -46,6 +46,8 @@ int main(int argc, char **argv)
 	struct sockaddr_in *to = &whereto;
 	struct sockaddr_in joinaddr;
 	sigset_t sset, sset_empty;
+	char buff[PCKT_LEN];
+
 #ifdef RDISC_SERVER
 	int val;
 
@@ -182,20 +184,44 @@ next:
 		forever = 1;
 	}
 
-	if (reg_request)
+	if (reg_request){
+		
+		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+     			logperror("socket failed");
+			exit(5);
+    	 	}
+	
+            registration_request(60, sockfd);
+			};
+		/*			if ((socketfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
+     			logperror("socket failed");
+			exit(5);
+    	 	}
+*/
+//	if (agent_advert){
+
+	/* 	if ((sock_check = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+     			logperror("socket failed");
+				logmsg(LOG_INFO, "ffffffffffffffffff:\n");
+			exit(5);
+    	 	}
+			logmsg(LOG_INFO, "mmmmmmmmmmmmmmmmmmmmm:\n");
+
+			while (read(sock_check, buff, PCKT_LEN)) {
             registration_request(60);
+			logmsg(LOG_INFO, "ggggggggggggggggggggggggggggggg:\n");
+
+		}*/
+	//}
+
 
 	memset( (char *)&whereto, 0, sizeof(struct sockaddr_in) );
 	to->sin_family = AF_INET;
-	logmsg(LOG_INFO, "set memory 1111 %d", agent_advert);
-	logmsg(LOG_INFO, "set memory 1111 %d", reg_request);
 
 	to->sin_addr.s_addr = inet_addr(sendaddress);
 
 	memset( (char *)&joinaddr, 0, sizeof(struct sockaddr_in) );
 	joinaddr.sin_family = AF_INET;
-	logmsg(LOG_INFO, "set memory 2222 %d", agent_advert);
-	logmsg(LOG_INFO, "set memory 2222 %d", reg_request);
 
 	joinaddr.sin_addr.s_addr = inet_addr(recvaddress);
 /*Cleanup: Reactivate this code
@@ -208,6 +234,7 @@ next:
 		logperror("socket");
 		exit(5);
 	}
+
 
 	setlinebuf( stdout );
 
@@ -236,16 +263,36 @@ next:
 		int len = sizeof (packet);
 		socklen_t fromlen = sizeof (from);
 		int cc;
+		int dd;
+
+
+		logmsg(LOG_INFO, "Checkuing the point we are at...:\n");
+
+		logmsg(LOG_INFO, "Len %d:\n", len);
+		logmsg(LOG_INFO, "socketfd %d:\n", socketfd);
+
 
 		cc=recvfrom(socketfd, (char *)packet, len, 0,
 			    (struct sockaddr *)&from, &fromlen);
-		if (cc<0) {
+	
+		logmsg(LOG_INFO, "We ggg have reached at the point here...:\n");
+
+		logmsg(LOG_INFO, "ccc %d:\n", cc);
+
+		/*dd=recvfrom(sock_check, (char *)packet, len, 0,
+			    (struct sockaddr *)&from, &fromlen);
+
+		logmsg(LOG_INFO, "Yes we have reached at the point here...:\n");
+
+		logmsg(LOG_INFO, "dddd %d:\n", dd);
+*/
+		/*if (cc<0) {
 			if (errno == EINTR)
 				continue;
 			logperror("recvfrom");
 			continue;
-		}
-
+		}*/
+		
 		sigprocmask(SIG_SETMASK, &sset, NULL);
 	        pr_pack( (char *)packet, cc, &from );
 		sigprocmask(SIG_SETMASK, &sset_empty, NULL);
@@ -388,7 +435,7 @@ advertise(struct sockaddr_in *sin, int lft)
 */
 
 void
-registration_request(int lft)
+registration_request(int lft, int sockfd)
 {
   	static unsigned char outpack[MAXPACKET];
     //struct reg_req *rreq = (struct reg_req *) ALLIGN(outpack);
@@ -401,10 +448,8 @@ registration_request(int lft)
 	struct iphdr *ip;
     char buff[PCKT_LEN];
 
- 	if ((socketfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-     		logperror("socket failed");
-		exit(5);
-    	 }
+
+
 
 	memset(buff, 0, PCKT_LEN);
 
@@ -414,33 +459,26 @@ registration_request(int lft)
 	struct reg_req  *rreq = (struct reg_req *)buff;
 
 
-	while (read(socketfd, buff, PCKT_LEN)) {
-    		logmsg(LOG_INFO, "Start logging 2222\n");
 
-    		logmsg(LOG_INFO, "Start logging 3333\n");
+	while (read(sockfd, buff, PCKT_LEN)) {
 
-       		logmsg(LOG_INFO, "Destination Address %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 
 			// create a raw socket with UDP protocol
-    		logmsg(LOG_INFO, "Start logging 4444\n");
 
-			sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+			sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		    		
 
 	  		if (sock < 0) {
     			perror("socket() error");
     			exit(2);
   			}
 
-			logmsg(LOG_INFO, "Raw socket is created.\n");
-
       		addr.sin_family = AF_INET;
       		addr.sin_port = htons(434);
-      		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-	   		
+      		// addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			addr.sin_addr.s_addr = inet_addr("172.20.10.117");
 			rreq->reg_req_type = ICMP_REGREQUEST;
 			rreq->flags = 0;
-			rreq->reg_req_lifetime = htons(60);
-			//rreq->home_addr=inet_addr("172.20.10.4");
+			rreq->reg_req_lifetime = htons(lft);
  			rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
@@ -456,7 +494,9 @@ registration_request(int lft)
         		}
 
 			close(sock);
+
       		}
+			
 
       		close(socketfd);
 		if( i < 0 || i != packetlen )  {
@@ -1043,7 +1083,7 @@ void timer()
 		if (agent_advert)
                         advertise(&whereto, lifetime);
                 if (reg_request)
-                        registration_request(lifetime);
+                        registration_request(lifetime, sockfd);
 
 		if (ntransmitted < initial_advertisements)
 			left_until_advertise = initial_advert_interval;
@@ -1313,7 +1353,7 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 		if (agent_advert)
                         advertise(&sin, lifetime);
                 if (reg_request)
-                        registration_request(lifetime);
+                        registration_request(lifetime, sockfd);
 
 		break;
 	}
@@ -1383,7 +1423,7 @@ finish()
                 if (agent_advert)
 			advertise(&whereto, 0);
 		if (reg_request)
-                        registration_request(0);
+                        registration_request(0, sockfd);
 
         }
 #endif

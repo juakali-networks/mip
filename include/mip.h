@@ -59,6 +59,8 @@ int reg_request;
 int max_adv_int = MAX_ADV_INT;
 int min_adv_int;
 int lifetime;
+int sockfd;
+
 int initial_advert_interval = MAX_INITIAL_ADVERT_INTERVAL;
 int initial_advertisements = MAX_INITIAL_ADVERTISEMENTS;
 int preference = 0;		/* Setable with -p option */
@@ -79,7 +81,8 @@ struct table *table;
 
 static void solicitor(struct sockaddr_in *sin);
 static void advertise(struct sockaddr_in *sin, int lft);
-static void registration_request(int lft);int get_time();
+static void registration_request(int lft, int sockfd);
+int get_time();
 
 
 int get_time();
