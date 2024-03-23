@@ -2,7 +2,7 @@
 
 echo "Hello, world!"
 
-source_dir="~/mip/src"
+source_dir="/home/dancer/actions-runner/_work/mip/src"
 ssh lubuntu@192.168.0.53 << EOF
 
 echo $(pwd)
