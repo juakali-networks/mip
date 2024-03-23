@@ -300,7 +300,7 @@ solicitor(struct sockaddr_in *sin)
 	icmph->un.gateway = 0; /* Reserved */
 	packetlen = 8;
 	/* Compute ICMP checksum here */
-        icmph->checksum = in_cksum((unsigned short *)icmph, packetlen);
+    icmph->checksum = in_cksum((unsigned short *)icmph, packetlen);
 
 	logmsg(LOG_INFO, "isbroadcast: %d\n", isbroadcast(sin));
 	logmsg(LOG_INFO, "ismulticast: %d\n", ismulticast(sin));
@@ -420,11 +420,7 @@ void
 registration_request(int lft, int sockfd)
 {
   	static unsigned char outpack[MAXPACKET];
-    //struct reg_req *rreq = (struct reg_req *) ALLIGN(outpack);
-
-
 	struct sockaddr_in addr;
-
     int packetlen, i;
 	int sock;
 	struct iphdr *ip;
