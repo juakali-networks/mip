@@ -15,7 +15,7 @@ echo "bbb!"
 git pull
 echo "ccc!"
 
-cd "source_dir"
+cd $source_dir
 echo "ddd!"
 
 echo "$(ls)"
