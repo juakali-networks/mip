@@ -426,16 +426,11 @@ registration_request(int lft, int sockfd)
 	struct iphdr *ip;
     char buff[PCKT_LEN];
 
-
-
-
 	memset(buff, 0, PCKT_LEN);
 
 	ip = (struct iphdr *)buff;
 
 	struct reg_req  *rreq = (struct reg_req *)buff;
-
-
 
 	while (read(sockfd, buff, PCKT_LEN)) {
 
@@ -477,7 +472,6 @@ registration_request(int lft, int sockfd)
 
       		}
 			
-
       		close(socketfd);
 		if( i < 0 || i != packetlen )  {
                 	if( i<0 ) {
