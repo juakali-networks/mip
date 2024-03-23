@@ -32,6 +32,24 @@ class reg_req():
      
         subprocess.run(["rm Results/reg_req.pcap"], shell=True, capture_output=False)
 
+        print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
+
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
+        try:
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
+                                   stdin=subprocess.PIPE, 
+                                   stdout = subprocess.PIPE,
+                                   universal_newlines=True,
+                                bufsize=0)
+            ma_process.communicate()
+            ma_process.kill()
+        
+        except Exception as err:
+            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
+            return False
+    
+        time.sleep(5)
+
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
        
         vm_user = "%s@%s" % (self._user_name, self._ip1)
@@ -50,24 +68,7 @@ class reg_req():
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
 
-        print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
 
-        time.sleep(5)
-
-        vm_user = "%s@%s" % (self._user_name, self._ip2)
-        try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
-                                   stdin=subprocess.PIPE, 
-                                   stdout = subprocess.PIPE,
-                                   universal_newlines=True,
-                                bufsize=0)
-            ma_process.communicate()
-            ma_process.kill()
-        
-        except Exception as err:
-            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
-            return False
-    
         state = self.check_packet_header()
 
         if state is True:
