@@ -16,6 +16,8 @@ echo "ccc!"
 cd "src"
 echo "ddd!"
 
+echo "$(ls)"
+
 echo $(pwd)
 echo "eee!"
 
