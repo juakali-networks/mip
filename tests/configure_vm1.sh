@@ -4,7 +4,7 @@ echo "Hello, world!"
 ssh lubuntu@192.168.0.53 << EOF
 
 cd mip
-echo $(ls)
+echo $(pwd)
 git pull
 cd src
 rm mip
