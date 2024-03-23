@@ -265,27 +265,9 @@ next:
 		int cc;
 		int dd;
 
-
-		logmsg(LOG_INFO, "Checkuing the point we are at...:\n");
-
-		logmsg(LOG_INFO, "Len %d:\n", len);
-		logmsg(LOG_INFO, "socketfd %d:\n", socketfd);
-
-
 		cc=recvfrom(socketfd, (char *)packet, len, 0,
 			    (struct sockaddr *)&from, &fromlen);
-	
-		logmsg(LOG_INFO, "We ggg have reached at the point here...:\n");
 
-		logmsg(LOG_INFO, "ccc %d:\n", cc);
-
-		/*dd=recvfrom(sock_check, (char *)packet, len, 0,
-			    (struct sockaddr *)&from, &fromlen);
-
-		logmsg(LOG_INFO, "Yes we have reached at the point here...:\n");
-
-		logmsg(LOG_INFO, "dddd %d:\n", dd);
-*/
 		/*if (cc<0) {
 			if (errno == EINTR)
 				continue;
@@ -453,7 +435,6 @@ registration_request(int lft, int sockfd)
 
 	memset(buff, 0, PCKT_LEN);
 
-    logmsg(LOG_INFO, "Start logging 1111\n");
 	ip = (struct iphdr *)buff;
 
 	struct reg_req  *rreq = (struct reg_req *)buff;
@@ -471,6 +452,9 @@ registration_request(int lft, int sockfd)
     			perror("socket() error");
     			exit(2);
   			}
+			logmsg(LOG_INFO, "Source address %s\n", inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr))));
+			logmsg(LOG_INFO, "Destination address %s\n", inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr))));
+
 
       		addr.sin_family = AF_INET;
       		addr.sin_port = htons(434);
