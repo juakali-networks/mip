@@ -16,6 +16,9 @@ git pull
 echo "ccc!"
 
 cd $source_dir
+echo $(pwd)
+echo "$(ls)"
+
 echo "ddd!"
 
 echo "$(ls)"
