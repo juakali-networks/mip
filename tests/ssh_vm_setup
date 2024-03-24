@@ -29,6 +29,9 @@ mv scp.py scp
 from ndsatcom.common.ssh.Scp import Scp
 self.__scp = Scp(host=self.__skywanidu_ip, port=int(self.__config.get(self.__device, "SSH_Port")),
 
+clear syslog
+truncate -s 0 /var/log/syslog
+
 
 # git repositories
 Install git

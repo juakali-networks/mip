@@ -449,8 +449,8 @@ registration_request(int lft, int sockfd)
 
       		addr.sin_family = AF_INET;
       		addr.sin_port = htons(434);
-      		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-			//addr.sin_addr.s_addr = inet_addr("172.20.10.117");
+      		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			// addr.sin_addr.s_addr = inet_addr("192.168.0.53");
 			rreq->reg_req_type = ICMP_REGREQUEST;
 			rreq->flags = 0;
 			rreq->reg_req_lifetime = htons(lft);
