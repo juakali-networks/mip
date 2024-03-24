@@ -72,8 +72,8 @@ class setup_vm():
                                     universal_newlines=True,
                                 bufsize=0)
         results_output, results_error = vm_process.communicate()
-        results_output_bytes = bytes(results_output, 'ascii')    
-        print(results_output_bytes)
+        # results_output_bytes = bytes(results_output, 'ascii')    
+        # print(results_output_bytes)
             
         vm_process.kill()
 
