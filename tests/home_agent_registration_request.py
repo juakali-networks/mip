@@ -101,7 +101,7 @@ class ha_reg_req():
             ma_process.kill()
 
         except Exception as err:
-             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip3 err))
+             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip3, err))
              return False
 
         ssh = self.createSSHClient(self._ip3, 22, self._user_name, self._pwd)
@@ -174,14 +174,14 @@ class ha_reg_req():
                     print("\nForeign agent received registration with the correct Home address IP address %s as expected\n" % home_addr)
                     state.append(True)
                 else:
-                    print("\nRegistration request message is sent to the Foreign agent with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (self._ip2, home_addr))
+                    print("\nRegistration request message is sent to the Foreign agent with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (home_addr, self._ip2))
                     state.append(False)
 
                 if  home_agent == self._ip3:
                     print("\nForeign agent received registration with the correct Home Agent IP address %s as expected\n" % home_agent)
                     state.append(True)
                 else:
-                    print("\nRegistration request message is sent to the Foreign agent with the wrong Home Agent IP %s, Not the expected address %s -- Test Failed\n" % (self._ip3, home_agent))
+                    print("\nRegistration request message is sent to the Foreign agent with the wrong Home Agent IP %s, Not the expected address %s -- Test Failed\n" % (home_agent, self._ip3))
                     state.append(False)
 
 
