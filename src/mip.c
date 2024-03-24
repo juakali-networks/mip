@@ -443,13 +443,13 @@ registration_request(int lft, int sockfd)
     			perror("socket() error");
     			exit(2);
   			}
-			logmsg(LOG_INFO, "Source address %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			logmsg(LOG_INFO, "Destination address %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+			logmsg(LOG_INFO, "Source address P %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			logmsg(LOG_INFO, "Destination address p %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
 
       		addr.sin_family = AF_INET;
       		addr.sin_port = htons(434);
-      		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+      		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			//addr.sin_addr.s_addr = inet_addr("172.20.10.117");
 			rreq->reg_req_type = ICMP_REGREQUEST;
 			rreq->flags = 0;
