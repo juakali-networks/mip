@@ -9,7 +9,7 @@ import paramiko
 from scp.scp import SCPClient
 # from scp.SCPClient import SCPClient
 
-class reg_req():
+class mn_reg_req():
 
     def __init__(self):
 
@@ -19,12 +19,13 @@ class reg_req():
 
         self._ip1 = "192.168.0.34"
         self._ip2 = "192.168.0.53"
+        self._ip3 = "192.168.0.237"
   
         self._rreq_msg_type = 1
         self._dest_port = "434"
         self._dest_addr = self._ip1
     
-        self._file = 'reg_req.pcap'
+        self._file = 'mn_reg_req.pcap'
         self._local_path = '/home/dancer/mip/tests/Results'
 
  
@@ -89,7 +90,7 @@ class reg_req():
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w reg_req.pcap\n" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w mn_reg_req.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -99,7 +100,7 @@ class reg_req():
             ma_process.kill()
 
         except Exception as err:
-             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
+             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip1, err))
              return False
 
         ssh = self.createSSHClient(self._ip1, 22, self._user_name, self._pwd)
@@ -109,7 +110,7 @@ class reg_req():
 
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
-        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S rm reg_req.pcap\n" % self._pwd],
+        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S rm mn_reg_req.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -119,7 +120,7 @@ class reg_req():
         ma_process.kill()
 
         # read pcap file and read packet fields
-        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/reg_req.pcap')
+        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/mn_reg_req.pcap')
         
         try:
             for packet in pcap_file:
@@ -172,14 +173,14 @@ class reg_req():
                     print("\nForeign agent received registration with the correct Home address IP address %s as expected\n" % home_addr)
                     state.append(True)
                 else:
-                    print("\nRegistration request message is sent to the Foreign agent with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (self._ip2, home_addr))
+                    print("\nRegistration request message is sent to the Foreign agent with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (home_addr, self._ip2))
                     state.append(False)
 
-                if  home_agent == self._ip2:
+                if  home_agent == self._ip3:
                     print("\nForeign agent received registration with the correct Home Agent IP address %s as expected\n" % home_agent)
                     state.append(True)
                 else:
-                    print("\nRegistration request message is sent to the Foreign agent with the wrong Home Agent IP %s, Not the expected address %s -- Test Failed\n" % (self._ip2, home_agent))
+                    print("\nRegistration request message is sent to the Foreign agent with the wrong Home Agent IP %s, Not the expected address %s -- Test Failed\n" % (home_agent, self._ip3))
                     state.append(False)
 
 
@@ -214,7 +215,7 @@ class reg_req():
 
         return True
 
-reg_req().step_1()
+mn_reg_req().step_1()
 
 
 

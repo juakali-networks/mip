@@ -111,7 +111,7 @@ class ha_reg_req():
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
 
-        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S rm reg_req.pcap\n" % self._pwd],
+        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S rm ha_reg_req.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -121,7 +121,7 @@ class ha_reg_req():
         ma_process.kill()
 
         # read pcap file and read packet fields
-        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/reg_req.pcap')
+        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/ha_reg_req.pcap')
         
         try:
             for packet in pcap_file:
