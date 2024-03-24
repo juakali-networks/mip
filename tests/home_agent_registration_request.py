@@ -9,7 +9,7 @@ import paramiko
 from scp.scp import SCPClient
 # from scp.SCPClient import SCPClient
 
-class reg_req():
+class ha_reg_req():
 
     def __init__(self):
 
@@ -216,7 +216,7 @@ class reg_req():
 
         return True
 
-reg_req().step_1()
+ha_reg_req().step_1()
 
 
 
