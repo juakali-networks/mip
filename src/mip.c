@@ -193,6 +193,17 @@ next:
 	
             registration_request(60, sockfd);
 			};
+
+	if (agent_advert){
+		
+		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+     			logperror("socket failed");
+			exit(5);
+    	 	}
+	
+            registration_request(60, sockfd);
+			};
+
 		/*			if ((socketfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
      			logperror("socket failed");
 			exit(5);
@@ -451,7 +462,11 @@ registration_request(int lft, int sockfd)
       		addr.sin_port = htons(434);
       		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			//addr.sin_addr.s_addr = INADDR_ANY;
-			addr.sin_addr.s_addr = inet_addr("192.168.0.34");
+			if (reg_request)
+				addr.sin_addr.s_addr = inet_addr("192.168.0.34");
+			if (agent_advert)
+				addr.sin_addr.s_addr = inet_addr("192.168.0.237");
+
 			rreq->reg_req_type = ICMP_REGREQUEST;
 			rreq->flags = 0;
 			rreq->reg_req_lifetime = htons(lft);
