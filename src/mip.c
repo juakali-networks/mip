@@ -489,12 +489,12 @@ registration_request(int lft, int sockfd)
 
       		addr.sin_family = AF_INET;
       		addr.sin_port = htons(434);
-      		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+      		// addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			//addr.sin_addr.s_addr = INADDR_ANY;
 			if (fa_reg_request)
-				addr.sin_addr.s_addr = inet_addr("192.168.0.85");
-			if (mn_reg_request)
 				addr.sin_addr.s_addr = inet_addr("192.168.0.240");
+			if (mn_reg_request)
+				addr.sin_addr.s_addr = inet_addr("192.168.0.34");
 
 			rreq->reg_req_type = ICMP_REGREQUEST;
 			rreq->flags = 0;
