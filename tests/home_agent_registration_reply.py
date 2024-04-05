@@ -26,7 +26,7 @@ class ha_reg_req():
         self._dest_port = "434"
         self._dest_addr = self._ip1
     
-        self._file = 'fa_reg_req.pcap'
+        self._file = 'ha_reg_rep.pcap'
         self._local_path = '/home/dancer/mip/tests/Results'
 
  
@@ -133,7 +133,7 @@ class ha_reg_req():
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w fa_reg_rep.pcap\n" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w ha_reg_rep.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -153,7 +153,7 @@ class ha_reg_req():
 
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
-        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S rm fa_reg_rep.pcap\n" % self._pwd],
+        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S rm ha_reg_rep.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -163,7 +163,7 @@ class ha_reg_req():
         ma_process.kill()
 
         # read pcap file and read packet fields
-        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/fa_reg_rep.pcap')
+        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/ha_reg_rep.pcap')
         
         try:
             for packet in pcap_file:
