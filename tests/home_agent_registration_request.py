@@ -247,7 +247,7 @@ class ha_reg_req():
             except Exception as err:
                 print("Failed to reboot VM with IP %s  with error %s" % (ip, err))
 
-        time.sleep(30)
+        time.sleep(60)
         return True
 
 ha_reg_req().step_1()
