@@ -37,7 +37,7 @@ class ha_reg_req():
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
         vm_user = "%s@%s" % (self._user_name, self._ip1)
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -p" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -j" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,

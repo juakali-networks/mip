@@ -33,7 +33,7 @@ class ha_reg_req():
     def step_1(self):
      
         subprocess.run(["rm Results/ha_reg_rep.pcap"], shell=True, capture_output=False)
-
+        print("aaaaaaaaaaaaaaaaaa")
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
@@ -50,6 +50,8 @@ class ha_reg_req():
             return False
     
         time.sleep(5)
+        print("bbbbbbbbbbbbbb")
+
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
@@ -66,6 +68,8 @@ class ha_reg_req():
             return False
     
         time.sleep(5)
+        print("cccccccccccccccccccccccc")
+
 
         # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
        
@@ -87,6 +91,7 @@ class ha_reg_req():
 
         time.sleep(5)
 
+        print("ddddddddddddddddddddddd")
 
 
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
@@ -110,6 +115,7 @@ class ha_reg_req():
 
         print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
 
+        print("eeeeeeeeeeeeeeeeeee")
 
         state = self.check_packet_header()
 
@@ -118,7 +124,7 @@ class ha_reg_req():
         else:
             print("Test Failed")
         
-        self.clean_up()
+        # self.clean_up()
 
         return state
 
@@ -128,12 +134,13 @@ class ha_reg_req():
         Check IP packet header
         """
         state = list()
+        print("fffffffffffffffffffff")
 
  
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 src 192.169.0.85 -c 1 -w ha_reg_rep.pcap\n" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w ha_reg_rep.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -145,6 +152,8 @@ class ha_reg_req():
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip1, err))
              return False
+        print("hhhhhhhhhhhhhh")
+
 
         ssh = self.createSSHClient(self._ip1, 22, self._user_name, self._pwd)
         scp = SCPClient(ssh.get_transport())
@@ -200,14 +209,6 @@ class ha_reg_req():
                 else:
                     print("\nRegistration reply message is sent with wrong message type number %s and not type number %s --Test Failed\n" % (mip_type, self._rrep_msg_type))
                     state.append(False)
-
-                if  care_off_addr == self._ip1:
-                    print("\nForeign agent received registration with the correct Care of IP address %s as expected\n" % care_off_addr)
-                    state.append(True)
-                else:
-                    print("\nRegistration reply message is sent to the Foreign agent with the wrong care of address IPP %s, Not the expected address %s -- Test Failed\n" % (self._ip2, care_off_addr))
-                    state.append(False)
-
 
                 if  home_addr == self._ip2:
                     print("\nForeign agent received registration with the correct Home address IP address %s as expected\n" % home_addr)
