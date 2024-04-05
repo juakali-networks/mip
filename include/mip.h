@@ -55,14 +55,14 @@ int forever = 0;	/* Never give up on host. If 0 defer fork until
 
 /* Router variables */
 int agent_advert;
-int reg_request;
-int max_adv_int = MAX_ADV_INT;
-int min_adv_int;
-int lifetime;
+int mn_reg_request;
 int fa_reg_request;
 int fa_reg_reply;
 int ha_reg_reply;
 int sockfd;
+int max_adv_int = MAX_ADV_INT;
+int min_adv_int;
+int lifetime;
 
 int initial_advert_interval = MAX_INITIAL_ADVERT_INTERVAL;
 int initial_advertisements = MAX_INITIAL_ADVERTISEMENTS;
@@ -85,6 +85,8 @@ struct table *table;
 static void solicitor(struct sockaddr_in *sin);
 static void advertise(struct sockaddr_in *sin, int lft);
 static void registration_request(int lft, int sockfd);
+static void registration_reply(int lft, int sockfd);
+
 int get_time();
 
 
@@ -233,7 +235,7 @@ struct reg_rep
     __be16 reg_rep_lifetime;
     __be32 home_addr;
     __be32 gw_fa_addr;
-    __be64 reg_req_id;
+    __be64 reg_rep_id;
   };
 
 

@@ -78,14 +78,14 @@ int main(int argc, char **argv)
 			case 'n':
 				fa_reg_request = 1;
 				break;
-			case 'p':
+			case 'j':
 				fa_reg_reply = 1;
 				break;
 			case 'q':
 				ha_reg_reply = 1;
 				break;
 			case 'r':
-				reg_request = 1;
+				mn_reg_request = 1;
 				break;
 			case 'a':
 				best_preference = 0;
@@ -147,7 +147,7 @@ next:
 		if (support_multicast()) {
 			sendaddress = ALL_ROUTERS_ADDRESS;
 #ifdef RDISC_SERVER
-			if (agent_advert || reg_request)
+			if (agent_advert || mn_reg_request)
 				sendaddress = ALL_HOSTS_ADDRESS;
 #endif
 		} else
@@ -161,7 +161,7 @@ next:
 		if (support_multicast()) {
 			recvaddress = ALL_HOSTS_ADDRESS;
 			
-			if (agent_advert || reg_request)
+			if (agent_advert || mn_reg_request)
 				recvaddress = ALL_ROUTERS_ADDRESS;
 		
 
@@ -178,7 +178,7 @@ next:
 	}
 
 #ifdef RDISC_SERVER
-	if (solicit && agent_advert && reg_request) {
+	if (solicit && agent_advert && mn_reg_request) {
 		prusage();
 		/* NOTREACHED */
 	}
@@ -193,16 +193,6 @@ next:
 		forever = 1;
 	}
 
-	if (reg_request){
-		
-		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-     			logperror("socket failed");
-			exit(5);
-    	 	}
-	
-            registration_request(60, sockfd);
-			};
-
 	if (fa_reg_request){
 		
 		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
@@ -213,7 +203,27 @@ next:
             registration_request(60, sockfd);
 			};
 
+	if (mn_reg_request){
+		
+		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+     			logperror("socket failed");
+			exit(5);
+    	 	}
+	
+            registration_request(60, sockfd);
+			};
+
 	if (ha_reg_reply){
+		
+		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+     			logperror("socket failed");
+			exit(5);
+    	 	}
+	
+            registration_reply(60, sockfd);
+			};
+
+	if (fa_reg_reply){
 		
 		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
      			logperror("socket failed");
@@ -481,9 +491,9 @@ registration_request(int lft, int sockfd)
       		addr.sin_port = htons(434);
       		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			//addr.sin_addr.s_addr = INADDR_ANY;
-			if (reg_request)
+			if (fa_reg_request)
 				addr.sin_addr.s_addr = inet_addr("192.168.0.34");
-			if (foreign_agent)
+			if (mn_reg_request)
 				addr.sin_addr.s_addr = inet_addr("192.168.0.85");
 
 			rreq->reg_req_type = ICMP_REGREQUEST;
@@ -494,7 +504,7 @@ registration_request(int lft, int sockfd)
 			rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			if (fa_reg_request)
 				rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			if (!fa_reg_request)
+			if (mn_reg_request)
 				rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			rreq->reg_req_id = get_time();
 
@@ -522,7 +532,7 @@ registration_request(int lft, int sockfd)
 }
 
 
-*
+/*
  *  M O B I L E   R E G I S T R A T I O N     R E Q U E S T
  *
  * Compose and transmit an ICMP MOBILE REGISTRATION REQUEST  packet.
@@ -543,7 +553,7 @@ registration_reply(int lft, int sockfd)
 
 	ip = (struct iphdr *)buff;
 
-	struct reg_req  *rreq = (struct reg_req *)buff;
+	struct reg_rep  *rrep = (struct reg_rep *)buff;
 
 	while (read(sockfd, buff, PCKT_LEN)) {
 
@@ -565,17 +575,16 @@ registration_reply(int lft, int sockfd)
       		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			//addr.sin_addr.s_addr = INADDR_ANY;
 			if (ha_reg_reply)
-				addr.sin_addr.s_addr = inet_addr("192.168.0.34");
+				addr.sin_addr.s_addr = inet_addr("192.168.0.240");
 			if (fa_reg_reply)
 				addr.sin_addr.s_addr = inet_addr("192.168.0.85");
 
-			rrep->reg_rep_type = ICMP_REGREQUEST;
-			rrep->flags = 0;
+			rrep->reg_rep_type = ICMP_REGREPLY;
+			rrep->code = 0;
 			rrep->reg_rep_lifetime = htons(lft);
  			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 		    rrep->home_addr = inet_addr("192.168.0.85");	
 			rrep-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-			rrep->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			rrep->reg_rep_id = get_time();
 
 	  		packetlen = sizeof(struct reg_req);
@@ -1172,11 +1181,11 @@ void timer()
 		left_until_getifconf = GETIFCONF_TIMER;
 	}
 #ifdef RDISC_SERVER
-	if ((agent_advert || reg_request) && left_until_advertise <= 0) {
+	if ((agent_advert || mn_reg_request) && left_until_advertise <= 0) {
 		ntransmitted++;
 		if (agent_advert)
                         advertise(&whereto, lifetime);
-                if (reg_request)
+                if (mn_reg_request)
                         registration_request(lifetime, sockfd);
 
 		if (ntransmitted < initial_advertisements)
@@ -1290,7 +1299,7 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 		struct icmp_ra_addr *ap;
 
 #ifdef RDISC_SERVER
-		if (agent_advert || reg_request)
+		if (agent_advert || mn_reg_request)
 			break;
 #endif
 
@@ -1379,7 +1388,7 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 	{
 		struct sockaddr_in sin;
 
-		if (!agent_advert || !reg_request)
+		if (!agent_advert || !mn_reg_request)
 			break;
 
 		/* TBD verify that the link is multicast or broadcast */
@@ -1446,7 +1455,7 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 		ntransmitted++;
 		if (agent_advert)
                         advertise(&sin, lifetime);
-                if (reg_request)
+                if (mn_reg_request)
                         registration_request(lifetime, sockfd);
 
 		break;
@@ -1505,7 +1514,7 @@ void
 finish()
 {
 #ifdef RDISC_SERVER
-        if (agent_advert || reg_request) {
+        if (agent_advert || mn_reg_request) {
                 /* Send out a packet with a preference so that all
                  * hosts will know that we are dead.
                  *
@@ -1516,7 +1525,7 @@ finish()
                 ntransmitted++;
                 if (agent_advert)
 			advertise(&whereto, 0);
-		if (reg_request)
+		if (mn_reg_request)
                         registration_request(0, sockfd);
 
         }
