@@ -4,6 +4,7 @@ On host PC run the followig commands
 
 >>ssh-keygen
 >>ssh-copy-id vm_username@vm_IP
+ssh-copy-id lubuntu@192.168.0.240
 finished
 
 On host PC run the followig commands

@@ -80,8 +80,8 @@ class setup_vm():
         return True
 
 ip1 = "192.168.0.34"
-ip2 = "192.168.0.53"
-ip3 = "192.168.0.237"
+ip2 = "192.168.0.240"
+ip3 = "192.168.0.85"
 
 setup_vm().step_1(ip1)
 setup_vm().step_1(ip2)
