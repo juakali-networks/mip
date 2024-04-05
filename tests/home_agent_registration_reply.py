@@ -33,7 +33,7 @@ class ha_reg_req():
     def step_1(self):
      
         subprocess.run(["rm Results/ha_reg_rep.pcap"], shell=True, capture_output=False)
-        print("aaaaaaaaaaaaaaaaaa")
+
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
@@ -50,10 +50,8 @@ class ha_reg_req():
             return False
     
         time.sleep(5)
-        print("bbbbbbbbbbbbbb")
 
-
-        vm_user = "%s@%s" % (self._user_name, self._ip3)
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
         try:
             ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
@@ -64,19 +62,17 @@ class ha_reg_req():
             ma_process.kill()
         
         except Exception as err:
-            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip3, err))
+            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
     
         time.sleep(5)
-        print("cccccccccccccccccccccccc")
-
 
         # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
        
         vm_user = "%s@%s" % (self._user_name, self._ip1)
     
         try:
-            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -n" % self._pwd],
+            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -90,9 +86,6 @@ class ha_reg_req():
             return False
 
         time.sleep(5)
-
-        print("ddddddddddddddddddddddd")
-
 
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
         
@@ -115,7 +108,6 @@ class ha_reg_req():
 
         print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
 
-        print("eeeeeeeeeeeeeeeeeee")
 
         state = self.check_packet_header()
 
@@ -134,13 +126,11 @@ class ha_reg_req():
         Check IP packet header
         """
         state = list()
-        print("fffffffffffffffffffff")
-
  
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w ha_reg_rep.pcap\n" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 src 192.168.0.85 || port 434 -c 1 -w ha_reg_rep.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
