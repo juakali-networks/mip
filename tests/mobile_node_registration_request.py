@@ -19,7 +19,7 @@ class mn_reg_req():
 
         self._ip1 = "192.168.0.34"
         self._ip2 = "192.168.0.240"
-        self._ip3 = "192.168.0.237"
+        self._ip3 = "192.168.0.85"
   
         self._rreq_msg_type = 1
         self._dest_port = "434"
