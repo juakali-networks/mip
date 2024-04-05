@@ -216,7 +216,7 @@ class ha_reg_req():
                     print("\nRegistration reply message is sent to the Foreign agent with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (home_addr, self._ip2))
                     state.append(False)
 
-                if  home_agent == self._ip3:
+                if  home_agent == self._ip2:
                     print("\nForeign agent received registration reply with the correct Home Agent IP address %s as expected\n" % home_agent)
                     state.append(True)
                 else:

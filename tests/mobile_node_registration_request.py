@@ -30,8 +30,8 @@ class mn_reg_req():
 
  
     def step_1(self):
-     
-        subprocess.run(["rm Results/reg_req.pcap"], shell=True, capture_output=False)
+        print("aaaaaaaaaaaaa")
+        subprocess.run(["rm Results/mn_reg_req.pcap"], shell=True, capture_output=False)
 
         print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
 
@@ -48,6 +48,7 @@ class mn_reg_req():
         except Exception as err:
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
+        print("bbbbbbbbbbbbb")
     
         time.sleep(5)
 
@@ -69,7 +70,10 @@ class mn_reg_req():
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
 
+        print("eeeeeeeeeeeeee")
 
+        state = False
+        
         state = self.check_packet_header()
 
         if state is True:
@@ -88,6 +92,9 @@ class mn_reg_req():
         """
         state = list()
 
+        print("fffffffffffffffffffffff")
+
+
  
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
@@ -104,6 +111,7 @@ class mn_reg_req():
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip1, err))
              return False
+        print("qqqqqqqqqqqqqqqqqqqqqqqqqqqq")
 
         ssh = self.createSSHClient(self._ip1, 22, self._user_name, self._pwd)
         scp = SCPClient(ssh.get_transport())
