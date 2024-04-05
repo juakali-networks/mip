@@ -499,9 +499,10 @@ registration_request(int lft, int sockfd)
 			rreq->reg_req_type = ICMP_REGREQUEST;
 			rreq->flags = 0;
 			rreq->reg_req_lifetime = htons(lft);
- 			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-		    rreq->home_addr = inet_addr("192.168.0.85");	
-			rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+ 			rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+		    // rreq->home_addr = inet_addr("192.168.0.85");	
+			rreq-> gw_fa_addr = inet_addr("192.168.0.85");
+			// rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			if (fa_reg_request)
 				rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			if (mn_reg_request)
