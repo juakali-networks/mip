@@ -14,8 +14,8 @@
 /* Types for Router Discovery*/
 #define ICMP_ROUTERSOLICIT          10       /* ICMP Router Solicitation  */
 #define ICMP_ROUTERADVERT           9        /* ICMP Router Advertisement */
-#define ICMP_REGREQUEST           1         /* ICMP Registration Request */
-#define ICMP_REGREPLY           36        /* ICMP Registration Reply */
+#define ICMP_REGREQUEST           1         /* MIP Registration Request */
+#define ICMP_REGREPLY           3        /* MIP Registration Reply */
 
 
 /* Codes for Router Discovery*/
@@ -59,7 +59,9 @@ int reg_request;
 int max_adv_int = MAX_ADV_INT;
 int min_adv_int;
 int lifetime;
-int foreign_agent;
+int fa_reg_request;
+int fa_reg_reply;
+int ha_reg_reply;
 int sockfd;
 
 int initial_advert_interval = MAX_INITIAL_ADVERT_INTERVAL;
@@ -220,6 +222,17 @@ struct reg_req
     __be32 home_addr;
     __be32 gw_fa_addr;
     __be32 care_of_addr;
+    __be64 reg_req_id;
+  };
+
+/* Registration Request */
+struct reg_rep
+  {
+    __u8 reg_rep_type;
+    __u8 code;
+    __be16 reg_rep_lifetime;
+    __be32 home_addr;
+    __be32 gw_fa_addr;
     __be64 reg_req_id;
   };
 

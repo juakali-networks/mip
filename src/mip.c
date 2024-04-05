@@ -76,7 +76,13 @@ int main(int argc, char **argv)
 				agent_advert = 1;
 				break;
 			case 'n':
-				foreign_agent = 1;
+				fa_reg_request = 1;
+				break;
+			case 'p':
+				fa_reg_reply = 1;
+				break;
+			case 'q':
+				ha_reg_reply = 1;
 				break;
 			case 'r':
 				reg_request = 1;
@@ -197,7 +203,7 @@ next:
             registration_request(60, sockfd);
 			};
 
-	if (foreign_agent){
+	if (fa_reg_request){
 		
 		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
      			logperror("socket failed");
@@ -205,6 +211,16 @@ next:
     	 	}
 	
             registration_request(60, sockfd);
+			};
+
+	if (ha_reg_reply){
+		
+		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+     			logperror("socket failed");
+			exit(5);
+    	 	}
+	
+            registration_reply(60, sockfd);
 			};
 
 		/*			if ((socketfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
@@ -476,9 +492,9 @@ registration_request(int lft, int sockfd)
  			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 		    rreq->home_addr = inet_addr("192.168.0.85");	
 			rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-			if (foreign_agent)
+			if (fa_reg_request)
 				rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			if (!foreign_agent)
+			if (!fa_reg_request)
 				rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			rreq->reg_req_id = get_time();
 
@@ -504,6 +520,87 @@ registration_request(int lft, int sockfd)
 	}
 
 }
+
+
+*
+ *  M O B I L E   R E G I S T R A T I O N     R E Q U E S T
+ *
+ * Compose and transmit an ICMP MOBILE REGISTRATION REQUEST  packet.
+ * The IP packet will be added on by the kernel.
+*/
+
+void
+registration_reply(int lft, int sockfd)
+{
+  	static unsigned char outpack[MAXPACKET];
+	struct sockaddr_in addr;
+    int packetlen, i;
+	int sock;
+	struct iphdr *ip;
+    char buff[PCKT_LEN];
+
+	memset(buff, 0, PCKT_LEN);
+
+	ip = (struct iphdr *)buff;
+
+	struct reg_req  *rreq = (struct reg_req *)buff;
+
+	while (read(sockfd, buff, PCKT_LEN)) {
+
+
+			// create a raw socket with UDP protocol
+
+			sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		    		
+
+	  		if (sock < 0) {
+    			perror("socket() error");
+    			exit(2);
+  			}
+			logmsg(LOG_INFO, "Source address %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			logmsg(LOG_INFO, "Destination address %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+
+
+      		addr.sin_family = AF_INET;
+      		addr.sin_port = htons(434);
+      		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			//addr.sin_addr.s_addr = INADDR_ANY;
+			if (ha_reg_reply)
+				addr.sin_addr.s_addr = inet_addr("192.168.0.34");
+			if (fa_reg_reply)
+				addr.sin_addr.s_addr = inet_addr("192.168.0.85");
+
+			rrep->reg_rep_type = ICMP_REGREQUEST;
+			rrep->flags = 0;
+			rrep->reg_rep_lifetime = htons(lft);
+ 			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+		    rrep->home_addr = inet_addr("192.168.0.85");	
+			rrep-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+			rrep->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			rrep->reg_rep_id = get_time();
+
+	  		packetlen = sizeof(struct reg_req);
+
+      		if (sendto(sock, buff, packetlen, 0,
+             	(struct sockaddr *)&addr, sizeof(addr)) < 0)
+         		{
+                 	perror("sendto()");
+                 	exit(3);
+        		}
+
+			close(sock);
+
+      		}
+			
+      		close(socketfd);
+		if( i < 0 || i != packetlen )  {
+                	if( i<0 ) {
+                    	logperror("registration_reply:sendto");
+               	 }
+                	logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n", sendaddress, packetlen, i);
+	}
+
+}
+
 
 int sendmcast(int socket, char *packet, int packetlen, struct sockaddr_in *sin)
 {
