@@ -34,9 +34,9 @@ class ha_reg_req():
      
         subprocess.run(["rm Results/reg_req.pcap"], shell=True, capture_output=False)
 
-        print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
+        # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
 
-        vm_user = "%s@%s" % (self._user_name, self._ip2)
+        vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
             ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
@@ -47,12 +47,12 @@ class ha_reg_req():
             ma_process.kill()
         
         except Exception as err:
-            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
+            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip3, err))
             return False
     
         time.sleep(5)
 
-        print("\nForeign Agent sending Agent Advertisement multicast packet\n")
+        # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
        
         vm_user = "%s@%s" % (self._user_name, self._ip1)
     
@@ -69,6 +69,31 @@ class ha_reg_req():
         except Exception as err:
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
+
+        time.sleep(5)
+
+
+
+        print("\nForeign Agent sending Agent Advertisement multicast packet\n")
+        
+        vm_user = "%s@%s" % (self._user_name, self._ip1)
+
+        try:
+
+            fa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
+                                    stdin=subprocess.PIPE, 
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+            
+            fa_process.communicate()
+            fa_process.kill()
+            
+        except Exception as err:
+            print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
+            return False
+
+        print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
 
 
         state = self.check_packet_header()

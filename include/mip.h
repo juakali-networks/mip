@@ -59,6 +59,7 @@ int reg_request;
 int max_adv_int = MAX_ADV_INT;
 int min_adv_int;
 int lifetime;
+int foreign_agent;
 int sockfd;
 
 int initial_advert_interval = MAX_INITIAL_ADVERT_INTERVAL;
