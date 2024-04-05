@@ -19,7 +19,7 @@ class mn_reg_req():
 
         self._ip1 = "192.168.0.34"
         self._ip2 = "192.168.0.240"
-        self._ip3 = "192.168.0.85"
+        self._ip3 = "192.168.0.237"
   
         self._rreq_msg_type = 1
         self._dest_port = "434"
@@ -76,6 +76,8 @@ class mn_reg_req():
             print("Test Passed")
         else:
             print("Test Failed")
+
+        self.clean_up()
 
         return state
 
@@ -198,20 +200,28 @@ class mn_reg_req():
         client.connect(server, port, user, password)
         return client
 
-    def clean_up(self, ma_process, aa_process):
+    def clean_up(self):
         """
-        Restore the VMs to there original state
+        Reboot VMs
         """
-        try:
-            aa_process.kill()
-        except Exception as err:
-            print("Failed to kill process  with error %s" % err)
+        vms = [self._ip1, self._ip2, self._ip3]
 
+        for ip in vms:
+            try:
+                vm_user = "%s@%s" % (self._user_name, ip)
+                vm_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  reboot\n" % self._pwd],
+                                        stdin=subprocess.PIPE,
+                                        stdout = subprocess.PIPE,
+                                        universal_newlines=True,
+                                    bufsize=0)
 
-        try:
-            ma_process.kill()
-        except Exception as err:
-            print("Failed to kill process  with error %s" % err)
+                vm_process.communicate()
+                vm_process.kill()
+                print("Rebooted VM with IP %s" % ip)
+            except Exception as err:
+                print("Failed to reboot VM with IP %s  with error %s" % (ip, err))
+
+        time.sleep(30)
 
         return True
 
