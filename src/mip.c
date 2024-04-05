@@ -75,6 +75,9 @@ int main(int argc, char **argv)
 			case 'm':
 				agent_advert = 1;
 				break;
+			case 'n':
+				foreign_agent = 1;
+				break;
 			case 'r':
 				reg_request = 1;
 				break;
@@ -194,7 +197,7 @@ next:
             registration_request(60, sockfd);
 			};
 
-	/*if (agent_advert){
+	if (foreign_agent){
 		
 		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
      			logperror("socket failed");
@@ -203,7 +206,7 @@ next:
 	
             registration_request(60, sockfd);
 			};
-*/
+
 		/*			if ((socketfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
      			logperror("socket failed");
 			exit(5);
@@ -464,7 +467,7 @@ registration_request(int lft, int sockfd)
 			//addr.sin_addr.s_addr = INADDR_ANY;
 			if (reg_request)
 				addr.sin_addr.s_addr = inet_addr("192.168.0.34");
-			if (agent_advert)
+			if (foreign_agent)
 				addr.sin_addr.s_addr = inet_addr("192.168.0.85");
 
 			rreq->reg_req_type = ICMP_REGREQUEST;
@@ -473,7 +476,10 @@ registration_request(int lft, int sockfd)
  			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 		    rreq->home_addr = inet_addr("192.168.0.85");	
 			rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-			rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			if (foreign_agent)
+				rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			if (!foreign_agent)
+				rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			rreq->reg_req_id = get_time();
 
 	  		packetlen = sizeof(struct reg_req);
