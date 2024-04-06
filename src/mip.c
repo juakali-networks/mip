@@ -1611,7 +1611,7 @@ struct timespec tms;
     struct iphdr *ip_header = (struct iphdr *)buff;
     struct icmphdr *icmp_header = (struct icmphdr *)(buff + sizeof(struct iphdr));
 
-	logmsg(LOG_INFO, "ICMP Router Advertisement message : %d\n", icmp_header->type);
+	logmsg(LOG_INFO, "ICMP Router Advertisement message type: %d\n", icmp_header->type);
 
     // Check if it's an ICMP Agent Advertisement message
     if (icmp_header->type == ICMP_ROUTERADVERT) {

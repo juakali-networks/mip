@@ -19,13 +19,23 @@ class setup_vm():
  
  
     def step_1(self, vm_ip):
-     
+
 
         print("\nConnecting to Virtual Machine with IP address %s\n" % vm_ip)
        
         vm_user = "%s@%s" % (self._user_name, vm_ip)
 
-        cmd = "cd mip && git pull"
+        cmd = "echo '%s' | sudo -S rm -r mip" % self._pwd
+        vm_process = subprocess.Popen(['ssh','-tt', vm_user, "%s" % cmd],
+                                    stdin=subprocess.PIPE, 
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+        results_output, results_error = vm_process.communicate()
+        results_output_bytes = bytes(results_output, 'ascii')    
+        print(results_output_bytes)  
+
+        cmd = "git clone https://github.com/juakali-networks/mip.git"
         vm_process = subprocess.Popen(['ssh','-tt', vm_user, "%s" % cmd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
