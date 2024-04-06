@@ -197,18 +197,8 @@ next:
 		forever = 1;
 	}
 
-	if (fa_reg_request){
-		
-		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-     			logperror("socket failed");
-			exit(5);
-    	 	}
-	
-            registration_request(60, sockfd);
-			};
 
-	if (mn_reg_request){
-		
+	if (mn_reg_request || fa_reg_request){
 		
 		logmsg(LOG_INFO, "Listening for ICMP echo messages...\n");
 
@@ -217,15 +207,15 @@ next:
 			exit(5);
     	 	}
 
-    while (1) {
-        ssize_t bytes_received = recv(sockfd, buff, BUFSIZE, 0);
-        if (bytes_received == -1) {
-            perror("recv");
-            close(sockfd);
-            exit(EXIT_FAILURE);
-        }
+    	while (1) {
+        	ssize_t bytes_received = recv(sockfd, buff, BUFSIZE, 0);
+        	if (bytes_received == -1) {
+            	perror("recv");
+            	close(sockfd);
+            	exit(EXIT_FAILURE);
+        	}
 	
-        process_packet(sockfd, buff, bytes_received);
+        	process_mn_rreg_packet(sockfd, buff, bytes_received);
     }
 
 	
@@ -1607,7 +1597,7 @@ struct timespec tms;
     return micros;
  }
 
- void process_packet(int sockfd, unsigned char *buff, int size) {
+ void process_mn_rreg_packet(int sockfd, unsigned char *buff, int size) {
     struct iphdr *ip_header = (struct iphdr *)buff;
     struct icmphdr *icmp_header = (struct icmphdr *)(buff + sizeof(struct iphdr));
 
