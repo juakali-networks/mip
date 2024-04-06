@@ -500,17 +500,13 @@ registration_request(int lft, int sockfd)
 			rreq->flags = 0;
 			rreq->reg_req_lifetime = htons(lft);
  			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-			if (mn_reg_request)
-		    	rreq->home_addr = inet_addr("192.168.0.240");	
-				rreq-> gw_fa_addr = inet_addr("192.168.0.85");
-			if (fa_reg_request)
-		    	rreq->home_addr = inet_addr("192.168.0.34");	
-				rreq-> gw_fa_addr = inet_addr("192.168.0.85");
-			// rreq-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-			if (fa_reg_request)
-				rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			if (mn_reg_request)
-				rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			// Home address is the the IP address of the Mobile Node
+		    rreq->home_addr = inet_addr("192.168.0.240");	
+			// Home Agent: The IP address of the mobile node's home agent.
+			rreq-> home_agent = inet_addr("192.168.0.85");	
+             // Care-of Address.  address for the end of the tunnel.
+			rreq->care_of_addr = inet_addr("192.168.0.85");
+
 			rreq->reg_req_id = get_time();
 
 	  		packetlen = sizeof(struct reg_req);
@@ -574,8 +570,12 @@ registration_reply(int lft, int sockfd)
 			logmsg(LOG_INFO, "Sourcessss address %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			logmsg(LOG_INFO, "Destinationnnnnn address %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
-
+			// Source Address: Typically copied from the Destination Address of the Registration Request to which the agent is replying. 
+			// Destination Address: Copied from the source address of the Registration Request to which the agent is replying.
       		addr.sin_family = AF_INET;
+			// Source Port: Copied from the UDP Destination Port of the corresponding Registration Request.
+			// Destination Port_: Copied from the source port of the corresponding Registration Request 
+
       		addr.sin_port = htons(434);
       		// addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			//addr.sin_addr.s_addr = INADDR_ANY;
@@ -588,8 +588,10 @@ registration_reply(int lft, int sockfd)
 			rrep->code = 0;
 			rrep->reg_rep_lifetime = htons(lft);
  			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-		    rrep->home_addr = inet_addr("192.168.0.85");	
-			rrep-> gw_fa_addr = inet_addr("192.168.0.34");	
+			// Home address: The IP address of the Mobile Node
+		    rrep->home_addr = inet_addr("192.168.0.240");	
+			// Home Agent: The IP address of the mobile node's home agent.
+			rrep-> home_agent = inet_addr("192.168.0.85");	
 			// rrep-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			rrep->reg_rep_id = get_time();
 

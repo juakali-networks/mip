@@ -222,7 +222,7 @@ struct reg_req
     __u8 flags;
     __be16 reg_req_lifetime;
     __be32 home_addr;
-    __be32 gw_fa_addr;
+    __be32 home_agent;
     __be32 care_of_addr;
     __be64 reg_req_id;
   };
@@ -234,7 +234,7 @@ struct reg_rep
     __u8 code;
     __be16 reg_rep_lifetime;
     __be32 home_addr;
-    __be32 gw_fa_addr;
+    __be32 home_agent;
     __be64 reg_rep_id;
   };
 
