@@ -116,7 +116,7 @@ class ha_reg_req():
         else:
             print("Test Failed")
         
-        # self.clean_up()
+        self.clean_up()
 
         return state
 
@@ -142,7 +142,6 @@ class ha_reg_req():
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip1, err))
              return False
-        print("hhhhhhhhhhhhhh")
 
 
         ssh = self.createSSHClient(self._ip1, 22, self._user_name, self._pwd)
@@ -172,7 +171,7 @@ class ha_reg_req():
                 dst_port = packet.layers[2].dstport
                 print("Destination Port %s" % dst_port)
                 mip_type = int(packet.layers[3].type, 16)
-                print("Mobile IP Type %s" % type(mip_type))
+                print("Mobile IP Code %s" % mip_type)
                 home_addr = packet.layers[3].homeaddr
                 print("Home Address %s" % home_addr)
                 home_agent = packet.layers[3].haaddr
@@ -200,18 +199,18 @@ class ha_reg_req():
                     print("\nRegistration reply message is sent with wrong message type number %s and not type number %s --Test Failed\n" % (mip_type, self._rrep_msg_type))
                     state.append(False)
 
-                if  home_addr == self._ip2:
+                if  home_addr == self._ip3:
                     print("\nForeign agent received registration with the correct Home address IP address %s as expected\n" % home_addr)
                     state.append(True)
                 else:
-                    print("\nRegistration reply message is sent to the Foreign agent with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (home_addr, self._ip2))
+                    print("\nRegistration reply message is sent to the Foreign agent with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (home_addr, self._ip3))
                     state.append(False)
 
                 if  home_agent == self._ip2:
                     print("\nForeign agent received registration reply with the correct Home Agent IP address %s as expected\n" % home_agent)
                     state.append(True)
                 else:
-                    print("\nRegistration reply message is sent to the Foreign agent with the wrong Home Agent IP %s, Not the expected address %s -- Test Failed\n" % (home_agent, self._ip3))
+                    print("\nRegistration reply message is sent to the Foreign agent with the wrong Home Agent IP %s, Not the expected address %s -- Test Failed\n" % (home_agent, self._ip2))
                     state.append(False)
 
 

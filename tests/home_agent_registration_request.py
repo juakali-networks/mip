@@ -32,7 +32,7 @@ class ha_reg_req():
  
     def step_1(self):
      
-        subprocess.run(["rm Results/reg_req.pcap"], shell=True, capture_output=False)
+        subprocess.run(["rm Results/ha_reg_req.pcap"], shell=True, capture_output=False)
 
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
 
@@ -71,8 +71,6 @@ class ha_reg_req():
             return False
 
         time.sleep(5)
-
-
 
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
         
@@ -193,7 +191,7 @@ class ha_reg_req():
                     print("\nForeign agent received registration with the correct Care of IP address %s as expected\n" % care_off_addr)
                     state.append(True)
                 else:
-                    print("\nRegistration request message is sent to the Foreign agent with the wrong care of address IPP %s, Not the expected address %s -- Test Failed\n" % (self._ip2, care_off_addr))
+                    print("\nRegistration request message is sent to the Foreign agent with the wrong care of address IPP %s, Not the expected address %s -- Test Failed\n" % (self._ip1, care_off_addr))
                     state.append(False)
 
 
