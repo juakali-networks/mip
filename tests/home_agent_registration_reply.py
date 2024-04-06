@@ -199,11 +199,11 @@ class ha_reg_req():
                     print("\nRegistration reply message is sent with wrong message type number %s and not type number %s --Test Failed\n" % (mip_type, self._rrep_msg_type))
                     state.append(False)
 
-                if  home_addr == self._ip3:
+                if  home_addr == self._ip2:
                     print("\nForeign agent received registration with the correct Home address IP address %s as expected\n" % home_addr)
                     state.append(True)
                 else:
-                    print("\nRegistration reply message is sent to the Foreign agent with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (home_addr, self._ip3))
+                    print("\nRegistration reply message is sent to the Foreign agent with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (home_addr, self._ip2))
                     state.append(False)
 
                 if  home_agent == self._ip3:
