@@ -582,7 +582,7 @@ registration_reply(int lft, int sockfd)
 			if (ha_reg_reply)
 				addr.sin_addr.s_addr = inet_addr("192.168.0.34");
 			if (fa_reg_reply)
-				addr.sin_addr.s_addr = inet_addr("192.168.0.85");
+				addr.sin_addr.s_addr = inet_addr("192.168.0.240");
 
 			rrep->reg_rep_type = ICMP_REGREPLY;
 			rrep->code = 0;

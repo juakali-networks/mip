@@ -46,7 +46,7 @@ class ha_reg_req():
             ma_process.kill()
         
         except Exception as err:
-            print("Connecting to Foreign Agent VM with IP %s failed with error %s" % (self._ip3, err))
+            print("Connecting to Foreign Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
     
         time.sleep(5)
@@ -67,7 +67,7 @@ class ha_reg_req():
     
         time.sleep(5)
 
-        vm_user = "%s@%s" % (self._user_name, self._ip3)
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
         try:
             ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
@@ -78,7 +78,7 @@ class ha_reg_req():
             ma_process.kill()
         
         except Exception as err:
-            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip3, err))
+            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
     
         time.sleep(5)
