@@ -24,7 +24,6 @@ class ha_reg_req():
   
         self._rrep_msg_type = 3
         self._dest_port = "434"
-        self._dest_addr = self._ip1
     
         self._file = 'fa_reg_rep.pcap'
         self._local_path = '/home/dancer/mip/tests/Results'
@@ -196,11 +195,11 @@ class ha_reg_req():
                 print("Home Agent %s" % home_agent)
 
                 
-                if dst_addr == self._dest_addr:
+                if dst_addr == self._ip2:
                     print("\nMobile Node received registration reply message from Foreign Agent on its IP address %s as expected\n" % dst_addr)
                     state.append(True)
                 else:
-                    print("\nRegistration reply message is Not sent from the Foreign agent IP address %s but to another destination address %s -- Test Failed\n"% (self._dest_addr, dst_addr))
+                    print("\nRegistration reply message is Not sent from the Foreign agent IP address %s but to another destination address %s -- Test Failed\n"% (self._ip2, dst_addr))
                     state.append(False)
 
                 if dst_port == self._dest_port:
@@ -217,18 +216,18 @@ class ha_reg_req():
                     print("\nRegistration reply message is sent with wrong message type number %s and not type number %s --Test Failed\n" % (mip_type, self._rrep_msg_type))
                     state.append(False)
 
-                if  home_addr == self._ip2:
+                if  home_addr == self._ip3:
                     print("\nMobile Node received registration reply with the correct Home address IP address %s as expected\n" % home_addr)
                     state.append(True)
                 else:
-                    print("\nRegistration reply message is sent to the Mobile Node with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (home_addr, self._ip2))
+                    print("\nRegistration reply message is sent to the Mobile Node with the wrong Home Address IP %s, Not the expected address %s -- Test Failed\n" % (home_addr, self._ip3))
                     state.append(False)
 
-                if  home_agent == self._ip3:
+                if  home_agent == self._ip2:
                     print("\nMobile Node received registration reply with the correct Home Agent IP address %s as expected\n" % home_agent)
                     state.append(True)
                 else:
-                    print("\nRegistration reply message is sent to the Mobile Node with the wrong Home Agent IP %s, Not the expected address %s -- Test Failed\n" % (home_agent, self._ip3))
+                    print("\nRegistration reply message is sent to the Mobile Node with the wrong Home Agent IP %s, Not the expected address %s -- Test Failed\n" % (home_agent, self._ip2))
                     state.append(False)
 
 

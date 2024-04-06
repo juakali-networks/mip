@@ -191,7 +191,7 @@ class ha_reg_req():
                     print("\nForeign agent received registration with the correct Care of IP address %s as expected\n" % care_off_addr)
                     state.append(True)
                 else:
-                    print("\nRegistration request message is sent to the Foreign agent with the wrong care of address IPP %s, Not the expected address %s -- Test Failed\n" % (self._ip1, care_off_addr))
+                    print("\nRegistration request message is sent to the Foreign agent with the wrong care of address IP %s, Not the expected address %s -- Test Failed\n" % (self._ip1, care_off_addr))
                     state.append(False)
 
 
