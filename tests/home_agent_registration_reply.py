@@ -69,7 +69,7 @@ class ha_reg_req():
 
         # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
        
-        vm_user = "%s@%s" % (self._user_name, self._ip1)
+        vm_user = "%s@%s" % (self._user_name, self._ip3)
     
         try:
             aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
@@ -82,7 +82,7 @@ class ha_reg_req():
             aa_process.kill()
             
         except Exception as err:
-            print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
+            print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip3, err))
             return False
 
         time.sleep(5)

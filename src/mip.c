@@ -580,7 +580,7 @@ registration_reply(int lft, int sockfd)
       		addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			//addr.sin_addr.s_addr = INADDR_ANY;
 			if (ha_reg_reply)
-				addr.sin_addr.s_addr = inet_addr("192.168.0.240");
+				addr.sin_addr.s_addr = inet_addr("192.168.0.34");
 			if (fa_reg_reply)
 				addr.sin_addr.s_addr = inet_addr("192.168.0.85");
 
