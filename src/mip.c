@@ -505,7 +505,7 @@ registration_request(int lft, int sockfd)
 			// Home Agent: The IP address of the mobile node's home agent.
 			rreq-> home_agent = inet_addr("192.168.0.85");	
              // Care-of Address.  address for the end of the tunnel.
-			rreq->care_of_addr = inet_addr("192.168.0.85");
+			rreq->care_of_addr = inet_addr("192.168.0.34");
 
 			rreq->reg_req_id = get_time();
 
