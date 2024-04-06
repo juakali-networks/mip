@@ -26,13 +26,13 @@ class ha_reg_req():
         self._dest_port = "434"
         self._dest_addr = self._ip1
     
-        self._file = 'ha_reg_req.pcap'
+        self._file = 'fa_reg_rep.pcap'
         self._local_path = '/home/dancer/mip/tests/Results'
 
  
     def step_1(self):
      
-        subprocess.run(["rm Results/ha_reg_rep.pcap"], shell=True, capture_output=False)
+        subprocess.run(["rm Results/fa_reg_rep.pcap"], shell=True, capture_output=False)
 
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
         vm_user = "%s@%s" % (self._user_name, self._ip1)
@@ -146,10 +146,10 @@ class ha_reg_req():
         state = list()
 
  
-        vm_user = "%s@%s" % (self._user_name, self._ip1)
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w ha_reg_rep.pcap\n" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 src 192.168.0.34 and port 434 -c 1 -w fa_reg_rep.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -159,17 +159,17 @@ class ha_reg_req():
             ma_process.kill()
 
         except Exception as err:
-             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip1, err))
+             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
              return False
 
-        ssh = self.createSSHClient(self._ip1, 22, self._user_name, self._pwd)
+        ssh = self.createSSHClient(self._ip2, 22, self._user_name, self._pwd)
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._file, local_path=self._local_path)
         scp.close()
 
-        vm_user = "%s@%s" % (self._user_name, self._ip3)
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
 
-        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S rm ha_reg_rep.pcap\n" % self._pwd],
+        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S rm fa_reg_rep.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -179,7 +179,7 @@ class ha_reg_req():
         ma_process.kill()
 
         # read pcap file and read packet fields
-        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/ha_reg_rep.pcap')
+        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/fa_reg_rep.pcap')
         
         try:
             for packet in pcap_file:

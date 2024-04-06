@@ -589,7 +589,8 @@ registration_reply(int lft, int sockfd)
 			rrep->reg_rep_lifetime = htons(lft);
  			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 		    rrep->home_addr = inet_addr("192.168.0.85");	
-			rrep-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+			rrep-> gw_fa_addr = inet_addr("192.168.0.34");	
+			// rrep-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			rrep->reg_rep_id = get_time();
 
 	  		packetlen = sizeof(struct reg_req);
