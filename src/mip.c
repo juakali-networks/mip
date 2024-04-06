@@ -32,6 +32,9 @@
 #include <time.h>
 
 
+#define BUFSIZE 8192
+
+
 /*
  * 			M A I N
  */
@@ -47,6 +50,7 @@ int main(int argc, char **argv)
 	struct sockaddr_in joinaddr;
 	sigset_t sset, sset_empty;
 	char buff[PCKT_LEN];
+	char buffer[BUFSIZE];
 
 #ifdef RDISC_SERVER
 	int val;
@@ -205,6 +209,31 @@ next:
 
 	if (mn_reg_request){
 		
+		
+		logmsg(LOG_INFO, "Listening for ICMP echo messages...\n");
+
+		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+     			logperror("socket failed");
+			exit(5);
+    	 	}
+
+    while (1) {
+        ssize_t bytes_received = recv(sockfd, buff, BUFSIZE, 0);
+        if (bytes_received == -1) {
+            perror("recv");
+            close(sockfd);
+            exit(EXIT_FAILURE);
+        }
+	
+        process_packet(sockfd, buff, bytes_received);
+    }
+
+	
+            // registration_request(60, sockfd);
+			};
+
+/*	if (mn_reg_request){
+		
 		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
      			logperror("socket failed");
 			exit(5);
@@ -212,6 +241,7 @@ next:
 	
             registration_request(60, sockfd);
 			};
+*/
 
 	if (ha_reg_reply){
 		
@@ -232,27 +262,6 @@ next:
 	
             registration_reply(60, sockfd);
 			};
-
-		/*			if ((socketfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
-     			logperror("socket failed");
-			exit(5);
-    	 	}
-*/
-//	if (agent_advert){
-
-	/* 	if ((sock_check = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
-     			logperror("socket failed");
-				logmsg(LOG_INFO, "ffffffffffffffffff:\n");
-			exit(5);
-    	 	}
-			logmsg(LOG_INFO, "mmmmmmmmmmmmmmmmmmmmm:\n");
-
-			while (read(sock_check, buff, PCKT_LEN)) {
-            registration_request(60);
-			logmsg(LOG_INFO, "ggggggggggggggggggggggggggggggg:\n");
-
-		}*/
-	//}
 
 
 	memset( (char *)&whereto, 0, sizeof(struct sockaddr_in) );
@@ -483,8 +492,8 @@ registration_request(int lft, int sockfd)
     			perror("socket() error");
     			exit(2);
   			}
-			logmsg(LOG_INFO, "Source address %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			logmsg(LOG_INFO, "Destination address %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+			logmsg(LOG_INFO, "Source address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
 
       		addr.sin_family = AF_INET;
@@ -567,8 +576,8 @@ registration_reply(int lft, int sockfd)
     			perror("socket() error");
     			exit(2);
   			}
-			logmsg(LOG_INFO, "Sourcessss address %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			logmsg(LOG_INFO, "Destinationnnnnn address %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+			logmsg(LOG_INFO, "Sources address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+			logmsg(LOG_INFO, "Destination address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
 			// Source Address: Typically copied from the Destination Address of the Registration Request to which the agent is replying. 
 			// Destination Address: Copied from the source address of the Registration Request to which the agent is replying.
@@ -1597,4 +1606,21 @@ struct timespec tms;
 
     return micros;
  }
+
+ void process_packet(int sockfd, unsigned char *buff, int size) {
+    struct iphdr *ip_header = (struct iphdr *)buff;
+    struct icmphdr *icmp_header = (struct icmphdr *)(buff + sizeof(struct iphdr));
+
+	logmsg(LOG_INFO, "ICMP Router Advertisement message : %d\n", icmp_header->type);
+
+    // Check if it's an ICMP Agent Advertisement message
+    if (icmp_header->type == ICMP_ROUTERADVERT) {
+
+        // Call registration request function
+		
+		registration_request(60, sockfd);
+		close(sockfd);
+    }
+}
+
 

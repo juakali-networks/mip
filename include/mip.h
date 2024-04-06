@@ -86,6 +86,7 @@ static void solicitor(struct sockaddr_in *sin);
 static void advertise(struct sockaddr_in *sin, int lft);
 static void registration_request(int lft, int sockfd);
 static void registration_reply(int lft, int sockfd);
+void process_packet(int sockfd, unsigned char *buff, int size); 
 
 int get_time();
 
