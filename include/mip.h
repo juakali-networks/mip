@@ -42,6 +42,8 @@
 
 #define MAXIFS 32
 
+#define MIP_UDP_PORT 434
+
 /* Common variables */
 int verbose = 0;
 int debug = 0;
@@ -87,6 +89,8 @@ static void advertise(struct sockaddr_in *sin, int lft);
 static void registration_request(int lft, int sockfd);
 static void registration_reply(int lft, int sockfd);
 void process_mn_rreg_packet(int sockfd, unsigned char *buff, int size); 
+void process_fa_rreg_packet(int sockfd); 
+
 
 int get_time();
 
