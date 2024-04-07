@@ -35,7 +35,7 @@ class ha_reg_req():
         subprocess.run(["rm Results/ha_reg_req.pcap"], shell=True, capture_output=False)
 
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
-
+        print("aaaaaaaaaaaaaaaaaaaa")
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
             ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
@@ -51,6 +51,7 @@ class ha_reg_req():
             return False
     
         time.sleep(5)
+        print("bbbbbbbbbbbbbbbbbbbbbbbbbb")
 
         # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
        
@@ -71,6 +72,8 @@ class ha_reg_req():
             return False
 
         time.sleep(5)
+        print("cccccccccccccccccccccccccc")
+
 
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
         
@@ -92,6 +95,8 @@ class ha_reg_req():
             return False
 
         print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
+        print("eeeeeeeeeeeeeeeeeeeeeeeee")
+
 
 
         state = self.check_packet_header()
@@ -112,7 +117,8 @@ class ha_reg_req():
         """
         state = list()
 
- 
+        print("ffffffffffffffffffffffffffff")
+
         vm_user = "%s@%s" % (self._user_name, self._ip3)
 
         try:
@@ -128,6 +134,9 @@ class ha_reg_req():
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip3, err))
              return False
+
+        print("ppppppppppppppppp")
+
 
         ssh = self.createSSHClient(self._ip3, 22, self._user_name, self._pwd)
         scp = SCPClient(ssh.get_transport())
