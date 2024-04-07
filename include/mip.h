@@ -88,8 +88,10 @@ static void solicitor(struct sockaddr_in *sin);
 static void advertise(struct sockaddr_in *sin, int lft);
 static void registration_request(int lft, int sockfd);
 static void registration_reply(int lft, int sockfd);
-void process_mn_rreg_packet(int sockfd, unsigned char *buff, int size); 
-void process_fa_rreg_packet(int sockfd); 
+void process_mn_rreg_packet(int sockfd, unsigned char *buff, int size);
+void process_fa_rreg_packet(int socketfd);
+
+
 
 
 int get_time();

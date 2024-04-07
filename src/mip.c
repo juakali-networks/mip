@@ -197,26 +197,18 @@ next:
 		forever = 1;
 	}
 
-	if (fa_reg_request){
-		
-		logmsg(LOG_INFO, "Listening for ICMP echo messages...\n");
+        if (fa_reg_request){
 
-		if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-     			logperror("socket failed");
-			exit(5);
-    	 	}
+                logmsg(LOG_INFO, "Listening for RREQ UDP messages on port 434...\n");
 
-    	while (1) {
-        	ssize_t bytes_received = recv(sockfd, buff, BUFSIZE, 0);
-        	if (bytes_received == -1) {
-            	perror("recv");
-            	close(sockfd);
-            	exit(EXIT_FAILURE);
-        	}
-	
-        	process_fa_rreg_packet(sockfd);
-    }
-		};
+                if ((socketfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+                        logperror("socket failed");
+                        exit(5);
+                }
+
+                process_fa_rreg_packet(socketfd);
+};
+
 
 	if (mn_reg_request){
 		
@@ -511,7 +503,7 @@ registration_request(int lft, int sockfd)
       		// addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 			//addr.sin_addr.s_addr = INADDR_ANY;
 			if (fa_reg_request)
-				addr.sin_addr.s_addr = inet_addr("192.168.0.240");
+				addr.sin_addr.s_addr = inet_addr("192.168.0.85");
 			if (mn_reg_request)
 				addr.sin_addr.s_addr = inet_addr("192.168.0.34");
 
@@ -1633,47 +1625,49 @@ struct timespec tms;
     }
 }
 
- void process_fa_rreg_packet(int sockfd) {
- 	struct sockaddr_in server_addr, client_addr, response_addr;
+ void process_fa_rreg_packet(int socketfd) {
+        struct sockaddr_in server_addr, client_addr, response_addr;
     socklen_t client_len;
     char buf[BUFSIZE];
 
 
- 	// Prepare server address
+        // Prepare server address
     memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(MIP_UDP_PORT);
 
     // Bind the socket to the specified port
-    if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
+    if (bind(socketfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
         perror("bind");
-        close(sockfd);
-        exit(EXIT_FAILURE);
+ 
     }
 
-   logmsg(LOG_INFO, "Listening for UDP packets on port %d...\n", MIP_UDP_PORT);
 
     while (1) {
         // Receive a packet
         client_len = sizeof(client_addr);
-        ssize_t bytes_received = recvfrom(sockfd, buf, BUFSIZE, 0,
+        ssize_t bytes_received = recvfrom(socketfd, buf, BUFSIZE, 0,
                                           (struct sockaddr *)&client_addr, &client_len);
+
         if (bytes_received == -1) {
-            perror("recvfrom");
-            close(sockfd);
+
+           perror("recvfrom");
+
+            close(socketfd);
             exit(EXIT_FAILURE);
         }
 
         buf[bytes_received] = '\0';
-		logmsg(LOG_INFO, "Received packet from %s:%d: %s\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port), buf);
 
 
+        registration_request(60, socketfd);
 
-}
-		registration_request(60, sockfd);
-		close(sockfd);
+        close(socketfd);
 
 }
+
+}
+
 
 

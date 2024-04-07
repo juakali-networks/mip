@@ -30,7 +30,7 @@ mv scp.py scp
 from ndsatcom.common.ssh.Scp import Scp
 self.__scp = Scp(host=self.__skywanidu_ip, port=int(self.__config.get(self.__device, "SSH_Port")),
 
-scp lubuntu@192.168.0.85:/home/lubuntu/mip/src/ffff.pcap /home/dancer
+scp lubuntu@192.168.0.34:/home/lubuntu/mip/src/kkkk.pcap/home/dancer
 
 
 clear syslog
