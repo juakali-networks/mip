@@ -207,7 +207,7 @@ next:
                 }
 
                 process_fa_rreg_packet(socketfd);
-};
+}
 
 
 	if (mn_reg_request){
@@ -229,31 +229,21 @@ next:
 	
         	process_mn_rreg_packet(sockfd, buff, bytes_received);
     }
+}
 
-	
-            // registration_request(60, sockfd);
-			};
-
-/*	if (mn_reg_request){
-		
-		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-     			logperror("socket failed");
-			exit(5);
-    	 	}
-	
-            registration_request(60, sockfd);
-			};
-*/
 
 	if (ha_reg_reply){
+
+		logmsg(LOG_INFO, "Listening for RREQ UDP messages on port 434...\n");
+
 		
-		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-     			logperror("socket failed");
-			exit(5);
-    	 	}
-	
-            registration_reply(60, sockfd);
-			};
+               if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+                        logperror("socket failed");
+                        exit(5);
+                }
+
+                process_ha_rrep_packet(sockfd);
+}
 
 	if (fa_reg_reply){
 		
@@ -263,7 +253,7 @@ next:
     	 	}
 	
             registration_reply(60, sockfd);
-			};
+			}
 
 
 	memset( (char *)&whereto, 0, sizeof(struct sockaddr_in) );
@@ -1668,6 +1658,51 @@ struct timespec tms;
 }
 
 }
+
+
+ void process_ha_rrep_packet(int sockfd) {
+    struct sockaddr_in server_addr, client_addr, response_addr;
+    socklen_t client_len;
+    char buf[BUFSIZE];
+
+    // Prepare server address
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    server_addr.sin_port = htons(MIP_UDP_PORT);
+
+    // Bind the socket to the specified port
+    if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
+        perror("bind");
+ 
+    }
+
+    while (1) {
+        // Receive a packet
+        client_len = sizeof(client_addr);
+        ssize_t bytes_received = recvfrom(sockfd, buf, BUFSIZE, 0,
+                                          (struct sockaddr *)&client_addr, &client_len);
+
+        if (bytes_received == -1) {
+
+           perror("recvfrom");
+        	close(sockfd);
+            exit(EXIT_FAILURE);
+        }
+
+        buf[bytes_received] = '\0';
+
+
+        registration_reply(60, sockfd);
+
+        close(sockfd);
+
+	}
+
+}
+
+
+
 
 
 
