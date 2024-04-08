@@ -204,24 +204,42 @@ class mn_reg_req():
         """
         Reboot VMs
         """
-        vms = [self._ip1, self._ip2, self._ip3]
 
-        for ip in vms:
-            try:
-                vm_user = "%s@%s" % (self._user_name, ip)
-                vm_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  reboot\n" % self._pwd],
-                                        stdin=subprocess.PIPE,
-                                        stdout = subprocess.PIPE,
-                                        universal_newlines=True,
-                                    bufsize=0)
+        vm1_user = "%s@%s" % (self._user_name, self._ip1)
+        vm1_process = subprocess.Popen(['ssh','-tt', vm1_user, "echo '%s' | sudo -S  reboot\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
 
-                vm_process.communicate()
-                vm_process.kill()
-                print("Rebooted VM with IP %s" % ip)
-            except Exception as err:
-                print("Failed to reboot VM with IP %s  with error %s" % (ip, err))
+        vm2_user = "%s@%s" % (self._user_name, self._ip2)
+        vm2_process = subprocess.Popen(['ssh','-tt', vm2_user, "echo '%s' | sudo -S  reboot\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
 
+
+        vm3_user = "%s@%s" % (self._user_name, self._ip3)
+        vm3_process = subprocess.Popen(['ssh','-tt', vm3_user, "echo '%s' | sudo -S  reboot\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+
+
+        vm1_process.communicate()
+        vm2_process.communicate()
+        vm3_process.communicate()
+
+
+        vm1_process.kill()
+        vm2_process.kill()
+        vm3_process.kill()
+
+        print("Wait 60s for VMs to reboot")
         time.sleep(60)
+        print("VMs are fully rebooted")
 
         return True
 
