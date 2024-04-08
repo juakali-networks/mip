@@ -24,7 +24,7 @@ class ha_reg_req():
   
         self._rreq_msg_type = 1
         self._dest_port = "434"
-        self._dest_addr = self._ip1
+        self._dest_addr = self._ip3
     
         self._file = 'ha_reg_req.pcap'
         self._local_path = '/home/dancer/mip/tests/Results'
@@ -36,7 +36,7 @@ class ha_reg_req():
 
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
         vm_user = "%s@%s" % (self._user_name, self._ip2)
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+
         try:
             ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
@@ -164,10 +164,10 @@ class ha_reg_req():
 
                 
                 if dst_addr == self._dest_addr:
-                    print("\nForeign agent received registration request message from Mobile Node on its IP address %s as expected\n" % dst_addr)
+                    print("\nHome agent received registration request message from the Foreign Adent on its IP address %s as expected\n" % dst_addr)
                     state.append(True)
                 else:
-                    print("\nRegistration request message is Not sent to the Foreign agent IP address %s but to another destination address %s -- Test Failed\n"% (self._dest_addr, dst_addr))
+                    print("\nRegistration request message is Not sent to the Home agent IP address %s but to another destination address %s -- Test Failed\n"% (self._dest_addr, dst_addr))
                     state.append(False)
 
                 if dst_port == self._dest_port:
