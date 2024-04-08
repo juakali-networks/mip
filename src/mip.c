@@ -242,7 +242,7 @@ next:
                         exit(5);
                 }
 
-                process_ha_rrep_packet(sockfd);
+                process_rrep_packet(sockfd);
 }
 
 	if (fa_reg_reply){
@@ -252,7 +252,7 @@ next:
 			exit(5);
     	 	}
 	
-            registration_reply(60, sockfd);
+            process_rrep_packet(sockfd);
 			}
 
 
@@ -1660,7 +1660,7 @@ struct timespec tms;
 }
 
 
- void process_ha_rrep_packet(int sockfd) {
+ void process_rrep_packet(int sockfd) {
     struct sockaddr_in server_addr, client_addr, response_addr;
     socklen_t client_len;
     char buf[BUFSIZE];
