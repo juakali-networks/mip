@@ -196,7 +196,7 @@ class agent_adv():
         vm2_process.kill()
 
         print("Wait 60s for VMs to reboot")
-        time.sleep(60)
+        time.sleep(180)
         print("VMs are fully rebooted")
 
         return True
