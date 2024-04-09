@@ -473,8 +473,9 @@ registration_request(int lft, int sockfd)
 
 	struct reg_req  *rreq = (struct reg_req *)buff;
 
-	while (read(sockfd, buff, PCKT_LEN)) {
 
+	int index = 0;
+	while ((read(sockfd, buff, PCKT_LEN)) && (index < 4)){
 
 			// create a raw socket with UDP protocol
 
@@ -518,6 +519,7 @@ registration_request(int lft, int sockfd)
                  	perror("sendto()");
                  	exit(3);
         		}
+			index++;
 
 			close(sock);
 
@@ -557,7 +559,8 @@ registration_reply(int lft, int sockfd)
 
 	struct reg_rep  *rrep = (struct reg_rep *)buff;
 
-	while (read(sockfd, buff, PCKT_LEN)) {
+	int index = 0;
+	while ((read(sockfd, buff, PCKT_LEN)) && (index < 4)){
 
 
 			// create a raw socket with UDP protocol
@@ -606,6 +609,7 @@ registration_reply(int lft, int sockfd)
         		}
 
 			close(sock);
+			index++;
 
       		}
 			
