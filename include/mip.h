@@ -43,7 +43,6 @@
 #define MAXIFS 32
 
 #define MIP_UDP_PORT 434
-#define lft 3600
 
 /* Common variables */
 int verbose = 0;
@@ -91,7 +90,7 @@ static void registration_request(int lft, int sockfd);
 static void registration_reply(int lft, int sockfd);
 void process_mn_rreg_packet(int sockfd, unsigned char *buff, int size);
 void process_fa_rreg_packet(int socketfd);
-void process_ha_rrep_packet(int sockfd);
+void process_rrep_packet(int sockfd);
 
 
 int get_time();
