@@ -43,6 +43,7 @@
 #define MAXIFS 32
 
 #define MIP_UDP_PORT 434
+#define lft 3600
 
 /* Common variables */
 int verbose = 0;
