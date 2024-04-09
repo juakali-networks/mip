@@ -111,6 +111,9 @@ class ha_reg_req():
         """
         state = list()
 
+        print("\nCapturing wireshark pcap packet")
+
+
         vm_user = "%s@%s" % (self._user_name, self._ip3)
 
         try:
@@ -126,6 +129,8 @@ class ha_reg_req():
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip3, err))
              return False
+
+        print("\nEnd of capturing wireshark pcap packet")
 
         ssh = self.createSSHClient(self._ip3, 22, self._user_name, self._pwd)
         scp = SCPClient(ssh.get_transport())

@@ -1610,7 +1610,7 @@ struct timespec tms;
 
         // Call registration request function
 		
-		registration_request(3600, sockfd);
+		registration_request(60, sockfd);
 		close(sockfd);
     }
 }
@@ -1651,7 +1651,7 @@ struct timespec tms;
         buf[bytes_received] = '\0';
 
 
-        registration_request(3600, socketfd);
+        registration_request(60, socketfd);
 
         close(socketfd);
 
@@ -1693,7 +1693,7 @@ struct timespec tms;
         buf[bytes_received] = '\0';
 
 
-        registration_reply(3600, sockfd);
+        registration_reply(60, sockfd);
 
         close(sockfd);
 

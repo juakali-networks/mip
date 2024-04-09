@@ -86,6 +86,7 @@ class agent_adv():
         """
         state = list()
 
+        print("\nCapturing wireshark pcap packet")
 
         vm_user = "%s@%s" % (self._user_name, self._ip2)
 
@@ -101,6 +102,9 @@ class agent_adv():
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
              return False
+    
+        print("\nEnd of capturing wireshark pcap packet")
+
         # username = "%s" % self._pwd
         ssh = self.createSSHClient(self._ip2, 22, self._pwd, self._pwd)
         scp = SCPClient(ssh.get_transport())

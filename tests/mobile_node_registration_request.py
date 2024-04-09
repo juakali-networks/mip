@@ -91,6 +91,8 @@ class mn_reg_req():
 
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
+        print("\nCapturing wireshark pcap packet")
+
         try:
             ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w mn_reg_req.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
@@ -104,6 +106,8 @@ class mn_reg_req():
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip1, err))
              return False
+
+        print("\nEnd of capturing wireshark pcap packet")
 
         ssh = self.createSSHClient(self._ip1, 22, self._user_name, self._pwd)
         scp = SCPClient(ssh.get_transport())
