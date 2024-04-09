@@ -47,6 +47,7 @@ class setup_vm():
         print(results_output_bytes)  
         vm_process.kill()
 
+        '''
         cmd = "rm mip/src/mip"
         vm_process = subprocess.Popen(['ssh','-tt', vm_user, "%s" % cmd],
                                     stdin=subprocess.PIPE, 
@@ -79,6 +80,7 @@ class setup_vm():
         results_output_bytes = bytes(results_output, 'ascii')    
         print(results_output_bytes)
         vm_process.kill()
+        '''
         
         cmd = "cd mip/src && make"    
         vm_process = subprocess.Popen(['ssh','-tt', vm_user, "%s" % cmd],
