@@ -7,9 +7,11 @@ import os
 import time
 import paramiko
 from scp.scp import SCPClient
+import threading
+
 # from scp.SCPClient import SCPClient
 
-class ha_reg_req():
+class ha_reg_rep():
 
     def __init__(self):
 
@@ -28,8 +30,8 @@ class ha_reg_req():
     
         self._file = 'ha_reg_rep.pcap'
         self._local_path = '/home/dancer/mip/tests/Results'
-
  
+
     def step_1(self):
      
         subprocess.run(["rm Results/ha_reg_rep.pcap"], shell=True, capture_output=False)
@@ -88,68 +90,42 @@ class ha_reg_req():
 
         # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
 
-        time.sleep(5)
+        return True
 
-        print("\nForeign Agent sending Agent Advertisement multicast packet\n")
+    def step_2(self):
+      
+        # Create threads for each command
+        thread1 = threading.Thread(target=self.capture_packet)
+        thread2 = threading.Thread(target=self.run_agent_advert)
         
-        vm_user = "%s@%s" % (self._user_name, self._ip1)
+        # Start both threads
+        thread1.start()
+        thread2.start()
 
-        try:
+        # Wait for both threads to finish
+        thread1.join()
+        thread2.join()
 
-            fa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
-                                    stdin=subprocess.PIPE, 
-                                    stdout = subprocess.PIPE,
-                                    universal_newlines=True,
-                                bufsize=0)
-            
-            fa_process.communicate()
-            fa_process.kill()
-            
-        except Exception as err:
-            print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
-            return False
-
-        print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
+        print("Both commands completed")
 
 
-        state = self.check_packet_header()
+        state = self.read_packet_header()
 
         if state is True:
             print("Test Passed")
         else:
             print("Test Failed")
-        
+
         self.clean_up()
 
         return state
 
-
-    def check_packet_header(self):
+    def read_packet_header(self):
         """
         Check IP packet header
         """
         state = list()
         
-        print("\nCapturing wireshark pcap packet")
-
-        vm_user = "%s@%s" % (self._user_name, self._ip1)
-
-        try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 src 192.168.0.85 and port 434 -c 1 -w ha_reg_rep.pcap\n" % self._pwd],
-                                    stdin=subprocess.PIPE,
-                                    stdout = subprocess.PIPE,
-                                    universal_newlines=True,
-                                bufsize=0)
-
-            ma_process.communicate()
-            ma_process.kill()
-
-        except Exception as err:
-             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip1, err))
-             return False
-
-        print("\nEnd of capturing wireshark pcap packet")
-
         ssh = self.createSSHClient(self._ip1, 22, self._user_name, self._pwd)
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._file, local_path=self._local_path)
@@ -226,6 +202,52 @@ class ha_reg_req():
         
         return all(state) if state else False
 
+    def run_agent_advert(self):
+    
+        print("\nForeign Agent sending Agent Advertisement multicast packet\n")
+       
+        vm_user = "%s@%s" % (self._user_name, self._ip1)
+    
+        try:
+            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
+                                    stdin=subprocess.PIPE, 
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+            aa_process.communicate()
+
+            aa_process.kill()
+            
+        except Exception as err:
+            print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
+            return False
+        
+        return True
+
+    def capture_packet(self):
+
+        print("\nCapturing wireshark pcap packet")
+
+        vm_user = "%s@%s" % (self._user_name, self._ip1)
+
+        try:
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 src 192.168.0.85 and port 434 -c 1 -w ha_reg_rep.pcap\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+
+            ma_process.communicate()
+            ma_process.kill()
+
+        except Exception as err:
+             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip1, err))
+             return False
+
+        print("\nEnd of capturing wireshark pcap packet")
+
+        return True
+
 
     def createSSHClient(self, server, port, user, password):
         client = paramiko.SSHClient()
@@ -271,13 +293,15 @@ class ha_reg_req():
         vm2_process.kill()
         vm3_process.kill()
 
-        print("Wait 60s for VMs to reboot")
-        time.sleep(300)
+        print("Wait 120s for VMs to reboot")
+        time.sleep(120)
         print("VMs are fully rebooted")
 
         return True
 
-ha_reg_req().step_1()
+ha_reg_rep().step_1()
+ha_reg_rep().step_2()
+
 
 
 
