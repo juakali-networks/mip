@@ -248,7 +248,6 @@ class ha_reg_rep():
 
         return True
 
-
     def createSSHClient(self, server, port, user, password):
         client = paramiko.SSHClient()
         client.load_system_host_keys()

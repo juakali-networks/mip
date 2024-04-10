@@ -136,7 +136,6 @@ class ha_reg_req():
         return state
 
 
-
     def read_packet_header(self):
         """
         Check IP packet header
@@ -310,7 +309,7 @@ class ha_reg_req():
         vm2_process.kill()
         vm3_process.kill()
 
-        print("Wait 60s for VMs to reboot")
+        print("Wait 120s for VMs to reboot")
         time.sleep(120)
         print("VMs are fully rebooted")
 

@@ -97,7 +97,7 @@ class mn_reg_req():
         else:
             print("Test Failed")
 
-        # self.clean_up()
+        self.clean_up()
 
         return state
 
@@ -216,16 +216,8 @@ class mn_reg_req():
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            print("22222222222222222222222")
             aa_process.communicate()
-            print("1111111111111111111111111")
-            print("ccccccccccccccccccc")
 
-            # self._ma_process.communicate(timeout=5)
-            # print("888888888888888888888888")
-
-
-            # exit()
             aa_process.kill()
             
         except Exception as err:
@@ -247,15 +239,10 @@ class mn_reg_req():
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            print("bbbbbbbbbbbbbb")
 
             self._ma_process.communicate(timeout=20)
-            print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
 
             self._ma_process.kill()
-
-            print("kkkkkkkkkkkkkkkkkkkkkkkkk")
-
 
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip1, err))
