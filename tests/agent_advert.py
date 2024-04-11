@@ -195,8 +195,8 @@ class agent_adv():
         vm1_process.kill()
         vm2_process.kill()
 
-        print("Wait 60s for VMs to reboot")
-        time.sleep(300)
+        print("Wait 120s for VMs to reboot")
+        time.sleep(120)
         print("VMs are fully rebooted")
 
         return True

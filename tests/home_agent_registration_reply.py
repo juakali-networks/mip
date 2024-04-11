@@ -50,9 +50,8 @@ class ha_reg_rep():
         except Exception as err:
             print("Connecting to Home Agent VM with IP %s failed with error %s" % (self._ip3, err))
             return False
+        time.sleep(10)
     
-        time.sleep(5)
-
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
         try:
@@ -68,9 +67,7 @@ class ha_reg_rep():
         except Exception as err:
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
-
-        time.sleep(5)
-
+        time.sleep(10)
 
         vm_user = "%s@%s" % (self._user_name, self._ip2)
         try:
@@ -85,9 +82,8 @@ class ha_reg_rep():
         except Exception as err:
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
+        time.sleep(10)
     
-        time.sleep(5)
-
         # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
 
         return True
@@ -203,6 +199,7 @@ class ha_reg_rep():
         return all(state) if state else False
 
     def run_agent_advert(self):
+        time.sleep(30)
     
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
        
@@ -236,8 +233,10 @@ class ha_reg_rep():
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
+            print("1111")
 
             ma_process.communicate()
+            print("22222")
             ma_process.kill()
 
         except Exception as err:
