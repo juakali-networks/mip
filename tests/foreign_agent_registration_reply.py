@@ -254,7 +254,7 @@ class ha_reg_req():
                                     universal_newlines=True,
                                 bufsize=0)
 
-            ma_process.communicate(timeout=20)
+            ma_process.communicate(timeout=60)
             ma_process.kill()
 
         except Exception as err:

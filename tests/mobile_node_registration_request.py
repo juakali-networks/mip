@@ -51,26 +51,10 @@ class mn_reg_req():
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
     
-        time.sleep(5)
+        time.sleep(10)
 
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
-       
-        vm_user = "%s@%s" % (self._user_name, self._ip1)
-    
-        try:
-            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
-                                    stdin=subprocess.PIPE, 
-                                    stdout = subprocess.PIPE,
-                                    universal_newlines=True,
-                                bufsize=0)
-            
-            aa_process.communicate()
-            aa_process.kill()
-            
-        except Exception as err:
-            print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
-            return False
-        
+
         return True
 
     def step_2(self):
@@ -205,6 +189,7 @@ class mn_reg_req():
         return client
 
     def run_agent_advert(self):
+        time.sleep(30)
     
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
        
