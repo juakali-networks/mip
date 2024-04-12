@@ -83,6 +83,7 @@ class ha_reg_req():
         
         # Start both threads
         thread1.start()
+        time.sleep(5)
         thread2.start()
 
         # Wait for both threads to finish
@@ -123,6 +124,7 @@ class ha_reg_req():
                                     universal_newlines=True,
                                     bufsize=0)
         ma_process.communicate()
+
 
         ma_process.kill()
 
@@ -198,7 +200,6 @@ class ha_reg_req():
         return all(state) if state else False
 
     def run_agent_advert(self):
-        time.sleep(30)
     
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
        
@@ -210,8 +211,7 @@ class ha_reg_req():
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            aa_process.communicate()
-
+            aa_process.communicate(timeout=15)
             aa_process.kill()
             
         except Exception as err:
@@ -232,8 +232,7 @@ class ha_reg_req():
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-
-            ma_process.communicate(timeout=40)
+            ma_process.communicate(timeout=100)
             ma_process.kill()
 
         except Exception as err:
