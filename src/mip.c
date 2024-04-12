@@ -496,18 +496,18 @@ registration_request(int lft, int sockfd)
 			if (fa_reg_request)
 				addr.sin_addr.s_addr = inet_addr("192.168.0.85");
 			if (mn_reg_request)
-				addr.sin_addr.s_addr = inet_ntoa(*(struct in_addr *)&(ip->saddr));
+				addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 
 			rreq->reg_req_type = ICMP_REGREQUEST;
 			rreq->flags = 0;
 			rreq->reg_req_lifetime = htons(lft);
  			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			// Home address is the the IP address of the Mobile Node
-		    rreq->home_addr = inet_addr("192.168.0.240");	
+		    rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			// Home Agent: The IP address of the mobile node's home agent.
 			rreq-> home_agent = inet_addr("192.168.0.85");	
              // Care-of Address.  address for the end of the tunnel.
-			rreq->care_of_addr = inet_ntoa(*(struct in_addr *)&(ip->saddr));
+			rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 
 			rreq->reg_req_id = get_time();
 
