@@ -113,7 +113,7 @@ class ha_reg_rep():
         else:
             print("Test Failed")
 
-        self.clean_up()
+        # self.clean_up()
 
         return state
 
@@ -206,14 +206,15 @@ class ha_reg_rep():
         vm_user = "%s@%s" % (self._user_name, self._ip1)
     
         try:
-            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
+            fa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            aa_process.communicate(timeout=15)
-
-            aa_process.kill()
+            print("33333333333")
+            fa_process.communicate(timeout=15)
+            print("44444444444")
+            fa_process.kill()
             
         except Exception as err:
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
@@ -228,16 +229,16 @@ class ha_reg_rep():
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 src 192.168.0.85 and port 434 -c 1 -w ha_reg_rep.pcap\n" % self._pwd],
+            ha_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 src 192.168.0.85 and port 434 -c 1 -w ha_reg_rep.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
             print("1111")
 
-            ma_process.communicate(timeout=100)
+            ha_process.communicate(timeout=100)
             print("22222")
-            ma_process.kill()
+            ha_process.kill()
 
         except Exception as err:
              print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip1, err))

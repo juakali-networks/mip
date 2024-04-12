@@ -586,14 +586,14 @@ registration_reply(int lft, int sockfd)
 			if (ha_reg_reply)
 				addr.sin_addr.s_addr = inet_addr("192.168.0.34");
 			if (fa_reg_reply)
-				addr.sin_addr.s_addr = inet_addr("192.168.0.240");
+				addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 
 			rrep->reg_rep_type = ICMP_REGREPLY;
 			rrep->code = 0;
 			rrep->reg_rep_lifetime = htons(lft);
  			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			// Home address: The IP address of the Mobile Node
-		    rrep->home_addr = inet_addr("192.168.0.240");	
+		    rrep->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));	
 			// Home Agent: The IP address of the mobile node's home agent.
 			rrep-> home_agent = inet_addr("192.168.0.85");	
 			// rrep-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
