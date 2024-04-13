@@ -27,6 +27,7 @@ Basic use came be demonstrated using the diagram below.
 flowchart TD;
     Foreign_Agent-->|Agent Advert|Mobile_Node;
     Home_Agent<-->Corresponding_Node;
+    Foreign_Agent-->|RREQ_CoA|Home_Agent;
 ```
 
 
