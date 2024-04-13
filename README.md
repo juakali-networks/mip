@@ -32,6 +32,18 @@ flowchart TB;
     Home_Agent-->|RREP|Foreign_Agent;
     Corresponding_Node<-->Home_Agent;
 ```
+dddddddddddddddddd
+
+```mermaid
+stateDiagram
+    [*] --> Still
+    Still --> [*]
+
+    Still --> Moving
+    Moving --> Still
+    Moving --> Crash
+    Crash --> [*]
+```
 
 
 # Usage
