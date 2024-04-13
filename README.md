@@ -6,11 +6,11 @@ implementation of Mobile IP RFC 5944 for Linux, written in C.
 # Install
 git clone https://github.com/juakali-networks/mip.git
 
-cd /mip/src
+<pre>cd /mip/src</pre>
 
-make clean
+<pre>make clean</pre>
 
-make
+<pre>make</pre>
 
 # Overview
 Mobile IP is a communication protocol (created by extending Internet Protocol, IP) that allows the users to move from one network to another with the same IP address. It ensures that the communication will continue without the user’s sessions or connections being dropped. 
@@ -24,3 +24,48 @@ THis is a partial implemntation of RFC 5944 specification. In case you are inter
 Basic use came be demonstrated using the diagram below.
 
 [text](HLD.pdf)
+
+# Usage
+Three Virtual machines
+
+VM 1, VM2 and VM3.
+
+On VM1 (Foreign Agent)
+<pre>cd /mip/src</pre>
+
+<pre>sudo ./mip -m <pre>
+
+Foreign Agent sends multicast agent advertisement packet
+
+On VM2 (Mobile Node)
+<pre>cd /mip/src</pre>
+
+<pre>sudo ./mip -r <pre>
+
+Mobile Node sends Registration Request (RREQ) packet to Foreign Agent, on receieving the Agent Advertisement packet
+
+On VM1 (Foreign Agent)
+<pre>cd /mip/src</pre>
+
+<pre>sudo ./mip -n <pre>
+
+Foreign Agent sends RREQ packet with care of Address to Home Agent on receiving the RREQ packet from Mobile Node
+
+On VM3 (Home Agent)
+<pre>cd /mip/src</pre>
+
+<pre>sudo ./mip -q <pre>
+
+Home Agent sends Registration Reply (RREP) packet back to Foreign Agent on receiving the RREQ packet
+
+On VM1 (Foreign Agent)
+<pre>cd /mip/src</pre>
+
+<pre>sudo ./mip -j <pre>
+
+Foreign Agent Forwards RREP packet to Mobile Node on receiving the RREP packet from MoHome Agent
+
+
+If you have uestions, comments or need any additional support, Contact juakali.networks@gmail.com
+
+
