@@ -32,15 +32,7 @@ flowchart TB;
     Home_Agent-->|RREP|Foreign_Agent;
     Corresponding_Node<-->Home_Agent;
 ```
-dddddddddddddddddd
 
-```mermaid
-stateDiagram
-    Home_Agent --> Corresponding_Node
-    Home_Agent --> Foreign_Agent
-    Foreign_Agent --> Still
-    Foreign_Agent --> Mobile_Node
-```
 
 
 # Usage
