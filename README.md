@@ -28,7 +28,7 @@ graph TD;
     Foreign_Agent-->|Agent Advert|Mobile_Node;
     Mobile_Node-->|RREQ|Foreign_Agent;
     Foreign_Agent-->|RREP|Mobile_Node;
-    Foreign_Agent-->|RREQ(CoA)|Home_Agent;
+    Foreign_Agent-->|RREQ_CoA|Home_Agent;
     Home_Agent-->|RREP|Foreign_Agent;
     Corresponding_Node<-->Home_Agent;
 ```
