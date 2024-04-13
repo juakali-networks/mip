@@ -38,9 +38,9 @@ dddddddddddddddddd
 stateDiagram
     Still --> [*]
 
-    Still --> Moving
-    Moving --> Still
-    Moving --> Crash
+    Still --> Foreign_Agent
+    Foreign_Agent --> Still
+    Foreign_Agent --> Crash
 ```
 
 
