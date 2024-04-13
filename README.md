@@ -27,9 +27,9 @@ Basic use came be demonstrated using the diagram below.
 graph TD;
     Foreign_Agent-- Agent Advert -->Mobile_Node;
     Mobile_Node-- RREQ -->Foreign_Agent;
-    Home_Agent<-->Foreign_Agent;
-    Home_Agent<-->Foreign_Agent;
-    Corresponding_Node<-->Home_Agent;
+    Home_Agent-->Foreign_Agent;
+    Foreign_Agent-->Home_Agent;
+    Corresponding_Node<----->Home_Agent;
 ```
 
 
