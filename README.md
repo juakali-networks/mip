@@ -24,13 +24,12 @@ THis is a partial implemntation of RFC 5944 specification. In case you are inter
 Basic use came be demonstrated using the diagram below.
 
 ```mermaid
-flowchart LR;
+flowchart TD;
     Foreign_Agent-->|Agent Advert|Mobile_Node;
     Mobile_Node-->|RREQ|Foreign_Agent;
     Foreign_Agent-->|RREP|Mobile_Node;
     Foreign_Agent-->|RREQ_CoA|Home_Agent;
     Home_Agent-->|RREP|Foreign_Agent;
-flowchart TB
     Corresponding_Node<-->Home_Agent;
 ```
 
