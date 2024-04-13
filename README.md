@@ -25,7 +25,7 @@ Basic use came be demonstrated using the diagram below.
 
 ```mermaid
 graph TD;
-    Foreign_Agent--Agent Advert-->Mobile_Node;
+    Foreign_Agent-->|Agent Advert|Mobile_Node;
     Mobile_Node--RREQ-->Foreign_Agent;
     Foreign_Agent--RREP-->Mobile_Node;
     Foreign_Agent--RREQ(CoA)-->Home_Agent;
