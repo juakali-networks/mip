@@ -36,7 +36,7 @@ dddddddddddddddddd
 
 ```mermaid
 stateDiagram
-    Home_Agent --> Corresponding_Node<-->Home_Agent
+    Home_Agent --> Corresponding_Node
     Home_Agent --> Foreign_Agent
     Foreign_Agent --> Still
     Foreign_Agent --> Mobile_Node
