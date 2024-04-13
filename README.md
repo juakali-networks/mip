@@ -1,4 +1,4 @@
-# rdisc
+# mip
 Mobile IP implementation for Linux in C
 
 implementation of Mobile IP RFC 5944 for Linux, written in C.
@@ -22,3 +22,5 @@ THis is a partial implemntation of RFC 5944 specification. In case you are inter
 
 
 Basic use came be demonstrated using the diagram below.
+
+[text](HLD.pdf)
