@@ -24,7 +24,7 @@ THis is a partial implemntation of RFC 5944 specification. In case you are inter
 Basic use came be demonstrated using the diagram below.
 
 ```mermaid
-flowchart TB;
+flowchart LR;
     Foreign_Agent-->|Agent Advert|Mobile_Node;
     Mobile_Node-->|RREQ|Foreign_Agent;
     Foreign_Agent-->|RREP|Mobile_Node;
