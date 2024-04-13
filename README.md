@@ -30,7 +30,7 @@ flowchart LR;
     Foreign_Agent-->|RREP|Mobile_Node;
     Foreign_Agent-->|RREQ_CoA|Home_Agent;
     Home_Agent-->|RREP|Foreign_Agent;
-flowchart TB;
+flowchart TB
     Corresponding_Node<-->Home_Agent;
 ```
 
