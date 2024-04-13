@@ -23,12 +23,21 @@ THis is a partial implemntation of RFC 5944 specification. In case you are inter
 
 Basic use came be demonstrated using the diagram below.
 
-[text](HLD.pdf)
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+
 
 # Usage
-Three Virtual machines
+Three Virtual machines (VMs) or PCs
 
 VM 1, VM2 and VM3.
+
+Run the commands on the VMs in the following order
 
 On VM1 (Foreign Agent)
 <pre>cd /mip/src</pre>
@@ -66,6 +75,6 @@ On VM1 (Foreign Agent)
 Foreign Agent Forwards RREP packet to Mobile Node on receiving the RREP packet from MoHome Agent
 
 
-If you have uestions, comments or need any additional support, Contact juakali.networks@gmail.com
+If you have questions, comments or need any additional support, contact juakali.networks@gmail.com
 
 
