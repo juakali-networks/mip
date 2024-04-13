@@ -36,11 +36,11 @@ dddddddddddddddddd
 
 ```mermaid
 stateDiagram
-    Still --> [*]
+    Home_Agent --> [*]
 
-    Still --> Foreign_Agent
+    Home_Agent --> Foreign_Agent
     Foreign_Agent --> Still
-    Foreign_Agent --> Crash
+    Foreign_Agent --> Mobile_Node
 ```
 
 
