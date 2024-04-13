@@ -25,8 +25,8 @@ Basic use came be demonstrated using the diagram below.
 
 ```mermaid
 graph TD;
-    Foreign_Agent<-->Mobile_Node;
-    Home_Agent<-RREQ->Foreign_Agent;
+    Foreign_Agent<-- RREQ -->Mobile_Node;
+    Home_Agent<-->Foreign_Agent;
     Home_Agent<-->Foreign_Agent;
     Corresponding_Node<-->Home_Agent;
     Foreign_Agent<-->Mobile_Node;
