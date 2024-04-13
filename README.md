@@ -25,10 +25,10 @@ Basic use came be demonstrated using the diagram below.
 
 ```mermaid
 graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+    Foreign_Agent-->Mobile_Node;
+    Mobile_Node-->Foreign_Agent;
+    Foreign_Agent-->Home_Agent;
+    Home_Agent-->Foreign_Agent;
 ```
 
 
