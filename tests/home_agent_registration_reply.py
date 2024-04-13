@@ -211,9 +211,7 @@ class ha_reg_rep():
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            print("33333333333")
             fa_process.communicate(timeout=15)
-            print("44444444444")
             fa_process.kill()
             
         except Exception as err:
@@ -234,10 +232,8 @@ class ha_reg_rep():
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            print("1111")
 
             ha_process.communicate(timeout=100)
-            print("22222")
             ha_process.kill()
 
         except Exception as err:
