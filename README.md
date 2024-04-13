@@ -27,7 +27,7 @@ Basic use came be demonstrated using the diagram below.
 graph TD;
     Foreign Agent-->Mobile Node;
     Home Agent-->Foreign Agent;
-    Corresponding Node--> Foreign Agent;
+    Corresponding Node-->Foreign Agent;
     Foreign Agent-->Mobile Node;
 ```
 
