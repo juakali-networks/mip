@@ -475,7 +475,7 @@ registration_request(int lft, int sockfd)
 
 
 	int index = 0;
-	while ((read(sockfd, buff, PCKT_LEN)) && (index < 4)){
+	while ((read(sockfd, buff, PCKT_LEN)) && (index < 1)){
 
 			// create a raw socket with UDP protocol
 
@@ -489,14 +489,6 @@ registration_request(int lft, int sockfd)
 			logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
             logmsg(LOG_INFO, "Index A %d\n", index);
-            
-			// Dont create RREQ packet for the packet with a multicast desination address
-            if (index==0){
-                index++;
-                continue;
-                }
-            logmsg(LOG_INFO, "Index B %d\n", index);
-
 
       		addr.sin_family = AF_INET;
       		addr.sin_port = htons(434);
