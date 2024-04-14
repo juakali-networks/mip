@@ -226,7 +226,7 @@ class mn_reg_req():
                                     universal_newlines=True,
                                 bufsize=0)
 
-            self._ma_process.communicate(timeout=100)
+            self._ma_process.communicate(timeout=150)
 
             self._ma_process.kill()
 
