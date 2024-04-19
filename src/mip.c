@@ -504,7 +504,8 @@ registration_request(int lft, int sockfd)
 			rreq->reg_req_lifetime = htons(lft);
  			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			// Home address is the the IP address of the Mobile Node
-		    rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+		    // rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+			rreq->home_addr = htonl(INADDR_ANY);
 			// Home Agent: The IP address of the mobile node's home agent.
 			rreq-> home_agent = inet_addr("192.168.0.85");	
              // Care-of Address.  address for the end of the tunnel.
@@ -595,7 +596,8 @@ registration_reply(int lft, int sockfd)
 			rrep->reg_rep_lifetime = htons(lft);
  			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 			// Home address: The IP address of the Mobile Node
-		    rrep->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));	
+		    // rrep->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));	
+			rrep->home_addr = htonl(INADDR_ANY);
 			// Home Agent: The IP address of the mobile node's home agent.
 			rrep-> home_agent = inet_addr("192.168.0.85");	
 			// rrep-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
