@@ -34,37 +34,32 @@ VM_1, VM_2 and VM_3.
 Run the commands on the VMs in the following order
 
 On VM_1 (Foreign Agent)
-<pre>cd /mip/src</pre>
 
-<pre>sudo ./mip -m </pre>
+<pre>sudo ./mip/src/mip -m </pre>
 
 Foreign Agent sends multicast agent advertisement packet
 
 On VM_2 (Mobile Node)
-<pre>cd /mip/src</pre>
 
-<pre>sudo ./mip -r </pre>
+<pre>sudo ./mip/src/mip -r </pre>
 
 Mobile Node sends Registration Request (RREQ) packet to Foreign Agent, on receieving the Agent Advertisement packet
 
 On VM_1 (Foreign Agent)
-<pre>cd /mip/src</pre>
 
-<pre>sudo ./mip -n </pre>
+<pre>sudo ./mip/src/mip -n </pre>
 
 Foreign Agent sends RREQ packet with care of Address to Home Agent on receiving the RREQ packet from Mobile Node
 
 On VM_3 (Home Agent)
-<pre>cd /mip/src</pre>
 
-<pre>sudo ./mip -q </pre>
+<pre>sudo ./mip/src/mip -q </pre>
 
 Home Agent sends Registration Reply (RREP) packet back to Foreign Agent on receiving the RREQ packet
 
 On VM_1 (Foreign Agent)
-<pre>cd /mip/src</pre>
 
-<pre>sudo ./mip -j </pre>
+<pre>sudo ./mip/src/mip -j </pre>
 
 Foreign Agent Forwards RREP packet to Mobile Node on receiving the RREP packet from MoHome Agent
 
