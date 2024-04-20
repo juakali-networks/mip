@@ -23,7 +23,8 @@ THis is a partial implemntation of RFC 5944 specification. In case you are inter
 
 Basic use came be demonstrated using the diagram below.
 
-(https://github.com/juakali-networks/mip/blob/master/doc/drawing.pdf)
+(https://github.com/juakali-networks/mip/blob/master/doc/ggg.png)
+
 
 ```mermaid
 flowchart TD;
