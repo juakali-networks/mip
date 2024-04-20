@@ -22,11 +22,11 @@ THis is a partial implemntation of RFC 5944 specification. In case you are inter
 
 
 Basic use came be demonstrated using the diagram below.
+#     Foreign_Agent-->|Agent Advert|Mobile_Node;
+
 
 ```mermaid
 flowchart TD;
-    Foreign_Agent && Home_Agent;
-    Foreign_Agent-->|Agent Advert|Mobile_Node;
     Home_Agent<-->Corresponding_Node;
     Mobile_Node-->|RREQ|Foreign_Agent;
     Foreign_Agent-->|RREP|Mobile_Node;
