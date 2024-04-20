@@ -12,15 +12,15 @@ git clone https://github.com/juakali-networks/mip.git
 <pre>make</pre>
 
 # Overview
-Mobile IP is a communication protocol (created by extending Internet Protocol, IP) that allows the users to move from one network to another with the same IP address. It ensures that the communication will continue without the user’s sessions or connections being dropped. 
+Mobile IP is a communication protocol (created by extending the Internet Protocol) that allows users to move from one network to another with the same IP address. It ensures that the communication will continue without the user’s sessions or connections being dropped. 
 
-Using Mobile IP, a mobile node is able to roam from an its home network to any foreign network while being always reachable through its home IP address.
-
-
-THis is a partial implemntation of RFC 5944 specification. In case you are interested inthe full implementation, please contact us on juakali.networks@gmail.com
+Using Mobile IP, a mobile node is able to roam from its home network to any foreign network while being always reachable through its home IP address.
 
 
-Basic use came be demonstrated using the diagram below.
+This is a partial implemntation of the [RFC 5944](https://datatracker.ietf.org/doc/html/rfc5944) specification. If you have questions, comments or need any additional support, contact us on juakali.networks@gmail.com. Feel free to reach us if you need us to implement for you any network protocol. The auto tets used for this project can be found here. (https://github.com/juakali-networks/mip/tree/master/tests). You can also contact us if you need us to create automatic tests for any protocols that you are implementing or any network devices you are developing. 
+
+
+Basic use case of mip be demonstrated using the diagram below.
 
 ![Basic use case](https://github.com/juakali-networks/mip/blob/master/doc/drawing.png)
 
@@ -32,11 +32,7 @@ VM_1, VM_2 and VM_3.
 
 Run the commands on the VMs in the following order
 
-On VM_1 (Foreign Agent)
 
-<pre>sudo ./mip/src/mip -m </pre>
-
-Foreign Agent sends multicast agent advertisement packet
 
 On VM_2 (Mobile Node)
 
@@ -61,6 +57,12 @@ On VM_1 (Foreign Agent)
 <pre>sudo ./mip/src/mip -j </pre>
 
 Foreign Agent Forwards RREP packet to Mobile Node on receiving the RREP packet from MoHome Agent
+
+On VM_1 (Foreign Agent)
+
+<pre>sudo ./mip/src/mip -m </pre>
+
+Foreign Agent sends multicast agent advertisement packet
 
 
 If you have questions, comments or need any additional support, contact juakali.networks@gmail.com
