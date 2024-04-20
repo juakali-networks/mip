@@ -26,33 +26,6 @@ Basic use came be demonstrated using the diagram below.
 ![Basic use case](https://github.com/juakali-networks/mip/blob/master/doc/drawing.png)
 
 
-```mermaid
-flowchart TD;
-    Foreign_Agent-->|RREP|Mobile_Node;
-    Mobile_Node-->|RREQ|Foreign_Agent;
-    Home_Agent<-->Corresponding_Node;
-    Foreign_Agent<-->Home_Agent;
-```
-
-```mermaid
-flowchart TD
-
-subgraph Z[" "]
-direction LR
-  A --> B
-  B --> C
-end
-
-subgraph ZA[" "]
-direction RL
-    D-->E
-    E-->F
-end
-
-Z --> ZA
-```
-
-
 # Usage
 Three Virtual machines (VMs) or PCs
 
