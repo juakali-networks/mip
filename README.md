@@ -33,6 +33,23 @@ flowchart TD;
     Foreign_Agent<-->Home_Agent;
 ```
 
+```mermaid
+flowchart TD
+
+subgraph Z[" "]
+direction LR
+  A --> B
+  B --> C
+end
+
+subgraph ZA[" "]
+direction RL
+    D-->E
+    E-->F
+end
+
+Z --> ZA
+```
 
 
 # Usage
