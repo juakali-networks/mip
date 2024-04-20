@@ -22,7 +22,7 @@ THis is a partial implemntation of RFC 5944 specification. In case you are inter
 
 
 Basic use came be demonstrated using the diagram below.
-#     Foreign_Agent-->|Agent Advert|Mobile_Node;
+https://github.com/juakali-networks/mip/blob/master/HLD.pdf
 
 
 ```mermaid
