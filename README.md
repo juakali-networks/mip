@@ -5,19 +5,21 @@ Implementation of Mobile IP [RFC 5944](https://datatracker.ietf.org/doc/html/rfc
 # Install
 git clone https://github.com/juakali-networks/mip.git
 
-<pre>cd /mip/src</pre>
+<pre>cd mip/src</pre>
 
 <pre>make clean</pre>
 
 <pre>make</pre>
 
 # Overview
-Mobile IP is a communication protocol (created by extending the Internet Protocol) that allows users to move from one network to another with the same IP address. It ensures that the communication will continue without the user’s sessions or connections being dropped. 
+Mobile IP is a communication protocol (created by extending the Internet Protocol) that allows users to move from one network to another while using the same IP address. It ensures that the communication will continue without the user’s sessions or connections being dropped. 
 
 Using Mobile IP, a mobile node is able to roam from its home network to any foreign network while being always reachable through its home IP address.
 
 
-This is a partial implemntation of the [RFC 5944](https://datatracker.ietf.org/doc/html/rfc5944) specification. If you have questions, comments or need any additional support, contact us on juakali.networks@gmail.com. Feel free to reach us if you need us to implement for you any network protocol. The auto tets used for this project can be found here. (https://github.com/juakali-networks/mip/tree/master/tests). You can also contact us if you need us to create automatic tests for any protocols that you are implementing or any network devices you are developing. 
+This is a partial implementation of the [RFC 5944](https://datatracker.ietf.org/doc/html/rfc5944) specification. If you have any questions, comments or need any additional support, contact us on juakali.networks@gmail.com. 
+
+Feel free to contact us if you need us to implement for you any network protocol. The auto tests used for this project can be found here (https://github.com/juakali-networks/mip/tree/master/tests). You can also contact us if you need us to create automatic tests for any protocols that you are implementing or any network devices you are developing. 
 
 
 Basic use case of mip be demonstrated using the diagram below.
