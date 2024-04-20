@@ -1,7 +1,6 @@
 # mip
-Mobile IP implementation for Linux in C
 
-implementation of Mobile IP [RFC 5944](https://datatracker.ietf.org/doc/html/rfc5944) for Linux, written in C.
+Implementation of Mobile IP [RFC 5944](https://datatracker.ietf.org/doc/html/rfc5944) for Linux, written in C.
 
 # Install
 git clone https://github.com/juakali-networks/mip.git
