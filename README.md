@@ -27,10 +27,9 @@ Basic use came be demonstrated using the diagram below.
 
 ```mermaid
 flowchart TD;
-    Home_Agent<-->Corresponding_Node;
     Foreign_Agent-->|RREP|Mobile_Node;
     Mobile_Node-->|RREQ|Foreign_Agent;
-
+    Home_Agent<-->Corresponding_Node;
 ```
 
 
