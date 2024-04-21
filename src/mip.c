@@ -218,7 +218,9 @@ next:
      			logperror("socket failed");
 			exit(5);
     	 	}
+		process_mn_rreg_packet(sockfd);
 
+/***
     	while (1) {
         	ssize_t bytes_received = recv(sockfd, buff, BUFSIZE, 0);
         	if (bytes_received == -1) {
@@ -229,12 +231,13 @@ next:
 	
         	process_mn_rreg_packet(sockfd, buff, bytes_received);
     }
+	***/
 }
 
 
 	if (ha_reg_reply){
 
-		logmsg(LOG_INFO, "Listening for RREQ UDP messages on port 434...\n");
+		logmsg(LOG_INFO, "Listening for RREQ UDP messages on port %d...\n", MIP_UDP_PORT);
 
 		
                if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
@@ -458,82 +461,61 @@ advertise(struct sockaddr_in *sin, int lft)
 */
 
 void
-registration_request(int lft, int sockfd)
+registration_request(int lft, unsigned char *buff)
 {
   	static unsigned char outpack[MAXPACKET];
 	struct sockaddr_in addr;
     int packetlen, i;
 	int sock;
 	struct iphdr *ip;
-    char buff[PCKT_LEN];
 
-	memset(buff, 0, PCKT_LEN);
 
 	ip = (struct iphdr *)buff;
 
 	struct reg_req  *rreq = (struct reg_req *)buff;
 
+    // create a raw socket with UDP protocol
 
-	int index = 0;
-	while ((read(sockfd, buff, PCKT_LEN)) && (index < 1)){
+    sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		    		
 
-			// create a raw socket with UDP protocol
+	if (sock < 0) {
+    	  perror("socket() error");
+    		exit(2);
+  		}
+	logmsg(LOG_INFO, "Source address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+	logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
-			sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		    		
+	addr.sin_family = AF_INET;
+    addr.sin_port = htons(MIP_UDP_PORT);
+    // addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+	//addr.sin_addr.s_addr = INADDR_ANY;
+	if (fa_reg_request)
+		addr.sin_addr.s_addr = inet_addr("192.168.0.85");
+	if (mn_reg_request)
+	addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 
-	  		if (sock < 0) {
-    			perror("socket() error");
-    			exit(2);
-  			}
-			logmsg(LOG_INFO, "Source address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+	rreq->reg_req_type = ICMP_REGREQUEST;
+	rreq->flags = 0;
+	rreq->reg_req_lifetime = htons(lft);
+ 	// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+	// Home address is the the IP address of the Mobile Node
+	// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+	rreq->home_addr = htonl(INADDR_ANY);
+	// Home Agent: The IP address of the mobile node's home agent.
+	rreq-> home_agent = inet_addr("192.168.0.85");	
+    // Care-of Address.  address for the end of the tunnel.
+	rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+	rreq->reg_req_id = get_time();
 
-            logmsg(LOG_INFO, "Index A %d\n", index);
+	packetlen = sizeof(struct reg_req);
 
-      		addr.sin_family = AF_INET;
-      		addr.sin_port = htons(434);
-      		// addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			//addr.sin_addr.s_addr = INADDR_ANY;
-			if (fa_reg_request)
-				addr.sin_addr.s_addr = inet_addr("192.168.0.85");
-			if (mn_reg_request)
-				addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+    if (sendto(sock, buff, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+         	{
+            perror("sendto()");
+            exit(3);
+        	}
 
-			rreq->reg_req_type = ICMP_REGREQUEST;
-			rreq->flags = 0;
-			rreq->reg_req_lifetime = htons(lft);
- 			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-			// Home address is the the IP address of the Mobile Node
-		    // rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-			rreq->home_addr = htonl(INADDR_ANY);
-			// Home Agent: The IP address of the mobile node's home agent.
-			rreq-> home_agent = inet_addr("192.168.0.85");	
-             // Care-of Address.  address for the end of the tunnel.
-			rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-
-			rreq->reg_req_id = get_time();
-
-	  		packetlen = sizeof(struct reg_req);
-
-      		if (sendto(sock, buff, packetlen, 0,
-             	(struct sockaddr *)&addr, sizeof(addr)) < 0)
-         		{
-                 	perror("sendto()");
-                 	exit(3);
-        		}
-			index++;
-
-			close(sock);
-
-      		}
-			
-      		close(socketfd);
-		if( i < 0 || i != packetlen )  {
-                	if( i<0 ) {
-                    	logperror("registratin_request:sendto");
-               	 }
-                	logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n", sendaddress, packetlen, i);
-	}
+	close(sock);
 
 }
 
@@ -546,84 +528,67 @@ registration_request(int lft, int sockfd)
 */
 
 void
-registration_reply(int lft, int sockfd)
+registration_reply(int lft, unsigned char *buff)
 {
   	static unsigned char outpack[MAXPACKET];
 	struct sockaddr_in addr;
     int packetlen, i;
 	int sock;
 	struct iphdr *ip;
-    char buff[PCKT_LEN];
+    // char buff[PCKT_LEN];
 
-	memset(buff, 0, PCKT_LEN);
+	// memset(buff, 0, PCKT_LEN);
 
 	ip = (struct iphdr *)buff;
 
 	struct reg_rep  *rrep = (struct reg_rep *)buff;
 
-	int index = 0;
-	while ((read(sockfd, buff, PCKT_LEN)) && (index < 4)){
-			if (index == 0)
-				continue;
+	// create a raw socket with UDP protocol
 
-			// create a raw socket with UDP protocol
+	sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		    		
 
-			sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		    		
+	if (sock < 0) {
+    		perror("socket() error");
+    		exit(2);
+  		}
+	logmsg(LOG_INFO, "Sources address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+	logmsg(LOG_INFO, "Destination address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
-	  		if (sock < 0) {
-    			perror("socket() error");
-    			exit(2);
-  			}
-			logmsg(LOG_INFO, "Sources address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			logmsg(LOG_INFO, "Destination address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+	// Source Address: Typically copied from the Destination Address of the Registration Request to which the agent is replying. 
+	// Destination Address: Copied from the source address of the Registration Request to which the agent is replying.
+    addr.sin_family = AF_INET;
+	// Source Port: Copied from the UDP Destination Port of the corresponding Registration Request.
+	// Destination Port_: Copied from the source port of the corresponding Registration Request 
 
-			// Source Address: Typically copied from the Destination Address of the Registration Request to which the agent is replying. 
-			// Destination Address: Copied from the source address of the Registration Request to which the agent is replying.
-      		addr.sin_family = AF_INET;
-			// Source Port: Copied from the UDP Destination Port of the corresponding Registration Request.
-			// Destination Port_: Copied from the source port of the corresponding Registration Request 
+    addr.sin_port = htons(MIP_UDP_PORT);
+    // addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+	//addr.sin_addr.s_addr = INADDR_ANY;
+	if (ha_reg_reply)
+			addr.sin_addr.s_addr = inet_addr("192.168.0.34");
+	if (fa_reg_reply)
+	      addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 
-      		addr.sin_port = htons(434);
-      		// addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-			//addr.sin_addr.s_addr = INADDR_ANY;
-			if (ha_reg_reply)
-				addr.sin_addr.s_addr = inet_addr("192.168.0.34");
-			if (fa_reg_reply)
-				addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+	rrep->reg_rep_type = ICMP_REGREPLY;
+	rrep->code = 0;
+	rrep->reg_rep_lifetime = htons(lft);
+ 	// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+	// Home address: The IP address of the Mobile Node
+	// rrep->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));	
+	rrep->home_addr = htonl(INADDR_ANY);
+	// Home Agent: The IP address of the mobile node's home agent.
+	rrep-> home_agent = inet_addr("192.168.0.85");	
+	// rrep-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+	rrep->reg_rep_id = get_time();
 
-			rrep->reg_rep_type = ICMP_REGREPLY;
-			rrep->code = 0;
-			rrep->reg_rep_lifetime = htons(lft);
- 			// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-			// Home address: The IP address of the Mobile Node
-		    // rrep->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));	
-			rrep->home_addr = htonl(INADDR_ANY);
-			// Home Agent: The IP address of the mobile node's home agent.
-			rrep-> home_agent = inet_addr("192.168.0.85");	
-			// rrep-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-			rrep->reg_rep_id = get_time();
+	packetlen = sizeof(struct reg_req);
 
-	  		packetlen = sizeof(struct reg_req);
+    if (sendto(sock, buff, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+        {
+            perror("sendto()");
+            exit(3);
+        }
 
-      		if (sendto(sock, buff, packetlen, 0,
-             	(struct sockaddr *)&addr, sizeof(addr)) < 0)
-         		{
-                 	perror("sendto()");
-                 	exit(3);
-        		}
-
-			close(sock);
-			index++;
-
-      		}
-			
-      		close(socketfd);
-		if( i < 0 || i != packetlen )  {
-                	if( i<0 ) {
-                    	logperror("registration_reply:sendto");
-               	 }
-                	logmsg(LOG_ERR, "wrote %s %d chars, ret=%d\n", sendaddress, packetlen, i);
-	}
+	close(sock);
 
 }
 
@@ -1202,8 +1167,8 @@ void timer()
 		ntransmitted++;
 		if (agent_advert)
                         advertise(&whereto, lifetime);
-                if (mn_reg_request)
-                        registration_request(lifetime, sockfd);
+              //  if (mn_reg_request)
+                //        registration_request(lifetime, buff);
 
 		if (ntransmitted < initial_advertisements)
 			left_until_advertise = initial_advert_interval;
@@ -1472,8 +1437,8 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 		ntransmitted++;
 		if (agent_advert)
                         advertise(&sin, lifetime);
-                if (mn_reg_request)
-                        registration_request(lifetime, sockfd);
+               // if (mn_reg_request)
+                 //       registration_request(lifetime, buff);
 
 		break;
 	}
@@ -1542,8 +1507,8 @@ finish()
                 ntransmitted++;
                 if (agent_advert)
 			advertise(&whereto, 0);
-		if (mn_reg_request)
-                        registration_request(0, sockfd);
+		//if (mn_reg_request)
+          //              registration_request(0, buff);
 
         }
 #endif
@@ -1607,7 +1572,18 @@ struct timespec tms;
     return micros;
  }
 
- void process_mn_rreg_packet(int sockfd, unsigned char *buff, int size) {
+ void process_mn_rreg_packet(int sockfd) {
+
+	char buff[PCKT_LEN];
+
+	while (1) {
+    ssize_t bytes_received = recv(sockfd, buff, BUFSIZE, 0);
+          if (bytes_received == -1) {
+            	perror("recv");
+            	close(sockfd);
+            	exit(EXIT_FAILURE);
+        	}
+	
     struct iphdr *ip_header = (struct iphdr *)buff;
     struct icmphdr *icmp_header = (struct icmphdr *)(buff + sizeof(struct iphdr));
 
@@ -1618,18 +1594,18 @@ struct timespec tms;
 
         // Call registration request function
 		
-		registration_request(60, sockfd);
+		registration_request(60, buff);
 		close(sockfd);
     }
 }
+}
 
- void process_fa_rreg_packet(int socketfd) {
-        struct sockaddr_in server_addr, client_addr, response_addr;
+ void process_fa_rreg_packet(int sockfd) {
+    struct sockaddr_in server_addr, client_addr, response_addr;
     socklen_t client_len;
-    char buf[BUFSIZE];
+    char buff[BUFSIZE];
 
-
-        // Prepare server address
+    // Prepare server address
     memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -1641,27 +1617,26 @@ struct timespec tms;
  
     }
 
-
     while (1) {
         // Receive a packet
         client_len = sizeof(client_addr);
-        ssize_t bytes_received = recvfrom(socketfd, buf, BUFSIZE, 0,
+        ssize_t bytes_received = recvfrom(socketfd, buff, BUFSIZE, 0,
                                           (struct sockaddr *)&client_addr, &client_len);
 
         if (bytes_received == -1) {
 
            perror("recvfrom");
 
-            close(socketfd);
+            close(sockfd);
             exit(EXIT_FAILURE);
         }
 
-        buf[bytes_received] = '\0';
+       // buf[bytes_received] = '\0';
 
 
-        registration_request(60, socketfd);
+        registration_request(60, buff);
 
-        close(socketfd);
+        close(sockfd);
 
 }
 
@@ -1671,7 +1646,7 @@ struct timespec tms;
  void process_rrep_packet(int sockfd) {
     struct sockaddr_in server_addr, client_addr, response_addr;
     socklen_t client_len;
-    char buf[BUFSIZE];
+    char buff[BUFSIZE];
 
     // Prepare server address
     memset(&server_addr, 0, sizeof(server_addr));
@@ -1688,7 +1663,7 @@ struct timespec tms;
     while (1) {
         // Receive a packet
         client_len = sizeof(client_addr);
-        ssize_t bytes_received = recvfrom(sockfd, buf, BUFSIZE, 0,
+        ssize_t bytes_received = recvfrom(sockfd, buff, BUFSIZE, 0,
                                           (struct sockaddr *)&client_addr, &client_len);
 
         if (bytes_received == -1) {
@@ -1698,10 +1673,10 @@ struct timespec tms;
             exit(EXIT_FAILURE);
         }
 
-        buf[bytes_received] = '\0';
+        //buf[bytes_received] = '\0';
 
 
-        registration_reply(60, sockfd);
+        registration_reply(60, buff);
 
         close(sockfd);
 
