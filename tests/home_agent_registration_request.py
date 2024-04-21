@@ -51,6 +51,7 @@ class ha_reg_req():
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
     
+        time.sleep(10)
 
 
         # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
@@ -71,7 +72,7 @@ class ha_reg_req():
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
 
-        # time.sleep(5)
+        time.sleep(10)
 
 
         return True

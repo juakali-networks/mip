@@ -66,7 +66,7 @@ class ha_reg_req():
             print("Connecting to Foreign Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
     
-        # time.sleep(10)
+        ime.sleep(10)
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
@@ -83,7 +83,7 @@ class ha_reg_req():
             return False
     
 
-        # time.sleep(10)
+        time.sleep(10)
 
         # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
        
@@ -103,7 +103,7 @@ class ha_reg_req():
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
 
-        # time.sleep(10)
+        time.sleep(10)
 
         return True
     
