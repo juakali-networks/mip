@@ -66,7 +66,7 @@ class ha_reg_req():
             print("Connecting to Foreign Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
     
-        ime.sleep(10)
+        time.sleep(10)
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
