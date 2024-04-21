@@ -34,6 +34,22 @@ class ha_reg_req():
     def step_1(self):
      
         subprocess.run(["rm Results/fa_reg_rep.pcap"], shell=True, capture_output=False)
+
+
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
+        try:
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
+                                   stdin=subprocess.PIPE, 
+                                   stdout = subprocess.PIPE,
+                                   universal_newlines=True,
+                                bufsize=0)
+            ma_process.communicate()
+            ma_process.kill()
+        
+        except Exception as err:
+            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
+            return False
+    
         
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
         vm_user = "%s@%s" % (self._user_name, self._ip1)
@@ -50,7 +66,7 @@ class ha_reg_req():
             print("Connecting to Foreign Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
     
-        time.sleep(10)
+        # time.sleep(10)
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
@@ -66,23 +82,8 @@ class ha_reg_req():
             print("Connecting to Home Agent VM with IP %s failed with error %s" % (self._ip3, err))
             return False
     
-        time.sleep(10)
 
-        vm_user = "%s@%s" % (self._user_name, self._ip2)
-        try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
-                                   stdin=subprocess.PIPE, 
-                                   stdout = subprocess.PIPE,
-                                   universal_newlines=True,
-                                bufsize=0)
-            ma_process.communicate()
-            ma_process.kill()
-        
-        except Exception as err:
-            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
-            return False
-    
-        time.sleep(10)
+        # time.sleep(10)
 
         # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
        
@@ -102,7 +103,7 @@ class ha_reg_req():
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
 
-        time.sleep(10)
+        # time.sleep(10)
 
         return True
     
