@@ -233,7 +233,7 @@ class ha_reg_rep():
                                     universal_newlines=True,
                                 bufsize=0)
 
-            ha_process.communicate(timeout=150)
+            ha_process.communicate(timeout=100)
             ha_process.kill()
 
         except Exception as err:
