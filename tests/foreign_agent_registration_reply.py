@@ -50,7 +50,7 @@ class ha_reg_req():
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
     
-        
+        time.sleep(10)
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
         vm_user = "%s@%s" % (self._user_name, self._ip1)
         try:
@@ -223,7 +223,6 @@ class ha_reg_req():
     def run_agent_advert(self):
 
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
-        time.sleep(30)
         vm_user = "%s@%s" % (self._user_name, self._ip1)
     
         try:
