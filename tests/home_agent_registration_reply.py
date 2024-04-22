@@ -211,7 +211,7 @@ class ha_reg_rep():
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            fa_process.communicate(timeout=15)
+            fa_process.communicate()
             fa_process.kill()
             
         except Exception as err:

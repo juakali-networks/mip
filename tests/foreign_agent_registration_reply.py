@@ -232,7 +232,7 @@ class ha_reg_req():
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            aa_process.communicate(timeout=15)
+            aa_process.communicate()
 
             aa_process.kill()
             
