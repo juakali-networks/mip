@@ -75,7 +75,7 @@ class agent_adv():
         else:
             print("Test Failed")
 
-        self.clean_up()
+        # self.clean_up()
 
         return state
 

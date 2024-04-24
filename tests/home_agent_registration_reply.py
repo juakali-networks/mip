@@ -50,7 +50,7 @@ class ha_reg_rep():
         except Exception as err:
             print("Connecting to Home Agent VM with IP %s failed with error %s" % (self._ip3, err))
             return False
-        # time.sleep(10)
+        time.sleep(10)
     
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
@@ -113,7 +113,7 @@ class ha_reg_rep():
         else:
             print("Test Failed")
 
-        self.clean_up()
+        # self.clean_up()
 
         return state
 
@@ -233,7 +233,7 @@ class ha_reg_rep():
                                     universal_newlines=True,
                                 bufsize=0)
 
-            ha_process.communicate(timeout=150)
+            ha_process.communicate(timeout=100)
             ha_process.kill()
 
         except Exception as err:
