@@ -38,13 +38,13 @@ class ha_reg_req():
 
         vm_user = "%s@%s" % (self._user_name, self._ip2)
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
+            vm2_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
                                 bufsize=0)
-            ma_process.communicate()
-            ma_process.kill()
+            vm2_process.communicate()
+            vm2_process.kill()
         
         except Exception as err:
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
@@ -54,13 +54,13 @@ class ha_reg_req():
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
         vm_user = "%s@%s" % (self._user_name, self._ip1)
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -j" % self._pwd],
+            vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -j" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
                                 bufsize=0)
-            ma_process.communicate()
-            ma_process.kill()
+            vm1_process.communicate()
+            vm1_process.kill()
         
         except Exception as err:
             print("Connecting to Foreign Agent VM with IP %s failed with error %s" % (self._ip1, err))
@@ -70,13 +70,13 @@ class ha_reg_req():
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -q" % self._pwd],
+            vm3_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -q" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
                                 bufsize=0)
-            ma_process.communicate()
-            ma_process.kill()
+            vm3_process.communicate()
+            vm3_process.kill()
         
         except Exception as err:
             print("Connecting to Home Agent VM with IP %s failed with error %s" % (self._ip3, err))
@@ -90,14 +90,14 @@ class ha_reg_req():
         vm_user = "%s@%s" % (self._user_name, self._ip1)
     
         try:
-            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -n" % self._pwd],
+            vm1_process_2 = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -n" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
             
-            aa_process.communicate()
-            aa_process.kill()
+            vm1_process_2.communicate()
+            vm1_process_2.kill()
             
         except Exception as err:
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))

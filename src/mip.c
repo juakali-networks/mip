@@ -560,7 +560,7 @@ registration_reply(int lft, unsigned char *buff)
 	// Source Port: Copied from the UDP Destination Port of the corresponding Registration Request.
 	// Destination Port_: Copied from the source port of the corresponding Registration Request 
 
-    addr.sin_port = htons(rand() % 65536);
+    addr.sin_port = MIP_UDP_PORT;
 	//addr.sin_addr.s_addr = INADDR_ANY;
 	if (ha_reg_reply)
     	addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
