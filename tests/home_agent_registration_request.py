@@ -102,7 +102,7 @@ class ha_reg_req():
         else:
             print("Test Failed")
 
-        # self.clean_up()
+        self.clean_up()
 
         return state
 
