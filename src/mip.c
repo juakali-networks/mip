@@ -79,15 +79,6 @@ int main(int argc, char **argv)
 			case 'm':
 				agent_advert = 1;
 				break;
-			case 'n':
-				fa_reg_request = 1;
-				break;
-			case 'j':
-				fa_reg_reply = 1;
-				break;
-			case 'q':
-				ha_reg_reply = 1;
-				break;
 			case 'r':
 				mn_reg_request = 1;
 				break;
@@ -197,17 +188,9 @@ next:
 		forever = 1;
 	}
 
-        if (fa_reg_request){
 
-                logmsg(LOG_INFO, "Listening for RREQ UDP messages on port 434...\n");
 
-                if ((socketfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-                        logperror("socket failed");
-                        exit(5);
-                }
 
-                process_fa_rreg_packet(socketfd);
-}
 
 
 	if (mn_reg_request){
@@ -219,6 +202,35 @@ next:
 			exit(5);
     	 	}
 		process_mn_rreg_packet(sockfd);
+
+
+        logmsg(LOG_INFO, "Listening for RREQ UDP messages on port 434...\n");
+
+        if ((socketfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+                    logperror("socket failed");
+                    exit(5);
+            }
+
+            process_fa_rreg_packet(socketfd);
+
+
+		logmsg(LOG_INFO, "Listening for RREQ UDP messages on port %d...\n", MIP_UDP_PORT);
+
+		
+               if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+                        logperror("socket failed");
+                        exit(5);
+                }
+
+                process_rrep_packet(sockfd);
+
+						
+		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+     			logperror("socket failed");
+			exit(5);
+    	 	}
+	
+            process_rrep_packet(sockfd);
 
 /***
     	while (1) {
@@ -235,28 +247,10 @@ next:
 }
 
 
-	if (ha_reg_reply){
 
-		logmsg(LOG_INFO, "Listening for RREQ UDP messages on port %d...\n", MIP_UDP_PORT);
 
-		
-               if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-                        logperror("socket failed");
-                        exit(5);
-                }
 
-                process_rrep_packet(sockfd);
-}
 
-	if (fa_reg_reply){
-		
-		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-     			logperror("socket failed");
-			exit(5);
-    	 	}
-	
-            process_rrep_packet(sockfd);
-			}
 
 
 	memset( (char *)&whereto, 0, sizeof(struct sockaddr_in) );

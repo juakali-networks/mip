@@ -4,7 +4,7 @@ On host PC run the followig commands
 
 >>ssh-keygen
 >>ssh-copy-id vm_username@vm_IP
-ssh-copy-id lubuntu@192.168.0.240
+ssh-copy-id lubuntu@172.20.10.5
 finished
 
 On host PC run the followig commands
@@ -27,7 +27,7 @@ sudo git clone https://github.com/jbardin/scp.py
 mv scp.py scp
 
 
-from ndsatcom.common.ssh.Scp import Scp
+
 self.__scp = Scp(host=self.__skywanidu_ip, port=int(self.__config.get(self.__device, "SSH_Port")),
 
 scp lubuntu@192.168.0.34:/home/lubuntu/mip/src/kkkk.pcap/home/dancer
@@ -39,5 +39,13 @@ truncate -s 0 /var/log/syslog
 
 # git repositories
 Install git
+
+sudo ip tunnel add gre1 mode gre remote 192.168.0.34 local 192.168.0.85 ttl 25
+
+sudo ip tunnel add gre1 mode gre remote 192.168.0.85 local 192.168.0.34 ttl 25
+ip addr add 10.0.0.1/30 dev gre1
+ip link set dev gre1 up
+
+https://bitlaunch.io/blog/what-is-a-gre-tunnel-and-how-to-set-one-up/
 
 
