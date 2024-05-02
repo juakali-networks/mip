@@ -58,8 +58,7 @@ int forever = 0;	/* Never give up on host. If 0 defer fork until
 /* Router variables */
 int agent_advert;
 int mn_reg_request;
-int fa_reg_request;
-int fa_reg_reply;
+int fa_reg;
 int ha_reg_reply;
 int sockfd;
 int max_adv_int = MAX_ADV_INT;

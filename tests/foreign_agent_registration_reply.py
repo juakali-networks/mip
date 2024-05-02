@@ -52,21 +52,21 @@ class ha_reg_req():
     
         time.sleep(10)
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
-        vm_user = "%s@%s" % (self._user_name, self._ip1)
-        try:
-            vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -j" % self._pwd],
-                                   stdin=subprocess.PIPE, 
-                                   stdout = subprocess.PIPE,
-                                   universal_newlines=True,
-                                bufsize=0)
-            vm1_process.communicate()
-            vm1_process.kill()
+       # vm_user = "%s@%s" % (self._user_name, self._ip1)
+       # try:
+        #    vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -j" % self._pwd],
+        #                           stdin=subprocess.PIPE, 
+        #                           stdout = subprocess.PIPE,
+        #                           universal_newlines=True,
+        #                        bufsize=0)
+        #    vm1_process.communicate()
+        #    vm1_process.kill()
         
-        except Exception as err:
-            print("Connecting to Foreign Agent VM with IP %s failed with error %s" % (self._ip1, err))
-            return False
+        #except Exception as err:
+        #    print("Connecting to Foreign Agent VM with IP %s failed with error %s" % (self._ip1, err))
+        #    return False
     
-        time.sleep(10)
+        #time.sleep(10)
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:

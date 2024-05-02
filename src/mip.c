@@ -80,10 +80,7 @@ int main(int argc, char **argv)
 				agent_advert = 1;
 				break;
 			case 'n':
-				fa_reg_request = 1;
-				break;
-			case 'j':
-				fa_reg_reply = 1;
+				fa_reg = 1;
 				break;
 			case 'q':
 				ha_reg_reply = 1;
@@ -197,17 +194,31 @@ next:
 		forever = 1;
 	}
 
-        if (fa_reg_request){
+    if (fa_reg){
 
-                logmsg(LOG_INFO, "Listening for RREQ UDP messages on port 434...\n");
+            logmsg(LOG_INFO, "Listening for RREQ UDP messages on port 434...\n");
 
-                if ((socketfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+            if ((socketfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
                         logperror("socket failed");
                         exit(5);
                 }
 
-                process_fa_rreg_packet(socketfd);
-}
+
+            if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
+                        logperror("socket failed");
+                        exit(5);
+            }
+
+            if (socketfd){
+            process_fa_rreg_packet(socketfd);
+                }
+
+                if (sockfd){
+            process_rrep_packet(sockfd);
+                        }
+        }
+
+
 
 
 	if (mn_reg_request){
@@ -247,16 +258,6 @@ next:
 
                 process_rrep_packet(sockfd);
 }
-
-	if (fa_reg_reply){
-		
-		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
-     			logperror("socket failed");
-			exit(5);
-    	 	}
-	
-            process_rrep_packet(sockfd);
-			}
 
 
 	memset( (char *)&whereto, 0, sizeof(struct sockaddr_in) );
@@ -489,7 +490,7 @@ registration_request(int lft, unsigned char *buff)
     addr.sin_port = htons(MIP_UDP_PORT);
     // addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 	//addr.sin_addr.s_addr = INADDR_ANY;
-	if (fa_reg_request)
+	if (fa_reg)
 		addr.sin_addr.s_addr = inet_addr("192.168.0.85");
 	if (mn_reg_request)
 	addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
@@ -564,7 +565,7 @@ registration_reply(int lft, unsigned char *buff)
 	//addr.sin_addr.s_addr = INADDR_ANY;
 	if (ha_reg_reply)
     	addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-	if (fa_reg_reply)
+	if (fa_reg)
 	      // addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 		    addr.sin_addr.s_addr = inet_addr("192.168.0.240");
 
