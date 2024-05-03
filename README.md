@@ -60,12 +60,6 @@ Home Agent sends Registration Reply (RREP) packet back to Foreign Agent on recei
 
 On VM_1 (Foreign Agent)
 
-<pre>sudo ./mip/src/mip -j </pre>
-
-Foreign Agent Forwards RREP packet to Mobile Node on receiving the RREP packet from MoHome Agent
-
-On VM_1 (Foreign Agent)
-
 <pre>sudo ./mip/src/mip -m </pre>
 
 Foreign Agent sends multicast agent advertisement packet
