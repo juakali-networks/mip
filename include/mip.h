@@ -11,6 +11,11 @@
 #define ALL_HOSTS_ADDRESS		"224.0.0.1"
 #define ALL_ROUTERS_ADDRESS		"224.0.0.2"
 
+
+/* Hardcoded IPS*/
+#define MN_IP		"172.20.10.4"
+#define HA_IP		"172.20.10.5"
+
 /* Types for Router Discovery*/
 #define ICMP_ROUTERSOLICIT          10       /* ICMP Router Solicitation  */
 #define ICMP_ROUTERADVERT           9        /* ICMP Router Advertisement */

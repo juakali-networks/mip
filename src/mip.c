@@ -491,7 +491,7 @@ registration_request(int lft, unsigned char *buff)
     // addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 	//addr.sin_addr.s_addr = INADDR_ANY;
 	if (fa_reg)
-		addr.sin_addr.s_addr = inet_addr("192.168.0.85");
+		addr.sin_addr.s_addr = inet_addr(HA_IP);
 	if (mn_reg_request)
 	addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 
@@ -503,7 +503,7 @@ registration_request(int lft, unsigned char *buff)
 	// rreq->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 	rreq->home_addr = htonl(INADDR_ANY);
 	// Home Agent: The IP address of the mobile node's home agent.
-	rreq-> home_agent = inet_addr("192.168.0.85");	
+	rreq-> home_agent = inet_addr(HA_IP);	
     // Care-of Address.  address for the end of the tunnel.
 	rreq->care_of_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 	rreq->reg_req_id = get_time();
@@ -567,7 +567,7 @@ registration_reply(int lft, unsigned char *buff)
     	addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 	if (fa_reg)
 	      // addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-		    addr.sin_addr.s_addr = inet_addr("192.168.0.240");
+		    addr.sin_addr.s_addr = inet_addr(MN_IP);
 
 	rrep->reg_rep_type = ICMP_REGREPLY;
 	rrep->code = 0;
@@ -577,7 +577,7 @@ registration_reply(int lft, unsigned char *buff)
 	// rrep->home_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));	
 	rrep->home_addr = htonl(INADDR_ANY);
 	// Home Agent: The IP address of the mobile node's home agent.
-	rrep-> home_agent = inet_addr("192.168.0.85");	
+	rrep-> home_agent = inet_addr(HA_IP);	
 	// rrep-> gw_fa_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 	rrep->reg_rep_id = get_time();
 
