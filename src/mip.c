@@ -223,7 +223,7 @@ next:
 
 	if (mn_reg_request){
 		
-		logmsg(LOG_INFO, "Listening for ICMP echo messages...\n");
+		logmsg(LOG_INFO, "Listening for Agent Advertisement Packet...\n");
 
 		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
      			logperror("socket failed");
