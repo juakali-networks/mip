@@ -18,9 +18,9 @@ class ha_reg_req():
         self._pwd = "lubuntu"
         self._user_name = "lubuntu"
 
-        self._ip1 = "172.20.10.3"
-        self._ip2 = "172.20.10.4"
-        self._ip3 = "172.20.10.5"
+        self._ip1 = "192.168.0.34"
+        self._ip2 = "192.168.0.240"
+        self._ip3 = "192.168.0.85"
   
         self._rreq_msg_type = 1
         self._dest_port = "434"
@@ -36,26 +36,32 @@ class ha_reg_req():
 
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
         vm_user = "%s@%s" % (self._user_name, self._ip2)
-
+        print(vm_user)
         try:
             vm2_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
                                 bufsize=0)
+            print("ddddddddddddddddddddd")
+
             vm2_process.communicate()
-            vm2_process.kill()
-        
+            print("gggggggggggggggggggggggggggg")
+
+            # vm2_process.kill()
+            print("ttttttttttttttttttt")
+
         except Exception as err:
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
-    
-        time.sleep(10)
-
+        print("sssssssss")
+        time.sleep(20)
+        print("jjjjjjjjjjjjjjj")
 
         # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
        
         vm_user = "%s@%s" % (self._user_name, self._ip1)
+        print("oooooooooooooooooooo")
 
         try:
             vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -n" % self._pwd],
@@ -93,6 +99,7 @@ class ha_reg_req():
 
         print("Both commands completed")
 
+        print("bbbbbbbbbbbbbbbbbbbb")
 
         state = self.read_packet_header()
 
@@ -118,6 +125,8 @@ class ha_reg_req():
         scp.close()
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
+        print("eeeeeee")
+
 
         ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S rm ha_reg_req.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
@@ -125,6 +134,7 @@ class ha_reg_req():
                                     universal_newlines=True,
                                     bufsize=0)
         ma_process.communicate()
+        print("ttttttttttttttttttttttttt")
 
 
         ma_process.kill()
@@ -226,6 +236,7 @@ class ha_reg_req():
         print("\nCapturing wireshark pcap packet")
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
         try:
             ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w ha_reg_req.pcap\n" % self._pwd],
