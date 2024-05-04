@@ -13,11 +13,11 @@
 
 
 /* Hardcoded IPS*/
-#define MN_IP		"172.20.10.4"
-#define HA_IP		"172.20.10.5"
+#define MN_IP		"192.168.0.240"
+#define HA_IP		"192.168.0.85"
 
 /* Types for Router Discovery*/
-#define ICMP_ROUTERSOLICIT          10       /* ICMP Router Solicitation  */
+#define ICMP_ROUTERSOLICIT          10       /* ICMP Router Solicitation */
 #define ICMP_ROUTERADVERT           9        /* ICMP Router Advertisement */
 #define ICMP_REGREQUEST           1         /* MIP Registration Request */
 #define ICMP_REGREPLY           3        /* MIP Registration Reply */
