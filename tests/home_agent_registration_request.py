@@ -43,25 +43,18 @@ class ha_reg_req():
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
                                 bufsize=0)
-            print("ddddddddddddddddddddd")
-
             vm2_process.communicate()
-            print("gggggggggggggggggggggggggggg")
-
-            # vm2_process.kill()
-            print("ttttttttttttttttttt")
+            vm2_process.kill()
 
         except Exception as err:
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
-        print("sssssssss")
+
         time.sleep(20)
-        print("jjjjjjjjjjjjjjj")
 
         # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
        
         vm_user = "%s@%s" % (self._user_name, self._ip1)
-        print("oooooooooooooooooooo")
 
         try:
             vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -n" % self._pwd],
@@ -69,7 +62,6 @@ class ha_reg_req():
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            
             vm1_process.communicate()
             vm1_process.kill()
             
@@ -99,8 +91,6 @@ class ha_reg_req():
 
         print("Both commands completed")
 
-        print("bbbbbbbbbbbbbbbbbbbb")
-
         state = self.read_packet_header()
 
         if state is True:
@@ -108,7 +98,7 @@ class ha_reg_req():
         else:
             print("Test Failed")
 
-        # self.clean_up()
+        self.clean_up()
 
         return state
 
@@ -125,8 +115,6 @@ class ha_reg_req():
         scp.close()
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
-        print("eeeeeee")
-
 
         ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S rm ha_reg_req.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
@@ -134,9 +122,6 @@ class ha_reg_req():
                                     universal_newlines=True,
                                     bufsize=0)
         ma_process.communicate()
-        print("ttttttttttttttttttttttttt")
-
-
         ma_process.kill()
 
         # read pcap file and read packet fields
@@ -173,7 +158,6 @@ class ha_reg_req():
                     print("\nReceived registration request message is not sent to the expected port %s but to wrong port %s - Test Failed\n" % (self._dest_port, dst_port))
                     state.append(False)
 
-
                 if mip_type == self._rreq_msg_type:
                     print("\nRegistration Request message is sent with the correct message type %s\n" % self._rreq_msg_type)
                     state.append(True)
@@ -187,7 +171,6 @@ class ha_reg_req():
                 else:
                     print("\nRegistration request message is sent to the Foreign agent with the wrong care of address IP %s, Not the expected address %s -- Test Failed\n" % (self._ip1, care_off_addr))
                     state.append(False)
-
 
                 if  home_addr == self._ip2:
                     print("\nForeign agent received registration with the correct Home address IP address %s as expected\n" % home_addr)
@@ -236,7 +219,6 @@ class ha_reg_req():
         print("\nCapturing wireshark pcap packet")
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
         try:
             ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w ha_reg_req.pcap\n" % self._pwd],
