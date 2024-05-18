@@ -16,8 +16,8 @@ class agent_adv():
         # Configs. Change your settings here
         self._user_name = "lubuntu"
         self._pwd = "lubuntu"
-        self._ip1 = "172.20.10.3"
-        self._ip2 = "172.20.10.4"
+        self._ip1 = "192.168.0.34"
+        self._ip2 = "192.168.0.240"
         self._all_host_mcast_addr = "224.0.0.1"
         self._agent_advert_type = "9"
         self._agent_advert_code = "16"
@@ -28,6 +28,24 @@ class agent_adv():
     def step_1(self):
 
         subprocess.run(["rm Results/agent_adv.pcap"], shell=True, capture_output=False)
+
+        print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
+
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
+
+        try:
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo %s | sudo -S ./mip/src/mip -r" % self._pwd],
+                                   stdin=subprocess.PIPE, 
+                                   stdout = subprocess.PIPE,
+                                   universal_newlines=True,
+                                bufsize=0)
+
+            ma_process.communicate()
+            ma_process.kill()
+
+        except Exception as err:
+            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
+            return False
 
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
         
@@ -48,25 +66,7 @@ class agent_adv():
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
 
-        print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
 
-        time.sleep(5)
-
-        vm_user = "%s@%s" % (self._user_name, self._ip2)
-
-        try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo %s | sudo -S ./mip/src/mip -r" % self._pwd],
-                                   stdin=subprocess.PIPE, 
-                                   stdout = subprocess.PIPE,
-                                   universal_newlines=True,
-                                bufsize=0)
-
-            ma_process.communicate()
-            ma_process.kill()
-
-        except Exception as err:
-            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
-            return False
 
         state = self.check_packet_header()
 
