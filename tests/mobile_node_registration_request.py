@@ -39,7 +39,7 @@ class mn_reg_req():
 
         vm_user = "%s@%s" % (self._user_name, self._ip2)
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
@@ -196,7 +196,7 @@ class mn_reg_req():
         vm_user = "%s@%s" % (self._user_name, self._ip1)
     
         try:
-            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
+            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -m" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -219,7 +219,7 @@ class mn_reg_req():
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
         try:
-            self._ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w mn_reg_req.pcap\n" % self._pwd],
+            self._ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S tcpdump -i enp0s3 port 434 -c 1 -w mn_reg_req.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -243,14 +243,14 @@ class mn_reg_req():
         """
 
         vm1_user = "%s@%s" % (self._user_name, self._ip1)
-        vm1_process = subprocess.Popen(['ssh','-tt', vm1_user, "echo '%s' | sudo -S  reboot\n" % self._pwd],
+        vm1_process = subprocess.Popen(['ssh','-tt', vm1_user, "echo '%s' | sudo -S reboot\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
 
         vm2_user = "%s@%s" % (self._user_name, self._ip2)
-        vm2_process = subprocess.Popen(['ssh','-tt', vm2_user, "echo '%s' | sudo -S  reboot\n" % self._pwd],
+        vm2_process = subprocess.Popen(['ssh','-tt', vm2_user, "echo '%s' | sudo -S reboot\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -258,7 +258,7 @@ class mn_reg_req():
 
 
         vm3_user = "%s@%s" % (self._user_name, self._ip3)
-        vm3_process = subprocess.Popen(['ssh','-tt', vm3_user, "echo '%s' | sudo -S  reboot\n" % self._pwd],
+        vm3_process = subprocess.Popen(['ssh','-tt', vm3_user, "echo '%s' | sudo -S reboot\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -275,7 +275,7 @@ class mn_reg_req():
         vm3_process.kill()
 
         print("Wait 120s for VMs to reboot")
-        time.sleep(120)
+        time.sleep(60)
         print("VMs are fully rebooted")
 
         return True

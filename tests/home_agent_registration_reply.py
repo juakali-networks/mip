@@ -38,7 +38,7 @@ class ha_reg_rep():
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
-            vm3_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -q" % self._pwd],
+            vm3_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -q" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
@@ -54,7 +54,7 @@ class ha_reg_rep():
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
         try:
-            vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -n" % self._pwd],
+            vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -n" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -70,7 +70,7 @@ class ha_reg_rep():
 
         vm_user = "%s@%s" % (self._user_name, self._ip2)
         try:
-            vm2_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
+            vm2_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
@@ -288,7 +288,7 @@ class ha_reg_rep():
         vm3_process.kill()
 
         print("Wait 120s for VMs to reboot")
-        time.sleep(120)
+        time.sleep(60)
         print("VMs are fully rebooted")
 
         return True

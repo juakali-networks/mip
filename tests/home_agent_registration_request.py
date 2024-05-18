@@ -38,7 +38,7 @@ class ha_reg_req():
         vm_user = "%s@%s" % (self._user_name, self._ip2)
         print(vm_user)
         try:
-            vm2_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -r" % self._pwd],
+            vm2_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -r" % self._pwd],
                                    stdin=subprocess.PIPE, 
                                    stdout = subprocess.PIPE,
                                    universal_newlines=True,
@@ -57,14 +57,16 @@ class ha_reg_req():
         vm_user = "%s@%s" % (self._user_name, self._ip1)
 
         try:
-            vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -n" % self._pwd],
+            vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -n" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
+
             vm1_process.communicate()
+
             vm1_process.kill()
-            
+
         except Exception as err:
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
@@ -200,7 +202,7 @@ class ha_reg_req():
         vm_user = "%s@%s" % (self._user_name, self._ip1)
     
         try:
-            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -m" % self._pwd],
+            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -m" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -221,7 +223,7 @@ class ha_reg_req():
         vm_user = "%s@%s" % (self._user_name, self._ip3)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  tcpdump -i enp0s3 port 434 -c 1 -w ha_reg_req.pcap\n" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S tcpdump -i enp0s3 port 434 -c 1 -w ha_reg_req.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -250,14 +252,14 @@ class ha_reg_req():
         """
 
         vm1_user = "%s@%s" % (self._user_name, self._ip1)
-        vm1_process = subprocess.Popen(['ssh','-tt', vm1_user, "echo '%s' | sudo -S  reboot\n" % self._pwd],
+        vm1_process = subprocess.Popen(['ssh','-tt', vm1_user, "echo '%s' | sudo -S reboot\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
 
         vm2_user = "%s@%s" % (self._user_name, self._ip2)
-        vm2_process = subprocess.Popen(['ssh','-tt', vm2_user, "echo '%s' | sudo -S  reboot\n" % self._pwd],
+        vm2_process = subprocess.Popen(['ssh','-tt', vm2_user, "echo '%s' | sudo -S reboot\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -265,7 +267,7 @@ class ha_reg_req():
 
 
         vm3_user = "%s@%s" % (self._user_name, self._ip3)
-        vm3_process = subprocess.Popen(['ssh','-tt', vm3_user, "echo '%s' | sudo -S  reboot\n" % self._pwd],
+        vm3_process = subprocess.Popen(['ssh','-tt', vm3_user, "echo '%s' | sudo -S reboot\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -282,7 +284,7 @@ class ha_reg_req():
         vm3_process.kill()
 
         print("Wait 120s for VMs to reboot")
-        time.sleep(30)
+        time.sleep(60)
         print("VMs are fully rebooted")
 
         return True
