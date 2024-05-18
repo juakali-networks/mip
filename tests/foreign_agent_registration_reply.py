@@ -19,9 +19,9 @@ class ha_reg_req():
         self._pwd = "lubuntu"
         self._user_name = "lubuntu"
 
-        self._ip1 = "192.168.0.34"
-        self._ip2 = "192.168.0.240"
-        self._ip3 = "192.168.0.85"
+        self._ip1 = "172.20.10.3"
+        self._ip2 = "172.20.10.4"
+        self._ip3 = "172.20.10.5"
 
         self._rrep_msg_type = 3
         self._dest_port = "434"

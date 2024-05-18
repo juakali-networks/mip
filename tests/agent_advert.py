@@ -16,8 +16,8 @@ class agent_adv():
         # Configs. Change your settings here
         self._user_name = "lubuntu"
         self._pwd = "lubuntu"
-        self._ip1 = "192.168.0.34"
-        self._ip2 = "192.168.0.240"
+        self._ip1 = "172.20.10.3"
+        self._ip2 = "172.20.10.4"
         self._all_host_mcast_addr = "224.0.0.1"
         self._agent_advert_type = "9"
         self._agent_advert_code = "16"
