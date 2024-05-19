@@ -27,12 +27,14 @@ class ha_reg_req():
         self._dest_addr = self._ip3
     
         self._file = 'ha_reg_req.pcap'
-        self._local_path = '/home/dancer/mip/tests/Results'
-
+        self._local_results_path = '/home/dancer/mip/tests/Results'
+        self._local_log_path = '/home/dancer/mip/tests/logs/home_agent_registration_request'
+        self._vm_log_file =  '/var/log/syslog'
  
     def step_1(self):
      
         subprocess.run(["rm Results/ha_reg_req.pcap"], shell=True, capture_output=False)
+        self.clear_syslogs()
 
         # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
         vm_user = "%s@%s" % (self._user_name, self._ip2)
@@ -99,6 +101,7 @@ class ha_reg_req():
         else:
             print("Test Failed")
 
+        self.save_syslogs()
         self.clean_up()
 
         return state
@@ -112,7 +115,7 @@ class ha_reg_req():
 
         ssh = self.createSSHClient(self._ip3, 22, self._user_name, self._pwd)
         scp = SCPClient(ssh.get_transport())
-        scp.get(remote_path=self._file, local_path=self._local_path)
+        scp.get(remote_path=self._file, local_path=self._local_results_path)
         scp.close()
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
@@ -287,6 +290,122 @@ class ha_reg_req():
         print("VMs are fully rebooted")
 
         return True
+    
+    def clean_up(self):
+        """
+        Reboot VMs
+        """
+
+        vm1_user = "%s@%s" % (self._user_name, self._ip1)
+        vm1_process = subprocess.Popen(['ssh','-tt', vm1_user, "echo '%s' | sudo -S reboot\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+
+        vm2_user = "%s@%s" % (self._user_name, self._ip2)
+        vm2_process = subprocess.Popen(['ssh','-tt', vm2_user, "echo '%s' | sudo -S reboot\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+
+
+        vm3_user = "%s@%s" % (self._user_name, self._ip3)
+        vm3_process = subprocess.Popen(['ssh','-tt', vm3_user, "echo '%s' | sudo -S reboot\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+
+
+        vm1_process.communicate()
+        vm2_process.communicate()
+        vm3_process.communicate()
+
+
+        vm1_process.kill()
+        vm2_process.kill()
+        vm3_process.kill()
+
+        print("Wait 120s for VMs to reboot")
+        time.sleep(60)
+        print("VMs are fully rebooted")
+
+        return True
+
+    def clear_syslogs(self):
+        """
+        clear sys logs
+        """
+        subprocess.run(["rm logs/home_agent_registration_request/vm1_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm logs/home_agent_registration_request/vm2_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm logs/home_agent_registration_request/vm3_syslogs"], shell=True, capture_output=False)
+
+        
+
+        vm1_user = "%s@%s" % (self._user_name, self._ip1)
+        vm1_process = subprocess.Popen(['ssh','-tt', vm1_user, "echo '%s' | sudo -S truncate -s 0 /var/log/syslog\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+
+        vm2_user = "%s@%s" % (self._user_name, self._ip2)
+        vm2_process = subprocess.Popen(['ssh','-tt', vm2_user, "echo '%s' | sudo -S truncate -s 0 /var/log/syslog\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+
+        vm3_user = "%s@%s" % (self._user_name, self._ip3)
+        vm3_process = subprocess.Popen(['ssh','-tt', vm3_user, "echo '%s' | sudo -S truncate -s 0 /var/log/syslog\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+
+        vm1_process.communicate()
+        vm2_process.communicate()
+        vm3_process.communicate()
+
+        vm1_process.kill()
+        vm2_process.kill()
+        vm3_process.kill()
+
+
+        print("Cleared syslogs")
+
+        return True
+
+    def save_syslogs(self):
+        """
+        save sys logs
+        """
+
+        ssh = self.createSSHClient(self._ip1, 22, self._pwd, self._pwd)
+        scp = SCPClient(ssh.get_transport())
+        scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
+        scp.close()
+        subprocess.run(["mv logs/home_agent_registration_request/syslog logs/home_agent_registration_request/vm1_syslog"], shell=True, capture_output=False)
+
+        ssh = self.createSSHClient(self._ip2, 22, self._pwd, self._pwd)
+        scp = SCPClient(ssh.get_transport())
+        scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
+        scp.close()
+        subprocess.run(["mv logs/home_agent_registration_request/syslog logs/home_agent_registration_request/vm2_syslog"], shell=True, capture_output=False)
+
+
+        ssh = self.createSSHClient(self._ip3, 22, self._pwd, self._pwd)
+        scp = SCPClient(ssh.get_transport())
+        scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
+        scp.close()
+        subprocess.run(["mv logs/home_agent_registration_request/syslog logs/home_agent_registration_request/vm3_syslog"], shell=True, capture_output=False)
+
+        print("Saved syslogs")
+
+        return True
+
 
 ha_reg_req().step_1()
 ha_reg_req().step_2()

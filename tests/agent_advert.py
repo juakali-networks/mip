@@ -22,12 +22,15 @@ class agent_adv():
         self._agent_advert_type = "9"
         self._agent_advert_code = "16"
         self._file = 'agent_adv.pcap'
-        self._local_path = '/home/dancer/mip/tests/Results'
-
+        self._local_results_path = '/home/dancer/mip/tests/Results'
+        self._local_log_path = '/home/dancer/mip/tests/logs/agent_advert'
+        self._vm_log_file =  '/var/log/syslog'
  
     def step_1(self):
 
         subprocess.run(["rm Results/agent_adv.pcap"], shell=True, capture_output=False)
+
+        self.clear_syslogs()
 
         print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
 
@@ -67,7 +70,6 @@ class agent_adv():
             return False
 
 
-
         state = self.check_packet_header()
 
         if state is True:
@@ -75,7 +77,8 @@ class agent_adv():
         else:
             print("Test Failed")
 
-        # self.clean_up()
+        self.save_syslogs()
+        self.clean_up()
 
         return state
 
@@ -108,7 +111,7 @@ class agent_adv():
         # username = "%s" % self._pwd
         ssh = self.createSSHClient(self._ip2, 22, self._pwd, self._pwd)
         scp = SCPClient(ssh.get_transport())
-        scp.get(remote_path=self._file, local_path=self._local_path)
+        scp.get(remote_path=self._file, local_path=self._local_results_path)
         scp.close()
     
         vm_user = "%s@%s" % (self._user_name, self._ip2)
@@ -133,7 +136,6 @@ class agent_adv():
                 dst_addr = packet.layers[1].dst
                 icmp_type = packet.layers[2].type
                 icmp_code = packet.layers[2].code
-
 
                 if dst_addr == self._all_host_mcast_addr:
                     print("\nForeign agent sent Agent Advert message to Mobile Node on all host multicast IP address %s as expected\n" % dst_addr)
@@ -198,6 +200,58 @@ class agent_adv():
         print("Wait 120s for VMs to reboot")
         time.sleep(60)
         print("VMs are fully rebooted")
+
+        return True
+
+    def clear_syslogs(self):
+        """
+        clear sys logs
+        """
+        subprocess.run(["rm logs/agent_advert/vm1_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm logs/agent_advert/vm2_syslogs"], shell=True, capture_output=False)
+
+        vm1_user = "%s@%s" % (self._user_name, self._ip1)
+        vm1_process = subprocess.Popen(['ssh','-tt', vm1_user, "echo '%s' | sudo -S truncate -s 0 /var/log/syslog\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+
+        vm2_user = "%s@%s" % (self._user_name, self._ip2)
+        vm2_process = subprocess.Popen(['ssh','-tt', vm2_user, "echo '%s' | sudo -S truncate -s 0 /var/log/syslog\n" % self._pwd],
+                                    stdin=subprocess.PIPE,
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+
+        vm1_process.communicate()
+        vm2_process.communicate()
+
+        vm1_process.kill()
+        vm2_process.kill()
+
+        print("Cleared syslogs")
+
+        return True
+
+    def save_syslogs(self):
+        """
+        save sys logs
+        """
+
+        ssh = self.createSSHClient(self._ip1, 22, self._pwd, self._pwd)
+        scp = SCPClient(ssh.get_transport())
+        scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
+        scp.close()
+        subprocess.run(["mv logs/agent_advert/syslog logs/agent_advert/vm1_syslog"], shell=True, capture_output=False)
+
+        ssh = self.createSSHClient(self._ip2, 22, self._pwd, self._pwd)
+        scp = SCPClient(ssh.get_transport())
+        scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
+        scp.close()
+        subprocess.run(["mv logs/agent_advert/syslog logs/agent_advert/vm2_syslog"], shell=True, capture_output=False)
+
+        print("saved syslogs")
 
         return True
 
