@@ -1,0 +1,20 @@
+May 20 06:37:37 lubuntu2004 systemd[1]: session-15.scope: Succeeded.
+May 20 06:37:37 lubuntu2004 systemd[1]: Started Session 16 of user lubuntu.
+May 20 06:37:38 lubuntu2004 in.rdiscd[1919]: Listening for Agent Advertisement Packet on Mobile Node...
+May 20 06:37:38 lubuntu2004 in.rdiscd[1919]: Run mn_reg_request command
+May 20 06:37:38 lubuntu2004 in.rdiscd[1919]: REQ UDP packet on port 434 has arrived on the Home Agent...
+May 20 06:37:38 lubuntu2004 systemd[1]: Started Session 17 of user lubuntu.
+May 20 06:37:38 lubuntu2004 in.rdiscd[1919]: ICMP Router Advertisement message type: 9
+May 20 06:37:38 lubuntu2004 in.rdiscd[1919]: Call registration request function after receivng ICMP packet of type 9
+May 20 06:37:38 lubuntu2004 in.rdiscd[1919]: Source address RREQ 192.168.0.34
+May 20 06:37:38 lubuntu2004 in.rdiscd[1919]: Destination address RREQ 192.168.0.240
+May 20 06:37:38 lubuntu2004 systemd[1]: session-16.scope: Succeeded.
+May 20 06:37:38 lubuntu2004 systemd[1]: Started Session 18 of user lubuntu.
+May 20 06:37:41 lubuntu2004 in.rdiscd[1979]: isbroadcast: 0
+May 20 06:37:41 lubuntu2004 in.rdiscd[1979]: ismulticast: 1
+May 20 06:37:41 lubuntu2004 in.rdiscd[1979]: Sending solicitations to all-routers.mcast.net (224.0.0.2)
+May 20 06:37:42 lubuntu2004 systemd[1]: session-18.scope: Succeeded.
+May 20 06:37:42 lubuntu2004 systemd[1]: Started Session 19 of user lubuntu.
+May 20 06:37:42 lubuntu2004 systemd[1]: Started Session 20 of user lubuntu.
+May 20 06:37:42 lubuntu2004 systemd[1]: session-20.scope: Succeeded.
+May 20 06:37:43 lubuntu2004 systemd[1]: Started Session 21 of user lubuntu.

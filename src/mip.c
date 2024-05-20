@@ -1378,8 +1378,8 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 	{
 		struct sockaddr_in sin;
 
-		if (!agent_advert || !mn_reg_request)
-			break;
+		//if (!agent_advert || !mn_reg_request)
+	//		break;
 
 		/* TBD verify that the link is multicast or broadcast */
 		/* XXX Find out the link it came in over? */
@@ -1443,10 +1443,7 @@ void pr_pack(char *buf, int cc, struct sockaddr_in *from)
 		}
 		nreceived++;
 		ntransmitted++;
-		if (agent_advert)
-                        advertise(&sin, lifetime);
-               // if (mn_reg_request)
-                 //       registration_request(lifetime, buff);
+        advertise(&sin, lifetime);
 
 		break;
 	}

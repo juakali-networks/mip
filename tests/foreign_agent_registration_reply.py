@@ -36,19 +36,7 @@ class fa_reg_req():
     def step_1(self):
      
         subprocess.run(["rm Results/fa_reg_rep.pcap"], shell=True, capture_output=False)
-        vm_user = "%s@%s" % (self._user_name, self._ip2)
 
-        cmd = "pwd" 
-        vm_process = subprocess.Popen(['ssh','-tt', vm_user, "%s" % cmd],
-                                    stdin=subprocess.PIPE, 
-                                    stdout = subprocess.PIPE,
-                                    universal_newlines=True,
-                                bufsize=0)
-        results_output, results_error = vm_process.communicate()
-        results_output_bytes = bytes(results_output, 'ascii')    
-        print("aaaaa")
-        print(results_output_bytes)  
-        print("bbbbbb")
 
         self.clear_syslogs()
 
@@ -327,7 +315,7 @@ class fa_reg_req():
         vm2_process.kill()
         vm3_process.kill()
 
-        print("Wait 120s for VMs to reboot")
+        print("Wait 60s for VMs to reboot")
         time.sleep(60)
         print("VMs are fully rebooted")
 

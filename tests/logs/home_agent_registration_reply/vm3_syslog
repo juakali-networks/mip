@@ -1,0 +1,8 @@
+May 20 06:38:59 lubuntu2004 systemd[1]: session-14.scope: Succeeded.
+May 20 06:39:00 lubuntu2004 systemd[1]: Started Session 15 of user lubuntu.
+May 20 06:39:00 lubuntu2004 in.rdiscd[3005]: Listening for RREQ UDP messages on port 434 on the Home Agent...
+May 20 06:39:37 lubuntu2004 in.rdiscd[3005]: Call registration reply function after binding socket on UDP Port 434
+May 20 06:39:37 lubuntu2004 systemd[1]: session-15.scope: Succeeded.
+May 20 06:39:37 lubuntu2004 in.rdiscd[3005]: Sources address RREP 192.168.0.34
+May 20 06:39:37 lubuntu2004 in.rdiscd[3005]: Destination address RREP 202.43.76.81
+May 20 06:41:14 lubuntu2004 systemd[1]: Started Session 16 of user lubuntu.

@@ -277,7 +277,7 @@ class mn_reg_req():
         vm2_process.kill()
         vm3_process.kill()
 
-        print("Wait 120s for VMs to reboot")
+        print("Wait 60s for VMs to reboot")
         time.sleep(60)
         print("VMs are fully rebooted")
 

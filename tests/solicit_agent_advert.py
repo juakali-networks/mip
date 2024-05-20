@@ -23,13 +23,13 @@ class agent_adv():
         self._agent_advert_code = "16"
         self._file = 'solicit_agent_adv.pcap'
         self._local_results_path = '/home/dancer/mip/tests/Results'
-        self._local_log_path = '/home/dancer/mip/tests/logs/agent_advert'
+        self._local_log_path = '/home/dancer/mip/tests/logs/solicit_agent_advert'
         self._vm_log_file =  '/var/log/syslog'
  
     def step_1(self):
 
 
-        subprocess.run(["rm Results/agent_adv.pcap"], shell=True, capture_output=False)
+        subprocess.run(["rm Results/solicit_agent_adv.pcap"], shell=True, capture_output=False)
 
         self.clear_syslogs()
 
@@ -95,7 +95,7 @@ class agent_adv():
         vm_user = "%s@%s" % (self._user_name, self._ip2)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S tcpdump -i enp0s3 icmp -c 1 -w agent_adv.pcap\n" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S tcpdump -i enp0s3 icmp -c 1 -w solicit_agent_adv.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -117,7 +117,7 @@ class agent_adv():
     
         vm_user = "%s@%s" % (self._user_name, self._ip2)
 
-        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo %s | sudo -S rm agent_adv.pcap\n" % self._pwd],
+        ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo %s | sudo -S rm solicit_agent_adv.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -128,7 +128,7 @@ class agent_adv():
 
 
         # read pcap file and read packet fields
-        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/agent_adv.pcap')
+        pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/solicit_agent_adv.pcap')
 
         try:
             for packet in pcap_file:
@@ -198,7 +198,7 @@ class agent_adv():
         vm1_process.kill()
         vm2_process.kill()
 
-        print("Wait 120s for VMs to reboot")
+        print("Wait 60s for VMs to reboot")
         time.sleep(60)
         print("VMs are fully rebooted")
 
