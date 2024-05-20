@@ -263,7 +263,7 @@ class agent_adv():
         ssh = self.createSSHClient(self._ip2, 22, self._pwd, self._pwd)
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
-        subprocess.run(["mv logs/agent_advert/syslog logs/agent_advert/vm2_syslog"], shell=True, capture_output=False)
+        subprocess.run(["mv tests/logs/agent_advert/syslog tests/logs/agent_advert/vm2_syslog"], shell=True, capture_output=False)
         scp.close()
 
         print("saved syslogs")
