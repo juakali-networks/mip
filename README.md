@@ -7,7 +7,7 @@ git clone https://github.com/juakali-networks/mip.git
 
 Adapt the mip.h file with the Mobile Node IP and Home Agent IP of your setup
 
-<pre>mip/include/mip.h</pre>
+<pre>mip/include/mip.h
 /* Hardcoded IPS*/
 #define MN_IP           "192.168.0.240"  
 #define HA_IP           "192.168.0.85"
