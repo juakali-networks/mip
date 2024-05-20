@@ -5,6 +5,12 @@ Implementation of Mobile IP [RFC 5944](https://datatracker.ietf.org/doc/html/rfc
 # Install
 git clone https://github.com/juakali-networks/mip.git
 
+Hard code the Mobile Node IP and Home Agent IP in the file mip.h
+<pre> /* Hardcoded IPS*/
+#define MN_IP           "192.168.0.240"  
+#define HA_IP           "192.168.0.85"
+</pre>
+
 <pre>cd mip/src</pre>
 
 <pre>make clean</pre>
