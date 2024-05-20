@@ -36,6 +36,19 @@ class fa_reg_req():
     def step_1(self):
      
         subprocess.run(["rm Results/fa_reg_rep.pcap"], shell=True, capture_output=False)
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
+
+        cmd = "pwd" 
+        vm_process = subprocess.Popen(['ssh','-tt', vm_user, "%s" % cmd],
+                                    stdin=subprocess.PIPE, 
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+        results_output, results_error = vm_process.communicate()
+        results_output_bytes = bytes(results_output, 'ascii')    
+        print("aaaaa")
+        print(results_output_bytes)  
+        print("bbbbbb")
 
         self.clear_syslogs()
 
@@ -377,7 +390,9 @@ class fa_reg_req():
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
         scp.close()
-        subprocess.run(["pwd"], shell=True, capture_output=True)
+
+
+        vm_process.kill()
 
         subprocess.run(["mv logs/foreign_agent_registration_reply/syslog logs/foreign_agent_registration_reply/vm2_syslog"], shell=True, capture_output=False)
 

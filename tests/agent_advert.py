@@ -28,6 +28,7 @@ class agent_adv():
  
     def step_1(self):
 
+
         subprocess.run(["rm Results/agent_adv.pcap"], shell=True, capture_output=False)
 
         self.clear_syslogs()
@@ -242,8 +243,22 @@ class agent_adv():
         ssh = self.createSSHClient(self._ip1, 22, self._pwd, self._pwd)
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
+        subprocess.run(["ls"], shell=True, capture_output=True)
+
         subprocess.run(["mv logs/agent_advert/syslog logs/agent_advert/vm1_syslog"], shell=True, capture_output=False)
         scp.close()
+
+        cmd = "pwd" 
+        vm_process = subprocess.Popen(["%s" % cmd],
+                                    stdin=subprocess.PIPE, 
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+        results_output, results_error = vm_process.communicate()
+        results_output_bytes = bytes(results_output, 'ascii')  
+        print("List path")  
+        print(results_output_bytes)  
+
 
         ssh = self.createSSHClient(self._ip2, 22, self._pwd, self._pwd)
         scp = SCPClient(ssh.get_transport())

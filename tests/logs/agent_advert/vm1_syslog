@@ -1,6 +1,0 @@
-May 19 15:54:59 lubuntu2004 systemd[1]: session-3.scope: Succeeded.
-May 19 15:54:59 lubuntu2004 systemd[915]: pulseaudio.service: Succeeded.
-May 19 15:55:00 lubuntu2004 systemd[1]: Started Session 5 of user lubuntu.
-May 19 15:55:00 lubuntu2004 systemd[1]: systemd-timedated.service: Succeeded.
-May 19 15:55:18 lubuntu2004 systemd[1]: systemd-hostnamed.service: Succeeded.
-May 19 15:55:20 lubuntu2004 systemd[1]: Started Session 6 of user lubuntu.
