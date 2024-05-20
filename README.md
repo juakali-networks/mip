@@ -5,11 +5,20 @@ Implementation of Mobile IP [RFC 5944](https://datatracker.ietf.org/doc/html/rfc
 # Install
 git clone https://github.com/juakali-networks/mip.git
 
-<pre>cd mip/src</pre>
+Adapt the mip.h file with the Mobile Node IP and Home Agent IP of your setup
 
-<pre>make clean</pre>
+<pre>mip/include/mip.h
+  
+/* Hardcoded IPS*/
+#define MN_IP           "192.168.0.240"  
+#define HA_IP           "192.168.0.85"
+</pre>
 
-<pre>make</pre>
+<pre>cd mip/src
+
+make clean
+
+make</pre>
 
 # Overview
 Mobile IP is a communication protocol (created by extending the Internet Protocol) that allows users to move from one network to another while using the same IP address. It ensures that the communication will continue without the user’s sessions or connections being dropped. 
