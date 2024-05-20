@@ -377,6 +377,8 @@ class fa_reg_req():
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
         scp.close()
+        subprocess.run(["pwd"], shell=True, capture_output=True)
+
         subprocess.run(["mv logs/foreign_agent_registration_reply/syslog logs/foreign_agent_registration_reply/vm2_syslog"], shell=True, capture_output=False)
 
         ssh = self.createSSHClient(self._ip3, 22, self._pwd, self._pwd)

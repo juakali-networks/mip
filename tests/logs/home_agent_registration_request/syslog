@@ -1,0 +1,75 @@
+May 19 15:43:14 lubuntu2004 systemd[1]: session-3.scope: Succeeded.
+May 19 15:43:14 lubuntu2004 systemd[925]: pulseaudio.service: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[1]: Stopping User Manager for UID 1000...
+May 19 15:43:25 lubuntu2004 systemd[925]: Stopped target Main User Target.
+May 19 15:43:25 lubuntu2004 systemd[925]: Stopping D-Bus User Message Bus...
+May 19 15:43:25 lubuntu2004 systemd[925]: dbus.service: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[925]: Stopped D-Bus User Message Bus.
+May 19 15:43:25 lubuntu2004 systemd[925]: Stopped target Basic System.
+May 19 15:43:25 lubuntu2004 systemd[925]: Stopped target Paths.
+May 19 15:43:25 lubuntu2004 systemd[925]: Stopped target Sockets.
+May 19 15:43:25 lubuntu2004 systemd[925]: Stopped target Timers.
+May 19 15:43:25 lubuntu2004 systemd[925]: dbus.socket: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[925]: Closed D-Bus User Message Bus Socket.
+May 19 15:43:25 lubuntu2004 systemd[925]: dirmngr.socket: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[925]: Closed GnuPG network certificate management daemon.
+May 19 15:43:25 lubuntu2004 systemd[925]: gpg-agent-browser.socket: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[925]: Closed GnuPG cryptographic agent and passphrase cache (access for web browsers).
+May 19 15:43:25 lubuntu2004 systemd[925]: gpg-agent-extra.socket: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[925]: Closed GnuPG cryptographic agent and passphrase cache (restricted).
+May 19 15:43:25 lubuntu2004 systemd[925]: gpg-agent-ssh.socket: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[925]: Closed GnuPG cryptographic agent (ssh-agent emulation).
+May 19 15:43:25 lubuntu2004 systemd[925]: gpg-agent.socket: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[925]: Closed GnuPG cryptographic agent and passphrase cache.
+May 19 15:43:25 lubuntu2004 systemd[925]: pk-debconf-helper.socket: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[925]: Closed debconf communication socket.
+May 19 15:43:25 lubuntu2004 systemd[925]: pulseaudio.socket: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[925]: Closed Sound System.
+May 19 15:43:25 lubuntu2004 systemd[925]: snapd.session-agent.socket: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[925]: Closed REST API socket for snapd user session agent.
+May 19 15:43:25 lubuntu2004 systemd[925]: Reached target Shutdown.
+May 19 15:43:25 lubuntu2004 systemd[925]: systemd-exit.service: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[925]: Finished Exit the Session.
+May 19 15:43:25 lubuntu2004 systemd[925]: Reached target Exit the Session.
+May 19 15:43:25 lubuntu2004 systemd[1]: user@1000.service: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[1]: Stopped User Manager for UID 1000.
+May 19 15:43:25 lubuntu2004 systemd[1]: Stopping User Runtime Directory /run/user/1000...
+May 19 15:43:25 lubuntu2004 systemd[870]: run-user-1000.mount: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[1]: run-user-1000.mount: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[1]: user-runtime-dir@1000.service: Succeeded.
+May 19 15:43:25 lubuntu2004 systemd[1]: Stopped User Runtime Directory /run/user/1000.
+May 19 15:43:25 lubuntu2004 systemd[1]: Removed slice User Slice of UID 1000.
+May 19 15:43:25 lubuntu2004 systemd[1]: Created slice User Slice of UID 1000.
+May 19 15:43:25 lubuntu2004 systemd[1]: Starting User Runtime Directory /run/user/1000...
+May 19 15:43:25 lubuntu2004 systemd[1]: Finished User Runtime Directory /run/user/1000.
+May 19 15:43:25 lubuntu2004 systemd[1]: Starting User Manager for UID 1000...
+May 19 15:43:25 lubuntu2004 systemd[1041]: Reached target Paths.
+May 19 15:43:25 lubuntu2004 systemd[1041]: Reached target Timers.
+May 19 15:43:25 lubuntu2004 systemd[1041]: Starting D-Bus User Message Bus Socket.
+May 19 15:43:25 lubuntu2004 systemd[1041]: Listening on GnuPG network certificate management daemon.
+May 19 15:43:25 lubuntu2004 systemd[1041]: Listening on GnuPG cryptographic agent and passphrase cache (access for web browsers).
+May 19 15:43:25 lubuntu2004 systemd[1041]: Listening on GnuPG cryptographic agent and passphrase cache (restricted).
+May 19 15:43:25 lubuntu2004 systemd[1041]: Listening on GnuPG cryptographic agent (ssh-agent emulation).
+May 19 15:43:25 lubuntu2004 systemd[1041]: Listening on GnuPG cryptographic agent and passphrase cache.
+May 19 15:43:25 lubuntu2004 systemd[1041]: Listening on debconf communication socket.
+May 19 15:43:25 lubuntu2004 systemd[1041]: Listening on Sound System.
+May 19 15:43:25 lubuntu2004 systemd[1041]: Listening on REST API socket for snapd user session agent.
+May 19 15:43:25 lubuntu2004 systemd[1041]: Listening on D-Bus User Message Bus Socket.
+May 19 15:43:25 lubuntu2004 systemd[1041]: Reached target Sockets.
+May 19 15:43:25 lubuntu2004 systemd[1041]: Reached target Basic System.
+May 19 15:43:25 lubuntu2004 systemd[1]: Started User Manager for UID 1000.
+May 19 15:43:25 lubuntu2004 systemd[1]: Started Session 5 of user lubuntu.
+May 19 15:43:25 lubuntu2004 systemd[1041]: Starting Sound Service...
+May 19 15:43:26 lubuntu2004 systemd[1]: systemd-hostnamed.service: Succeeded.
+May 19 15:43:26 lubuntu2004 rtkit-daemon[878]: Supervising 3 threads of 1 processes of 2 users.
+May 19 15:43:26 lubuntu2004 rtkit-daemon[878]: message repeated 4 times: [ Supervising 3 threads of 1 processes of 2 users.]
+May 19 15:43:26 lubuntu2004 systemd[1041]: Started D-Bus User Message Bus.
+May 19 15:43:26 lubuntu2004 dbus-daemon[1083]: [session uid=1000 pid=1083] AppArmor D-Bus mediation is enabled
+May 19 15:43:26 lubuntu2004 systemd[1041]: Started Sound Service.
+May 19 15:43:26 lubuntu2004 systemd[1041]: Reached target Main User Target.
+May 19 15:43:26 lubuntu2004 systemd[1041]: Startup finished in 342ms.
+May 19 15:43:26 lubuntu2004 kernel: [   63.587738] device enp0s3 entered promiscuous mode
+May 19 15:45:05 lubuntu2004 systemd[1]: Started Session 7 of user lubuntu.
+May 19 15:45:06 lubuntu2004 systemd[1]: Started Session 8 of user lubuntu.
+May 19 15:45:06 lubuntu2004 systemd[1]: session-8.scope: Succeeded.
+May 19 15:45:07 lubuntu2004 systemd[1]: Started Session 9 of user lubuntu.

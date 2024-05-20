@@ -1,0 +1,13 @@
+May 19 15:54:59 lubuntu2004 systemd[1]: session-3.scope: Succeeded.
+May 19 15:54:59 lubuntu2004 systemd[905]: pulseaudio.service: Succeeded.
+May 19 15:54:59 lubuntu2004 systemd[1]: Started Session 5 of user lubuntu.
+May 19 15:54:59 lubuntu2004 systemd[1]: session-5.scope: Succeeded.
+May 19 15:55:00 lubuntu2004 systemd[1]: Started Session 6 of user lubuntu.
+May 19 15:55:00 lubuntu2004 kernel: [   38.620905] device enp0s3 entered promiscuous mode
+May 19 15:55:01 lubuntu2004 systemd[1]: systemd-timedated.service: Succeeded.
+May 19 15:55:18 lubuntu2004 kernel: [   56.481300] device enp0s3 left promiscuous mode
+May 19 15:55:18 lubuntu2004 systemd[1]: session-6.scope: Succeeded.
+May 19 15:55:18 lubuntu2004 systemd[1]: Started Session 7 of user lubuntu.
+May 19 15:55:19 lubuntu2004 systemd[1]: Started Session 8 of user lubuntu.
+May 19 15:55:19 lubuntu2004 systemd[1]: session-8.scope: Succeeded.
+May 19 15:55:20 lubuntu2004 systemd[1]: Started Session 9 of user lubuntu.
