@@ -1,0 +1,6 @@
+May 20 04:44:48 lubuntu2004 systemd[1]: session-3.scope: Succeeded.
+May 20 04:44:48 lubuntu2004 systemd[916]: pulseaudio.service: Succeeded.
+May 20 04:44:48 lubuntu2004 systemd[1]: Started Session 5 of user lubuntu.
+May 20 04:44:48 lubuntu2004 in.rdiscd[1064]: Listening for RREQ UDP messages on port 434 on the Home Agent...
+May 20 04:44:57 lubuntu2004 systemd[1]: systemd-hostnamed.service: Succeeded.
+May 20 04:47:02 lubuntu2004 systemd[1]: Started Session 6 of user lubuntu.
