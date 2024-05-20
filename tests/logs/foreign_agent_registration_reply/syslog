@@ -1,0 +1,17 @@
+May 20 04:37:50 lubuntu2004 systemd[1]: session-5.scope: Succeeded.
+May 20 04:37:50 lubuntu2004 systemd[1]: Started Session 6 of user lubuntu.
+May 20 04:37:51 lubuntu2004 in.rdiscd[1135]: Listening for Agent Advertisement Packet on Mobile Node...
+May 20 04:37:51 lubuntu2004 in.rdiscd[1135]: Run mn_reg_request command
+May 20 04:37:51 lubuntu2004 in.rdiscd[1135]: REQ UDP packet on port 434 has arrived on the Home Agent...
+May 20 04:37:55 lubuntu2004 systemd[1]: systemd-hostnamed.service: Succeeded.
+May 20 04:38:22 lubuntu2004 systemd[1]: Started Session 7 of user lubuntu.
+May 20 04:38:23 lubuntu2004 kernel: [   84.772059] device enp0s3 entered promiscuous mode
+May 20 04:38:27 lubuntu2004 in.rdiscd[1135]: ICMP Router Advertisement message type: 9
+May 20 04:38:27 lubuntu2004 in.rdiscd[1135]: Call registration request function after receivng ICMP packet of type 9
+May 20 04:38:27 lubuntu2004 systemd[1]: session-6.scope: Succeeded.
+May 20 04:38:27 lubuntu2004 in.rdiscd[1135]: Source address RREQ 192.168.0.34
+May 20 04:38:27 lubuntu2004 in.rdiscd[1135]: Destination address RREQ 224.0.0.1
+May 20 04:40:02 lubuntu2004 systemd[1]: Started Session 8 of user lubuntu.
+May 20 04:40:03 lubuntu2004 systemd[1]: Started Session 9 of user lubuntu.
+May 20 04:40:03 lubuntu2004 systemd[1]: session-9.scope: Succeeded.
+May 20 04:40:04 lubuntu2004 systemd[1]: Started Session 10 of user lubuntu.

@@ -1,0 +1,69 @@
+May 20 04:42:01 lubuntu2004 systemd[1]: session-11.scope: Succeeded.
+May 20 04:42:01 lubuntu2004 systemd[1358]: pulseaudio.service: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1]: Stopping User Manager for UID 1000...
+May 20 04:42:11 lubuntu2004 systemd[1358]: Stopped target Main User Target.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Stopping D-Bus User Message Bus...
+May 20 04:42:11 lubuntu2004 systemd[1358]: dbus.service: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Stopped D-Bus User Message Bus.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Stopped target Basic System.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Stopped target Paths.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Stopped target Sockets.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Stopped target Timers.
+May 20 04:42:11 lubuntu2004 systemd[1358]: dbus.socket: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Closed D-Bus User Message Bus Socket.
+May 20 04:42:11 lubuntu2004 systemd[1358]: dirmngr.socket: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Closed GnuPG network certificate management daemon.
+May 20 04:42:11 lubuntu2004 systemd[1358]: gpg-agent-browser.socket: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Closed GnuPG cryptographic agent and passphrase cache (access for web browsers).
+May 20 04:42:11 lubuntu2004 systemd[1358]: gpg-agent-extra.socket: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Closed GnuPG cryptographic agent and passphrase cache (restricted).
+May 20 04:42:11 lubuntu2004 systemd[1358]: gpg-agent-ssh.socket: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Closed GnuPG cryptographic agent (ssh-agent emulation).
+May 20 04:42:11 lubuntu2004 systemd[1358]: gpg-agent.socket: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Closed GnuPG cryptographic agent and passphrase cache.
+May 20 04:42:11 lubuntu2004 systemd[1358]: pk-debconf-helper.socket: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Closed debconf communication socket.
+May 20 04:42:11 lubuntu2004 systemd[1358]: pulseaudio.socket: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Closed Sound System.
+May 20 04:42:11 lubuntu2004 systemd[1358]: snapd.session-agent.socket: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Closed REST API socket for snapd user session agent.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Reached target Shutdown.
+May 20 04:42:11 lubuntu2004 systemd[1358]: systemd-exit.service: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Finished Exit the Session.
+May 20 04:42:11 lubuntu2004 systemd[1358]: Reached target Exit the Session.
+May 20 04:42:11 lubuntu2004 systemd[1]: user@1000.service: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1]: Stopped User Manager for UID 1000.
+May 20 04:42:11 lubuntu2004 systemd[1]: Stopping User Runtime Directory /run/user/1000...
+May 20 04:42:11 lubuntu2004 systemd[866]: run-user-1000.mount: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1]: run-user-1000.mount: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1]: user-runtime-dir@1000.service: Succeeded.
+May 20 04:42:11 lubuntu2004 systemd[1]: Stopped User Runtime Directory /run/user/1000.
+May 20 04:42:11 lubuntu2004 systemd[1]: Removed slice User Slice of UID 1000.
+May 20 04:42:20 lubuntu2004 systemd[1]: Created slice User Slice of UID 1000.
+May 20 04:42:20 lubuntu2004 systemd[1]: Starting User Runtime Directory /run/user/1000...
+May 20 04:42:20 lubuntu2004 systemd[1]: Finished User Runtime Directory /run/user/1000.
+May 20 04:42:20 lubuntu2004 systemd[1]: Starting User Manager for UID 1000...
+May 20 04:42:21 lubuntu2004 systemd[1465]: Reached target Paths.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Reached target Timers.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Starting D-Bus User Message Bus Socket.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Listening on GnuPG network certificate management daemon.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Listening on GnuPG cryptographic agent and passphrase cache (access for web browsers).
+May 20 04:42:21 lubuntu2004 systemd[1465]: Listening on GnuPG cryptographic agent and passphrase cache (restricted).
+May 20 04:42:21 lubuntu2004 systemd[1465]: Listening on GnuPG cryptographic agent (ssh-agent emulation).
+May 20 04:42:21 lubuntu2004 systemd[1465]: Listening on GnuPG cryptographic agent and passphrase cache.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Listening on debconf communication socket.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Listening on Sound System.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Listening on REST API socket for snapd user session agent.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Listening on D-Bus User Message Bus Socket.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Reached target Sockets.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Reached target Basic System.
+May 20 04:42:21 lubuntu2004 systemd[1]: Started User Manager for UID 1000.
+May 20 04:42:21 lubuntu2004 systemd[1]: Started Session 13 of user lubuntu.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Starting Sound Service...
+May 20 04:42:21 lubuntu2004 rtkit-daemon[874]: Supervising 3 threads of 1 processes of 2 users.
+May 20 04:42:21 lubuntu2004 rtkit-daemon[874]: message repeated 4 times: [ Supervising 3 threads of 1 processes of 2 users.]
+May 20 04:42:21 lubuntu2004 systemd[1465]: Started D-Bus User Message Bus.
+May 20 04:42:21 lubuntu2004 dbus-daemon[1515]: [session uid=1000 pid=1515] AppArmor D-Bus mediation is enabled
+May 20 04:42:21 lubuntu2004 systemd[1465]: Started Sound Service.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Reached target Main User Target.
+May 20 04:42:21 lubuntu2004 systemd[1465]: Startup finished in 651ms.
