@@ -1600,8 +1600,8 @@ struct timespec tms;
     // Check if it's an ICMP Agent Advertisement message
     if (icmp_header->type == ICMP_ROUTERADVERT) {
 
-        // Call registration request function
-		
+		logmsg(LOG_INFO, "Call registration request function after receivng ICMP packet of type %d\n", icmp_header->type);
+
 		registration_request(60, buff);
 		close(sockfd);
     }
@@ -1641,6 +1641,7 @@ struct timespec tms;
 
        // buf[bytes_received] = '\0';
 
+		logmsg(LOG_INFO, "Call registration request function on Foreign Agent after binding socket on UDP Port %d\n", MIP_UDP_PORT);
 
         registration_request(60, buff);
 
@@ -1683,6 +1684,7 @@ struct timespec tms;
 
         //buf[bytes_received] = '\0';
 
+		logmsg(LOG_INFO, "Call registration reply function after binding socket on UDP Port %d\n", MIP_UDP_PORT);
 
         registration_reply(60, buff);
 
