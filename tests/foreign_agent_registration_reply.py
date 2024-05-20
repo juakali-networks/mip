@@ -382,13 +382,13 @@ class fa_reg_req():
 
         vm_process.kill()
 
-        subprocess.run(["mv logs/foreign_agent_registration_reply/syslog logs/foreign_agent_registration_reply/vm2_syslog"], shell=True, capture_output=False)
+        subprocess.run(["mv tests/logs/foreign_agent_registration_reply/syslog tests/logs/foreign_agent_registration_reply/vm2_syslog"], shell=True, capture_output=False)
 
         ssh = self.createSSHClient(self._ip3, 22, self._pwd, self._pwd)
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
         scp.close()
-        subprocess.run(["mv logs/foreign_agent_registration_reply/syslog logs/foreign_agent_registration_reply/vm3_syslog"], shell=True, capture_output=False)
+        subprocess.run(["mv tests/logs/foreign_agent_registration_reply/syslog tests/logs/foreign_agent_registration_reply/vm3_syslog"], shell=True, capture_output=False)
 
         print("Saved syslogs")
 

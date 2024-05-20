@@ -387,20 +387,20 @@ class ha_reg_req():
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
         scp.close()
-        subprocess.run(["mv logs/home_agent_registration_request/syslog logs/home_agent_registration_request/vm1_syslog"], shell=True, capture_output=False)
+        subprocess.run(["mv tests/logs/home_agent_registration_request/syslog tests/logs/home_agent_registration_request/vm1_syslog"], shell=True, capture_output=False)
 
         ssh = self.createSSHClient(self._ip2, 22, self._pwd, self._pwd)
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
         scp.close()
-        subprocess.run(["mv logs/home_agent_registration_request/syslog logs/home_agent_registration_request/vm2_syslog"], shell=True, capture_output=False)
+        subprocess.run(["mv tests/logs/home_agent_registration_request/syslog tests/logs/home_agent_registration_request/vm2_syslog"], shell=True, capture_output=False)
 
 
         ssh = self.createSSHClient(self._ip3, 22, self._pwd, self._pwd)
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
         scp.close()
-        subprocess.run(["mv logs/home_agent_registration_request/syslog logs/home_agent_registration_request/vm3_syslog"], shell=True, capture_output=False)
+        subprocess.run(["mv tests/logs/home_agent_registration_request/syslog tests/logs/home_agent_registration_request/vm3_syslog"], shell=True, capture_output=False)
 
         print("Saved syslogs")
 

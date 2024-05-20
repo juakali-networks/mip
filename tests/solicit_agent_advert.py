@@ -245,7 +245,7 @@ class agent_adv():
         scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
         subprocess.run(["ls"], shell=True, capture_output=True)
 
-        subprocess.run(["mv tests/logs/solicit_agent_advert/syslog teste/logs/solicit_agent_advert/vm1_syslog"], shell=True, capture_output=False)
+        subprocess.run(["mv tests/logs/solicit_agent_advert/syslog tests/logs/solicit_agent_advert/vm1_syslog"], shell=True, capture_output=False)
         scp.close()
 
         cmd = "pwd" 

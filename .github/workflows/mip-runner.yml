@@ -21,11 +21,11 @@ jobs:
       run: python3 tests/agent_advert.py
     - name: Run Solicit Agent Advert test
       run: python3 tests/solicit_agent_advert.py
-    #- name: Run Mobile Node Registration Request test
-    #  run: python3 tests/mobile_node_registration_request.py    
-    #- name: Run Home Agent Registration Request test
-    #  run: python3 tests/home_agent_registration_request.py
-    #- name: Run Home Agent Registration Reply test
-    #  run: python3 tests/home_agent_registration_reply.py
-    #- name: Run Foreign Agent Registration Reply test
-    #  run: python3 tests/foreign_agent_registration_reply.py
+    - name: Run Mobile Node Registration Request test
+      run: python3 tests/mobile_node_registration_request.py    
+    - name: Run Home Agent Registration Request test
+      run: python3 tests/home_agent_registration_request.py
+    - name: Run Home Agent Registration Reply test
+      run: python3 tests/home_agent_registration_reply.py
+    - name: Run Foreign Agent Registration Reply test
+      run: python3 tests/foreign_agent_registration_reply.py
