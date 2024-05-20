@@ -196,7 +196,8 @@ next:
 
     if (fa_reg){
 
-            logmsg(LOG_INFO, "Listening for RREQ UDP messages on port 434...\n");
+            logmsg(LOG_INFO, "Listening for RREQ UDP messages on port %d or ICMP packet on the Foreign Agent...\n", MIP_UDP_PORT);
+            logmsg(LOG_INFO, "Run fa_req command\n");
 
             if ((socketfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
                         logperror("socket failed");
@@ -210,11 +211,14 @@ next:
             }
 
             if (socketfd){
+			logmsg(LOG_INFO, "REQ UDP packet on port %d has arrived on the Foreign Agent...\n", MIP_UDP_PORT);
             process_fa_rreg_packet(socketfd);
                 }
 
                 if (sockfd){
-            process_rrep_packet(sockfd);
+				logmsg(LOG_INFO, "ICMP packet has arrived on the Foreign Agent...\n", MIP_UDP_PORT);
+
+            	process_rrep_packet(sockfd);
                         }
         }
 
@@ -223,12 +227,15 @@ next:
 
 	if (mn_reg_request){
 		
-		logmsg(LOG_INFO, "Listening for Agent Advertisement Packet...\n");
+		logmsg(LOG_INFO, "Listening for Agent Advertisement Packet on Mobile Node...\n");
+
+        logmsg(LOG_INFO, "Run mn_reg_request command\n");
 
 		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
      			logperror("socket failed");
 			exit(5);
     	 	}
+		logmsg(LOG_INFO, "REQ UDP packet on port %d has arrived on the Home Agent...\n", MIP_UDP_PORT);
 		process_mn_rreg_packet(sockfd);
 
 /***
@@ -248,7 +255,7 @@ next:
 
 	if (ha_reg_reply){
 
-		logmsg(LOG_INFO, "Listening for RREQ UDP messages on port %d...\n", MIP_UDP_PORT);
+		logmsg(LOG_INFO, "Listening for RREQ UDP messages on port %d on the Home Agent...\n", MIP_UDP_PORT);
 
 		
                if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
