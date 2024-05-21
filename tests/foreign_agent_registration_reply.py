@@ -28,7 +28,7 @@ class fa_reg_req():
        
         self._file = 'fa_reg_rep.pcap'
         self._local_results_path = '/home/dancer/mip/tests/Results'
-        self._local_log_path = '/home/dancer/mip/tests/logs/foreign_agent_registration_reply'
+        self._local_log_path = '/home/dancer/actions-runner/_work/mip/mip/tests/logs/foreign_agent_registration_reply'
         self._vm_log_file =  '/var/log/syslog'
  
 
@@ -372,7 +372,7 @@ class fa_reg_req():
         scp = SCPClient(ssh.get_transport())
         scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
         scp.close()
-        subprocess.run(["mv logs/foreign_agent_registration_reply/syslog logs/foreign_agent_registration_reply/vm1_syslog"], shell=True, capture_output=False)
+        subprocess.run(["mv tests/logs/foreign_agent_registration_reply/syslog tests/logs/foreign_agent_registration_reply/vm1_syslog"], shell=True, capture_output=False)
 
         ssh = self.createSSHClient(self._ip2, 22, self._pwd, self._pwd)
         scp = SCPClient(ssh.get_transport())
@@ -380,7 +380,6 @@ class fa_reg_req():
         scp.close()
 
 
-        vm_process.kill()
 
         subprocess.run(["mv tests/logs/foreign_agent_registration_reply/syslog tests/logs/foreign_agent_registration_reply/vm2_syslog"], shell=True, capture_output=False)
 

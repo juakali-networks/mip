@@ -29,7 +29,7 @@ class ha_reg_rep():
     
         self._file = 'ha_reg_rep.pcap'
         self._local_results_path = '/home/dancer/mip/tests/Results'
-        self._local_log_path = '/home/dancer/mip/tests/logs/home_agent_registration_reply'
+        self._local_log_path = '/home/dancer/actions-runner/_work/mip/mip/tests/logs/home_agent_registration_reply'
         self._vm_log_file =  '/var/log/syslog'
  
 

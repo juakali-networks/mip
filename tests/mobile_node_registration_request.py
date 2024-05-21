@@ -29,7 +29,7 @@ class mn_reg_req():
     
         self._file = 'mn_reg_req.pcap'
         self._local_results_path = '/home/dancer/mip/tests/Results'
-        self._local_log_path = '/home/dancer/mip/tests/logs/mobile_node_registration_request'
+        self._local_log_path = '/home/dancer/actions-runner/_work/mip/mip/tests/logs/mobile_node_registration_request'
         self._vm_log_file =  '/var/log/syslog'
  
     def step_1(self):

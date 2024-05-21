@@ -1,0 +1,15 @@
+May 21 13:29:45 lubuntu2004 systemd[1]: session-9.scope: Succeeded.
+May 21 13:30:01 lubuntu2004 CRON[1439]: (root) CMD ([ -x /etc/init.d/anacron ] && if [ ! -d /run/systemd/system ]; then /usr/sbin/invoke-rc.d anacron start >/dev/null; fi)
+May 21 13:30:06 lubuntu2004 systemd[1]: Started Session 11 of user lubuntu.
+May 21 13:30:06 lubuntu2004 systemd[1]: session-11.scope: Succeeded.
+May 21 13:30:07 lubuntu2004 anacron[403]: Job `cron.weekly' terminated (mailing output)
+May 21 13:30:07 lubuntu2004 anacron[403]: anacron: Can't find sendmail at /usr/sbin/sendmail, not mailing output
+May 21 13:30:07 lubuntu2004 anacron[403]: Can't find sendmail at /usr/sbin/sendmail, not mailing output
+May 21 13:30:07 lubuntu2004 systemd[1]: anacron.service: Succeeded.
+May 21 13:30:07 lubuntu2004 anacron[403]: Normal exit (2 jobs run)
+May 21 13:30:22 lubuntu2004 systemd[1]: Started Session 12 of user lubuntu.
+May 21 13:31:50 lubuntu2004 systemd[1]: Started Run anacron jobs.
+May 21 13:31:50 lubuntu2004 anacron[1598]: Anacron 2.3 started on 2024-05-21
+May 21 13:31:50 lubuntu2004 systemd[1]: anacron.service: Succeeded.
+May 21 13:31:50 lubuntu2004 anacron[1598]: Normal exit (0 jobs run)
+May 21 13:32:00 lubuntu2004 systemd[1]: Started Session 13 of user lubuntu.

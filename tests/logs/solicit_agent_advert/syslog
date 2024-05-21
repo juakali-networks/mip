@@ -1,18 +1,14 @@
-May 20 07:06:23 lubuntu2004 systemd[1]: session-3.scope: Succeeded.
-May 20 07:06:23 lubuntu2004 systemd[937]: pulseaudio.service: Succeeded.
-May 20 07:06:23 lubuntu2004 systemd[1]: Started Session 5 of user lubuntu.
-May 20 07:06:23 lubuntu2004 in.rdiscd[1098]: Listening for Agent Advertisement Packet on Mobile Node...
-May 20 07:06:23 lubuntu2004 in.rdiscd[1098]: Run mn_reg_request command
-May 20 07:06:23 lubuntu2004 in.rdiscd[1098]: REQ UDP packet on port 434 has arrived on the Home Agent...
-May 20 07:06:23 lubuntu2004 systemd[1]: Started Session 6 of user lubuntu.
-May 20 07:06:25 lubuntu2004 systemd[1]: systemd-hostnamed.service: Succeeded.
-May 20 07:06:30 lubuntu2004 systemd[1]: session-6.scope: Succeeded.
-May 20 07:06:30 lubuntu2004 systemd[1]: Started Session 7 of user lubuntu.
-May 20 07:06:30 lubuntu2004 kernel: [   60.397183] device enp0s3 entered promiscuous mode
-May 20 07:12:38 lubuntu2004 in.rdiscd[1098]: ICMP Router Advertisement message type: 8
-May 20 07:12:39 lubuntu2004 kernel: [  428.814322] device enp0s3 left promiscuous mode
-May 20 07:12:39 lubuntu2004 systemd[1]: session-7.scope: Succeeded.
-May 20 07:12:39 lubuntu2004 systemd[1]: Started Session 8 of user lubuntu.
-May 20 07:12:39 lubuntu2004 systemd[1]: Started Session 9 of user lubuntu.
-May 20 07:12:39 lubuntu2004 systemd[1]: session-9.scope: Succeeded.
-May 20 07:12:41 lubuntu2004 systemd[1]: Started Session 10 of user lubuntu.
+May 21 13:08:50 lubuntu2004 systemd[1]: session-3.scope: Succeeded.
+May 21 13:08:50 lubuntu2004 systemd[945]: pulseaudio.service: Succeeded.
+May 21 13:08:50 lubuntu2004 systemd[1]: Started Session 5 of user lubuntu.
+May 21 13:08:50 lubuntu2004 systemd[1]: session-5.scope: Succeeded.
+May 21 13:08:50 lubuntu2004 systemd[1]: Started Session 6 of user lubuntu.
+May 21 13:08:57 lubuntu2004 systemd[1]: session-6.scope: Succeeded.
+May 21 13:08:57 lubuntu2004 systemd[1]: Started Session 7 of user lubuntu.
+May 21 13:08:57 lubuntu2004 kernel: [   61.530635] device enp0s3 entered promiscuous mode
+May 21 13:12:35 lubuntu2004 kernel: [  279.594159] device enp0s3 left promiscuous mode
+May 21 13:12:35 lubuntu2004 systemd[1]: session-7.scope: Succeeded.
+May 21 13:12:36 lubuntu2004 systemd[1]: Started Session 8 of user lubuntu.
+May 21 13:12:36 lubuntu2004 systemd[1]: Started Session 9 of user lubuntu.
+May 21 13:12:36 lubuntu2004 systemd[1]: session-9.scope: Succeeded.
+May 21 13:12:37 lubuntu2004 systemd[1]: Started Session 10 of user lubuntu.

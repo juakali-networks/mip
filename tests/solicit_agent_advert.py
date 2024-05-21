@@ -23,7 +23,7 @@ class agent_adv():
         self._agent_advert_code = "16"
         self._file = 'solicit_agent_adv.pcap'
         self._local_results_path = '/home/dancer/mip/tests/Results'
-        self._local_log_path = '/home/dancer/mip/tests/logs/solicit_agent_advert'
+        self._local_log_path = '/home/dancer/actions-runner/_work/mip/mip/tests/logs/solicit_agent_advert'
         self._vm_log_file =  '/var/log/syslog'
  
     def step_1(self):
