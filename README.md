@@ -43,12 +43,6 @@ VM_1, VM_2 and VM_3.
 
 Run the commands on the VMs in the following order
 
-On VM_1 (Foreign Agent) and VM_2 (Mobile Node), run the commands below to enable dynamic tunnel creation.
-
-<pre>sysctl -w net.ipv4.ip_forward=1</pre>
-
-
-
 On VM_2 (Mobile Node)
 
 <pre>sudo ./mip/src/mip -r </pre>
