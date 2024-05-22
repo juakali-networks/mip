@@ -208,8 +208,8 @@ class agent_adv():
         """
         clear sys logs
         """
-        subprocess.run(["rm logs/agent_advert/vm1_syslogs"], shell=True, capture_output=False)
-        subprocess.run(["rm logs/agent_advert/vm2_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm tests/logs/agent_advert/vm1_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm tests/logs/agent_advert/vm2_syslogs"], shell=True, capture_output=False)
 
         vm1_user = "%s@%s" % (self._user_name, self._ip1)
         vm1_process = subprocess.Popen(['ssh','-tt', vm1_user, "echo '%s' | sudo -S truncate -s 0 /var/log/syslog\n" % self._pwd],

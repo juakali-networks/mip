@@ -338,9 +338,9 @@ class ha_reg_req():
         """
         clear sys logs
         """
-        subprocess.run(["rm logs/home_agent_registration_request/vm1_syslogs"], shell=True, capture_output=False)
-        subprocess.run(["rm logs/home_agent_registration_request/vm2_syslogs"], shell=True, capture_output=False)
-        subprocess.run(["rm logs/home_agent_registration_request/vm3_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm tests/logs/home_agent_registration_request/vm1_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm tests/logs/home_agent_registration_request/vm2_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm tests/logs/home_agent_registration_request/vm3_syslogs"], shell=True, capture_output=False)
 
         
 

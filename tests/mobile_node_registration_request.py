@@ -287,9 +287,9 @@ class mn_reg_req():
         """
         clear sys logs
         """
-        subprocess.run(["rm logs/mobile_node_registration_request/vm1_syslogs"], shell=True, capture_output=False)
-        subprocess.run(["rm logs/mobile_node_registration_request/vm2_syslogs"], shell=True, capture_output=False)
-        subprocess.run(["rm logs/mobile_node_registration_request/vm3_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm tests/logs/mobile_node_registration_request/vm1_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm tests/logs/mobile_node_registration_request/vm2_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm tests/logs/mobile_node_registration_request/vm3_syslogs"], shell=True, capture_output=False)
         
         vm1_user = "%s@%s" % (self._user_name, self._ip1)
         vm1_process = subprocess.Popen(['ssh','-tt', vm1_user, "echo '%s' | sudo -S truncate -s 0 /var/log/syslog\n" % self._pwd],

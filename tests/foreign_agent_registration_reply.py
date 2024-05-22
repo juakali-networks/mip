@@ -325,9 +325,9 @@ class fa_reg_req():
         """
         clear sys logs
         """
-        subprocess.run(["rm logs/foreign_agent_registration_reply/vm1_syslogs"], shell=True, capture_output=False)
-        subprocess.run(["rm logs/foreign_agent_registration_reply/vm2_syslogs"], shell=True, capture_output=False)
-        subprocess.run(["rm logs/foreign_agent_registration_reply/vm3_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm tests/logs/foreign_agent_registration_reply/vm1_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm tests/logs/foreign_agent_registration_reply/vm2_syslogs"], shell=True, capture_output=False)
+        subprocess.run(["rm tests/logs/foreign_agent_registration_reply/vm3_syslogs"], shell=True, capture_output=False)
        
 
         vm1_user = "%s@%s" % (self._user_name, self._ip1)
