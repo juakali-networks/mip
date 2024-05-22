@@ -447,6 +447,8 @@ advertise(struct sockaddr_in *sin, int lft)
 				cc = sendto(socketfd, (char *)outpack, packetlen, 0,
 					    (struct sockaddr *)sin,
 					    sizeof(struct sockaddr));
+				logmsg(LOG_INFO, "Agent advertisement message sent...\n");
+
 			} else
 				cc = packetlen;
 		}
@@ -522,6 +524,11 @@ registration_request(int lft, unsigned char *buff)
             perror("sendto()");
             exit(3);
         	}
+	if (fa_reg)
+		logmsg(LOG_INFO, "Foreign Agent forwaredd RREQ Packet to Home Agent...\n");
+	if (mn_reg_request)
+		logmsg(LOG_INFO, "Mobile Node sent RREQ Packet to Foreign Agent...\n");
+
 
 	close(sock);
 
@@ -595,7 +602,10 @@ registration_reply(int lft, unsigned char *buff)
             perror("sendto()");
             exit(3);
         }
-
+	if (fa_reg)
+		logmsg(LOG_INFO, "Foreign Agent forwarded RREP Packet to Mobile Node...\n");
+	if (ha_reg_reply)
+		logmsg(LOG_INFO, "Home Agent sent RREP Packet to Foreign Agent...\n");
 	close(sock);
 
 }
