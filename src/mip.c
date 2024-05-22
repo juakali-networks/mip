@@ -426,9 +426,10 @@ advertise(struct sockaddr_in *sin, int lft)
 		if (isbroadcast(sin))
 			cc = sendbcastif(socketfd, (char *)outpack, packetlen,
 					&interfaces[i]);
-		else if (ismulticast(sin))
+		else if (ismulticast(sin)) {
+			logmsg(LOG_INFO, "Agent advertisement message sent...\n");
 			cc = sendmcastif(socketfd, (char *)outpack, packetlen, sin,
-					&interfaces[i]);
+					&interfaces[i]); }
 		else {
 			struct interface *ifp = &interfaces[i];
 			/*
@@ -447,7 +448,6 @@ advertise(struct sockaddr_in *sin, int lft)
 				cc = sendto(socketfd, (char *)outpack, packetlen, 0,
 					    (struct sockaddr *)sin,
 					    sizeof(struct sockaddr));
-				logmsg(LOG_INFO, "Agent advertisement message sent...\n");
 
 			} else
 				cc = packetlen;
@@ -519,16 +519,16 @@ registration_request(int lft, unsigned char *buff)
 
 	packetlen = sizeof(struct reg_req);
 
-    if (sendto(sock, buff, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0)
-         	{
-            perror("sendto()");
-            exit(3);
-        	}
 	if (fa_reg)
 		logmsg(LOG_INFO, "Foreign Agent forwaredd RREQ Packet to Home Agent...\n");
 	if (mn_reg_request)
 		logmsg(LOG_INFO, "Mobile Node sent RREQ Packet to Foreign Agent...\n");
 
+    if (sendto(sock, buff, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+         	{
+            perror("sendto()");
+            exit(3);
+        	}
 
 	close(sock);
 
@@ -597,15 +597,17 @@ registration_reply(int lft, unsigned char *buff)
 
 	packetlen = sizeof(struct reg_req);
 
+	if (fa_reg)
+		logmsg(LOG_INFO, "Foreign Agent forwarded RREP Packet to Mobile Node...\n");
+	if (ha_reg_reply)
+		logmsg(LOG_INFO, "Home Agent sent RREP Packet to Foreign Agent...\n");
+
     if (sendto(sock, buff, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0)
         {
             perror("sendto()");
             exit(3);
         }
-	if (fa_reg)
-		logmsg(LOG_INFO, "Foreign Agent forwarded RREP Packet to Mobile Node...\n");
-	if (ha_reg_reply)
-		logmsg(LOG_INFO, "Home Agent sent RREP Packet to Foreign Agent...\n");
+
 	close(sock);
 
 }
