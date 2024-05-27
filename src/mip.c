@@ -520,7 +520,7 @@ registration_request(int lft, unsigned char *buff)
 	packetlen = sizeof(struct reg_req);
 
 	if (fa_reg)
-		logmsg(LOG_INFO, "Foreign Agent forwaredd RREQ Packet to Home Agent...\n");
+		logmsg(LOG_INFO, "Foreign Agent forwared RREQ Packet to Home Agent...\n");
 	if (mn_reg_request)
 		logmsg(LOG_INFO, "Mobile Node sent RREQ Packet to Foreign Agent...\n");
 
@@ -543,7 +543,7 @@ registration_request(int lft, unsigned char *buff)
 */
 
 void
-registration_reply(int lft, unsigned char *buff)
+registration_reply(int lft, unsigned char *buff, int sockfd, int udp_dest)
 {
   	static unsigned char outpack[MAXPACKET];
 	struct sockaddr_in addr;
@@ -560,12 +560,13 @@ registration_reply(int lft, unsigned char *buff)
 
 	// create a raw socket with UDP protocol
 
-	sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		    		
+	/*** sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		    		
 
 	if (sock < 0) {
     		perror("socket() error");
     		exit(2);
   		}
+	***/
 	logmsg(LOG_INFO, "Sources address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 	logmsg(LOG_INFO, "Destination address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
@@ -575,7 +576,10 @@ registration_reply(int lft, unsigned char *buff)
 	// Source Port: Copied from the UDP Destination Port of the corresponding Registration Request.
 	// Destination Port_: Copied from the source port of the corresponding Registration Request 
 
-    addr.sin_port = MIP_UDP_PORT;
+	// Remove this later
+    addr.sin_port = htons(1888);
+
+    // addr.sin_port = MIP_UDP_PORT;
 	//addr.sin_addr.s_addr = INADDR_ANY;
 	if (ha_reg_reply)
     	addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
@@ -1665,9 +1669,13 @@ struct timespec tms;
     struct sockaddr_in server_addr, client_addr, response_addr;
     socklen_t client_len;
     char buff[BUFSIZE];
+	int udp_dest;
+
 
     // Prepare server address
     memset(&server_addr, 0, sizeof(server_addr));
+    memset(&client_addr, 0, sizeof(client_addr));
+
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(MIP_UDP_PORT);
@@ -1695,7 +1703,7 @@ struct timespec tms;
 
 		logmsg(LOG_INFO, "Call registration reply function after binding socket on UDP Port %d\n", MIP_UDP_PORT);
 
-        registration_reply(60, buff);
+        registration_reply(120, buff, sockfd, udp_dest);
 
         close(sockfd);
 
