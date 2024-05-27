@@ -577,7 +577,7 @@ registration_reply(int lft, unsigned char *buff, int sockfd, int udp_dest)
 	// Destination Port_: Copied from the source port of the corresponding Registration Request 
 
 	// Remove this later
-    addr.sin_port = htons(1888);
+    addr.sin_port = htons(udp_dest);
 
     // addr.sin_port = MIP_UDP_PORT;
 	//addr.sin_addr.s_addr = INADDR_ANY;
@@ -606,13 +606,14 @@ registration_reply(int lft, unsigned char *buff, int sockfd, int udp_dest)
 	if (ha_reg_reply)
 		logmsg(LOG_INFO, "Home Agent sent RREP Packet to Foreign Agent...\n");
 
-    if (sendto(sock, buff, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0)
+  
+    if (sendto(sockfd, buff, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0)
         {
             perror("sendto()");
             exit(3);
         }
 
-	close(sock);
+	close(sockfd);
 
 }
 
@@ -1702,6 +1703,7 @@ struct timespec tms;
         //buf[bytes_received] = '\0';
 
 		logmsg(LOG_INFO, "Call registration reply function after binding socket on UDP Port %d\n", MIP_UDP_PORT);
+		udp_dest = ntohs(client_addr.sin_port);
 
         registration_reply(120, buff, sockfd, udp_dest);
 
