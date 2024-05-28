@@ -116,7 +116,7 @@ class ha_reg_rep():
             print("Test Failed")
 
         self.save_syslogs()
-        # self.clean_up()
+        self.clean_up()
 
         return state
 

@@ -328,8 +328,8 @@ class ha_reg_req():
         vm2_process.kill()
         vm3_process.kill()
 
-        print("Wait 60s for VMs to reboot")
-        time.sleep(60)
+        print("Wait 120s for VMs to reboot")
+        time.sleep(120)
         print("VMs are fully rebooted")
 
         return True
