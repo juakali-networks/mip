@@ -539,23 +539,12 @@ registration_reply(int lft, unsigned char *buff, int sockfd, int udp_dest)
     int packetlen, i;
 	int sock;
 	struct iphdr *ip;
-    // char buff[PCKT_LEN];
 
-	// memset(buff, 0, PCKT_LEN);
 
 	ip = (struct iphdr *)buff;
 
 	struct reg_rep  *rrep = (struct reg_rep *)buff;
 
-	// create a raw socket with UDP protocol
-
-	/*** sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		    		
-
-	if (sock < 0) {
-    		perror("socket() error");
-    		exit(2);
-  		}
-	***/
 	logmsg(LOG_INFO, "Sources address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 	logmsg(LOG_INFO, "Destination address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
@@ -590,12 +579,6 @@ registration_reply(int lft, unsigned char *buff, int sockfd, int udp_dest)
 
 	packetlen = sizeof(struct reg_req);
 
-	if (fa_reg)
-		logmsg(LOG_INFO, "Foreign Agent forwarded RREP Packet to Mobile Node...\n");
-	if (ha_reg_reply)
-		logmsg(LOG_INFO, "Home Agent sent RREP Packet to Foreign Agent...\n");
-
-  
     if (sendto(sockfd, buff, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0)
         {
             logmsg(LOG_INFO, "Packet not sent...\n");
@@ -1640,7 +1623,6 @@ struct timespec tms;
         ssize_t bytes_received = recvfrom(socketfd, buff, BUFSIZE, 0,
                                           (struct sockaddr *)&client_addr, &client_len);
 
-
         if (bytes_received == -1) {
 
            perror("recvfrom");
@@ -1684,7 +1666,6 @@ struct timespec tms;
             server_addr.sin_port = htons(MIP_UDP_PORT);
 
      }
-
 
     // Bind the socket to the specified port
     if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
@@ -1818,7 +1799,6 @@ faregreply(int lft, unsigned char *buffer)
             exit(3);
                 }
         logmsg(LOG_INFO, "Packet sent\n");
-
 
         close(sock);
 

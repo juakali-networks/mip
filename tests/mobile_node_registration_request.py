@@ -86,7 +86,7 @@ class mn_reg_req():
             print("Test Failed")
      
         self.save_syslogs()
-        self.clean_up()
+        # self.clean_up()
 
         return state
 
@@ -197,10 +197,10 @@ class mn_reg_req():
     
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
        
-        vm_user = "%s@%s" % (self._user_name, self._ip1)
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
     
         try:
-            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -m" % self._pwd],
+            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -s" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,

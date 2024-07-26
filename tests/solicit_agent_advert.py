@@ -80,7 +80,7 @@ class agent_adv():
             print("Test Failed")
 
         self.save_syslogs()
-        #self.clean_up()
+        self.clean_up()
 
         return state
 
@@ -127,14 +127,12 @@ class agent_adv():
 
         ma_process.kill()
 
-
         # read pcap file and read packet fields
         pcap_file = pyshark.FileCapture('/home/dancer/mip/tests/Results/solicit_agent_adv.pcap')
 
         try:
             for packet in pcap_file:
 
-           #     tos_hex_value = int(packet.layers[1].dsfield, 16)
                 dst_addr = packet.layers[1].dst
                 icmp_type = packet.layers[2].type
                 icmp_code = packet.layers[2].code
@@ -159,7 +157,6 @@ class agent_adv():
                 else:
                     print("\ngent Advert message is sent with wrong ICMP code %s and not code %s\n" % (self._agent_advert_type, icmp_type))
                     state.append(False)
-
 
         except Exception as err:
             print("Failed to  captured packet with error %s" % err)

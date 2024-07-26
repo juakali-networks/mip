@@ -31,7 +31,6 @@ class fa_reg_req():
         self._local_log_path = '/home/dancer/actions-runner/_work/mip/mip/tests/logs/foreign_agent_registration_reply'
         self._vm_log_file =  '/var/log/syslog'
  
-
  
     def step_1(self):
      
@@ -39,8 +38,6 @@ class fa_reg_req():
 
 
         self.clear_syslogs()
-
-
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
@@ -132,7 +129,7 @@ class fa_reg_req():
             print("Test Failed")
         
         self.save_syslogs()
-        self.clean_up()
+        # self.clean_up()
 
         return state
 
@@ -222,10 +219,10 @@ class fa_reg_req():
     def run_agent_advert(self):
 
         print("\nForeign Agent sending Agent Advertisement multicast pabroadacket\n")
-        vm_user = "%s@%s" % (self._user_name, self._ip1)
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
     
         try:
-            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -m" % self._pwd],
+            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -s" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -373,8 +370,6 @@ class fa_reg_req():
         scp.get(remote_path=self._vm_log_file, local_path=self._local_log_path)
         scp.close()
 
-
-
         subprocess.run(["mv tests/logs/foreign_agent_registration_reply/syslog tests/logs/foreign_agent_registration_reply/vm2_syslog"], shell=True, capture_output=False)
 
         ssh = self.createSSHClient(self._ip3, 22, self._pwd, self._pwd)
@@ -396,11 +391,6 @@ fa_reg_req().step_2()
 
 
  
-
-
-
-
-
 
 
 

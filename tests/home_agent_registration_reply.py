@@ -110,7 +110,7 @@ class ha_reg_rep():
             print("Test Failed")
 
         self.save_syslogs()
-        self.clean_up()
+        # self.clean_up()
 
         return state
 
@@ -200,10 +200,10 @@ class ha_reg_rep():
     
         print("\nForeign Agent sending Agent Advertisement multicast packet\n")
        
-        vm_user = "%s@%s" % (self._user_name, self._ip1)
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
     
         try:
-            fa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -m" % self._pwd],
+            fa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -s" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -299,8 +299,7 @@ class ha_reg_rep():
         subprocess.run(["rm tests/logs/home_agent_registration_reply/vm2_syslogs"], shell=True, capture_output=False)
         subprocess.run(["rm tests/logs/home_agent_registration_reply/vm3_syslogs"], shell=True, capture_output=False)
 
-        
-
+       
         vm1_user = "%s@%s" % (self._user_name, self._ip1)
         vm1_process = subprocess.Popen(['ssh','-tt', vm1_user, "echo '%s' | sudo -S truncate -s 0 /var/log/syslog\n" % self._pwd],
                                     stdin=subprocess.PIPE,
