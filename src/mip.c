@@ -89,10 +89,10 @@ int main(int argc, char **argv)
 			case 'r':
 				mn_reg_request = 1;
 				break;
-		        case 'j':
-                                fa_rep = 1;
-                                break;
-			case 'a':
+		    case 'j':
+                fa_rep = 1;
+                break;
+			    case 'a':
 				best_preference = 0;
 				break;
 			case 'b':
@@ -201,9 +201,6 @@ next:
 
     if (fa_reg){
 
-            logmsg(LOG_INFO, "Listening for RREQ UDP messages on port %d or ICMP packet on the Foreign Agent...\n", MIP_UDP_PORT);
-            logmsg(LOG_INFO, "Run fa_req command\n");
-
             if ((socketfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
                         logperror("socket failed");
                         exit(5);
@@ -211,8 +208,7 @@ next:
 
 
             if (socketfd){
-			logmsg(LOG_INFO, "REQ UDP packet on port %d has arrived on the Foreign Agent...\n", MIP_UDP_PORT);
-            process_fa_rreg_packet(socketfd);
+                   process_fa_rreg_packet(socketfd);
                 }
 
               
@@ -221,39 +217,25 @@ next:
 
        if (fa_rep){
 
-            logmsg(LOG_INFO, "jjj Listening for RREQ UDP messages on port %d or ICMP packet on the Foreign Agent...\n", MIP_UDP_PORT);
-            logmsg(LOG_INFO, "jjjj Run fa_req command\n");
-
             if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_UDP)) < 0) {
                        logperror("socket failed");
                        exit(5);
             }
-            logmsg(LOG_INFO, "ppppppppppppppppppp...\n");
-
-            logmsg(LOG_INFO, "mmmmmmmmmmmmmmmmmm..\n");
 
                  if (sockfd){
-                                logmsg(LOG_INFO, "ICMP packet has arrived on the Foreign Agent...\n", MIP_UDP_PORT);
 
                 process_rrep_packet_final(sockfd);
                         }
         }
 
 
-
-
-
 	if (mn_reg_request){
 		
-		logmsg(LOG_INFO, "Listening for Agent Advertisement Packet on Mobile Node...\n");
-
-        logmsg(LOG_INFO, "Run mn_reg_request command\n");
 
 		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
      			logperror("socket failed");
 			exit(5);
     	 	}
-		logmsg(LOG_INFO, "REQ UDP packet on port %d has arrived on the Home Agent...\n", MIP_UDP_PORT);
 		process_mn_rreg_packet(sockfd);
 
 /***
@@ -272,8 +254,6 @@ next:
 
 
 	if (ha_reg_reply){
-
-		logmsg(LOG_INFO, "Listening for RREQ UDP messages on port %d on the Home Agent...\n", MIP_UDP_PORT);
 
 		
                if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
@@ -512,18 +492,13 @@ registration_request(int lft, unsigned char *buff)
     	  perror("socket() error");
     		exit(2);
   		}
-	logmsg(LOG_INFO, "Source address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-	logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-        memset(&addr, 0, sizeof(addr));
+	//logmsg(LOG_INFO, "Source address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+	//logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+    memset(&addr, 0, sizeof(addr));
  
-        addr.sin_family = AF_INET;
-        addr.sin_port = htons(MIP_UDP_PORT);
-    // addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-	//addr.sin_addr.s_addr = INADDR_ANY;
-	if (fa_reg)
-		 addr.sin_addr.s_addr = inet_addr(HA_IP);
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(MIP_UDP_PORT);
 
-	if (mn_reg_request)
 	addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 
 	rreq->reg_req_type = ICMP_REGREQUEST;
@@ -541,31 +516,11 @@ registration_request(int lft, unsigned char *buff)
 
 	packetlen = sizeof(struct reg_req);
 
-	if (fa_reg)
-		logmsg(LOG_INFO, "Foreign Agent forwared RREQ Packet to Home Agent...\n");
-	if (mn_reg_request)
-		logmsg(LOG_INFO, "Mobile Node sent RREQ Packet to Foreign Agent...\n");
-
     if (sendto(sock, buff, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0)
          	{
             perror("sendto()");
             exit(3);
         	}
-      //  if (fa_reg){
-
-
- 
-    //logmsg(LOG_INFO, "hhhhhhhhhhhhhhhh %d.\n");
-
-      // Get the local address and port used
-  //  if (getsockname(sock, (struct sockaddr *)&localaddr, &addrlen) < 0) {
-    //    perror("getsockname failed");
-      //  close(sock);
-   //     exit(EXIT_FAILURE);
-   // }
-    //logmsg(LOG_INFO, "Message sent to destination port %d.\n", ntohs(myaddr.sin_port), ntohs(destaddr.sin_port));
-   // logmsg(LOG_INFO, "Message sent from ephemeral port %d.\n", ntohs(addr.sin_port));
-   // }
 
 	close(sock);
 
@@ -587,23 +542,11 @@ registration_reply(int lft, unsigned char *buff, int sockfd, int udp_dest)
     int packetlen, i;
 	int sock;
 	struct iphdr *ip;
-    // char buff[PCKT_LEN];
-
-	// memset(buff, 0, PCKT_LEN);
 
 	ip = (struct iphdr *)buff;
 
 	struct reg_rep  *rrep = (struct reg_rep *)buff;
 
-	// create a raw socket with UDP protocol
-
-	/*** sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		    		
-
-	if (sock < 0) {
-    		perror("socket() error");
-    		exit(2);
-  		}
-	***/
 	logmsg(LOG_INFO, "Sources address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 	logmsg(LOG_INFO, "Destination address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
@@ -637,12 +580,6 @@ registration_reply(int lft, unsigned char *buff, int sockfd, int udp_dest)
 	rrep->reg_rep_id = get_time();
 
 	packetlen = sizeof(struct reg_req);
-
-	if (fa_reg)
-		logmsg(LOG_INFO, "Foreign Agent forwarded RREP Packet to Mobile Node...\n");
-	if (ha_reg_reply)
-		logmsg(LOG_INFO, "Home Agent sent RREP Packet to Foreign Agent...\n");
-
   
     if (sendto(sockfd, buff, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0)
         {
@@ -1649,12 +1586,10 @@ struct timespec tms;
     struct iphdr *ip_header = (struct iphdr *)buff;
     struct icmphdr *icmp_header = (struct icmphdr *)(buff + sizeof(struct iphdr));
 
-	logmsg(LOG_INFO, "ICMP Router Advertisement message type: %d\n", icmp_header->type);
+	// logmsg(LOG_INFO, "ICMP Router Advertisement message type: %d\n", icmp_header->type);
 
     // Check if it's an ICMP Agent Advertisement message
     if (icmp_header->type == ICMP_ROUTERADVERT) {
-
-		logmsg(LOG_INFO, "Call registration request function after receivng ICMP packet of type %d\n", icmp_header->type);
 
 		registration_request(60, buff);
 		close(sockfd);
@@ -1679,7 +1614,6 @@ struct timespec tms;
         perror("bind");
  
     }
-    logmsg(LOG_INFO, "zzzzzzzzzzzzzzzzzzzzz: \n");
     int ind;
     while (1) {
         // Recieve a packet
@@ -1690,12 +1624,6 @@ struct timespec tms;
     	client_len = sizeof(client_addr);
         ssize_t bytes_received = recvfrom(socketfd, buff, BUFSIZE, 0,
                                           (struct sockaddr *)&client_addr, &client_len);
-    // For loop to print numbers from 1 to 10
-        int ind;
-	for (ind = 1; ind <= 16; ind++) {
-                logmsg(LOG_INFO, "buff_after[i] %lx\n", buff[ind]);
-        }
-	logmsg(LOG_INFO, "bytes_received fffffffffffffhh  %d\n", bytes_received);
 
         if (bytes_received == -1) {
 
@@ -1711,7 +1639,6 @@ struct timespec tms;
         logmsg(LOG_INFO, "udp_src %d\n", udp_src);
         set_global_var(udp_src);
 
-	logmsg(LOG_INFO, "Call registration request function on Foreign Agent after binding socket on UDP Port %d\n", MIP_UDP_PORT);
 
         registration_request(60, buff);
 
@@ -1738,10 +1665,7 @@ struct timespec tms;
 
     if (fa_rep){
 	    sleep(10);  
-//	    server_addr.sin_port = global_var;
             server_addr.sin_port = htons(0);
-	   // logmsg(LOG_INFO, "local_local_local_var.........%d\n", global_var);
-
     }
     else
       {
@@ -1749,44 +1673,28 @@ struct timespec tms;
 
      }
 
-  
-    logmsg(LOG_INFO, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbCalt \n");
-    logmsg(LOG_INFO, "fa_reg %d\n", fa_reg);
-    logmsg(LOG_INFO, "fa_rep %d\n", fa_rep);
 
     // Bind the socket to the specified port
     if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
         perror("bind");
  
     }
-  if (fa_rep){
 
+  if (fa_rep){
 
     socklen_t len = sizeof(server_addr);
     getsockname(sockfd, (struct sockaddr *)&server_addr, &len);
-    logmsg(LOG_INFO, "Listening on port 1: %d\n", ntohs(server_addr.sin_port));
-    logmsg(LOG_INFO, "Listening on port 2: %d\n", htons(server_addr.sin_port));
 
 	 }
     int ind;
     while (1) {
-        // Receive a packet
+    /***  Receive a packet
         for (ind = 1; ind <= 16; ind++) {
                 logmsg(LOG_INFO, "auff_be4[i] %lx\n", buff[ind]);
-        }
+        }***/
 
 	client_len = sizeof(client_addr);
-        ssize_t bytes_received = recvfrom(sockfd, buff, BUFSIZE, 0,
-                                          (struct sockaddr *)&client_addr, &client_len);
-//        for (int index = 0; index <= BUFSIZE; index++) {
-  //           logmsg(LOG_INFO, "index ½d,  buff: %#x\n", index,  buff[index]);
-    //	}
-      //	logmsg(LOG_INFO, "bytes_received %d\n", bytes_received);
-       int ind;
-	for (ind = 1; ind <= 16; ind++) {
-                logmsg(LOG_INFO, "auff_after[i] %lx\n", buff[ind]);
-        }
-        logmsg(LOG_INFO, "bytes_received hhhhhhhhhhff  %d\n", bytes_received);
+        ssize_t bytes_received = recvfrom(sockfd, buff, BUFSIZE, 0,  (struct sockaddr *)&client_addr, &client_len);
 
         if (bytes_received == -1) {
 
@@ -1795,12 +1703,8 @@ struct timespec tms;
             exit(EXIT_FAILURE);
         }
 
-        //buf[bytes_received] = '\0';
-
 		udp_dest = ntohs(client_addr.sin_port);
-
         registration_reply(120, buff, sockfd, udp_dest);
-
         close(sockfd);
 
 	}
@@ -1811,10 +1715,7 @@ struct timespec tms;
 void set_global_var(int value) {
     int global_var;
     global_var = value;
-    logmsg(LOG_INFO, "global_var %d\n", global_var);
-
 }
-
 
 
 void process_rrep_packet_final(int sockfd) {
@@ -1837,7 +1738,6 @@ void process_rrep_packet_final(int sockfd) {
 
     close(sockfd);
     free(buffer);
-//    return 0;
 }
 void process_packet(unsigned char *buffer, int size) {
     struct iphdr *iph = (struct iphdr *)(buffer);
@@ -1850,21 +1750,9 @@ void process_packet(unsigned char *buffer, int size) {
     src_addr.sin_addr.s_addr = iph->saddr;
     dest_addr.sin_addr.s_addr = iph->daddr;
 
-    logmsg(LOG_INFO, "Received packet from %s:%d\n", inet_ntoa(src_addr.sin_addr), ntohs(udph->source));
-    logmsg(LOG_INFO,"Destination port: %d\n", ntohs(udph->dest));
-    logmsg(LOG_INFO,"source port: %d\n", ntohs(udph->source));
-
-    logmsg(LOG_INFO, "Packet size: %d bytes\n\n", size);
     if (ntohs(udph->source)==MIP_UDP_PORT){
-            logmsg(LOG_INFO, "WE have reached hererererere\n");
-                    int ind;
-        for (ind = 1; ind <= 16; ind++) {
-                logmsg(LOG_INFO, "bufferkkkk %lx\n", buffer[ind]);
-        }
- 
-            faregreply(60, buffer);
-
-            close(sockfd);
+        faregreply(60, buffer);
+        close(sockfd);
 
 }
 }
@@ -1877,8 +1765,6 @@ faregreply(int lft, unsigned char *buffer)
         int packetlen, i;
         int sock;
         struct iphdr *ip;
-   //     struct sockaddr_in localaddr;
-     //   socklen_t addrlen = sizeof(localaddr);
 
         ip = (struct iphdr *)buffer;
         struct reg_rep  *rrep = (struct reg_rep *)buffer;
@@ -1887,8 +1773,8 @@ faregreply(int lft, unsigned char *buffer)
           perror("socket() error");
                 exit(2);
                 }
-        logmsg(LOG_INFO, "Source address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-        logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+        logmsg(LOG_INFO, "Source address RREP %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+        logmsg(LOG_INFO, "Destination address RREp %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
         memset(&addr, 0, sizeof(addr));
         addr.sin_family = AF_INET;
         addr.sin_port = htons(MIP_UDP_PORT);
@@ -1899,8 +1785,7 @@ faregreply(int lft, unsigned char *buffer)
         rrep->home_addr = htonl(INADDR_ANY);
         rrep-> home_agent = inet_addr(HA_IP);
         rrep->reg_rep_id = get_time();
-	packetlen = sizeof(struct reg_rep);
-//        logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+	    packetlen = sizeof(struct reg_rep);
 
     if (sendto(sock, buffer, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0){
 
@@ -1908,7 +1793,6 @@ faregreply(int lft, unsigned char *buffer)
             exit(3);
                 }
         logmsg(LOG_INFO, "Packet sent\n");
-
 
         close(sock);
 
