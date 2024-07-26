@@ -19,7 +19,7 @@ class fa_reg_req():
         self._pwd = "lubuntu"
         self._user_name = "lubuntu"
 
-        self._ip1 = "192.168.0.34"
+        self._ip1 = "192.168.0.33"
         self._ip2 = "192.168.0.240"
         self._ip3 = "192.168.0.85"
 
@@ -40,37 +40,7 @@ class fa_reg_req():
 
         self.clear_syslogs()
 
-        vm_user = "%s@%s" % (self._user_name, self._ip2)
-        try:
-            vm2_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -r" % self._pwd],
-                                   stdin=subprocess.PIPE, 
-                                   stdout = subprocess.PIPE,
-                                   universal_newlines=True,
-                                bufsize=0)
-            vm2_process.communicate()
-            vm2_process.kill()
-        
-        except Exception as err:
-            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
-            return False
-    
-        time.sleep(10)
-        # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
-       # vm_user = "%s@%s" % (self._user_name, self._ip1)
-       # try:
-        #    vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -j" % self._pwd],
-        #                           stdin=subprocess.PIPE, 
-        #                           stdout = subprocess.PIPE,
-        #                           universal_newlines=True,
-        #                        bufsize=0)
-        #    vm1_process.communicate()
-        #    vm1_process.kill()
-        
-        #except Exception as err:
-        #    print("Connecting to Foreign Agent VM with IP %s failed with error %s" % (self._ip1, err))
-        #    return False
-    
-        #time.sleep(10)
+
 
         vm_user = "%s@%s" % (self._user_name, self._ip3)
         try:
@@ -85,16 +55,42 @@ class fa_reg_req():
         except Exception as err:
             print("Connecting to Home Agent VM with IP %s failed with error %s" % (self._ip3, err))
             return False
+ 
     
+        vm_user = "%s@%s" % (self._user_name, self._ip2)
+        try:
+            vm2_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -r" % self._pwd],
+                                   stdin=subprocess.PIPE, 
+                                   stdout = subprocess.PIPE,
+                                   universal_newlines=True,
+                                bufsize=0)
+            vm2_process.communicate()
+            vm2_process.kill()
+        
+        except Exception as err:
+            print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
+            return False
+        
+      #  time.sleep(10)
+        # print("Mobile Node sending Registration Reply Packet to Foreign Adent\n")
+        vm_user = "%s@%s" % (self._user_name, self._ip1)
+        try:
+            vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S  ./mip/src/mip -n" % self._pwd],
+                                   stdin=subprocess.PIPE, 
+                                   stdout = subprocess.PIPE,
+                                   universal_newlines=True,
+                                bufsize=0)
+            vm1_process.communicate()
+            vm1_process.kill()
+        
+        except Exception as err:
+           print("Connecting to Foreign Agent VM with IP %s failed with error %s" % (self._ip1, err))
+           return False
 
-        time.sleep(10)
-
-        # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
-       
         vm_user = "%s@%s" % (self._user_name, self._ip1)
     
         try:
-            vm1_process_2 = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -n" % self._pwd],
+            vm1_process_2 = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -j" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
@@ -106,8 +102,6 @@ class fa_reg_req():
         except Exception as err:
             print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
             return False
-
-        time.sleep(10)
 
         return True
     
@@ -227,7 +221,7 @@ class fa_reg_req():
 
     def run_agent_advert(self):
 
-        print("\nForeign Agent sending Agent Advertisement multicast packet\n")
+        print("\nForeign Agent sending Agent Advertisement multicast pabroadacket\n")
         vm_user = "%s@%s" % (self._user_name, self._ip1)
     
         try:
@@ -254,7 +248,7 @@ class fa_reg_req():
         vm_user = "%s@%s" % (self._user_name, self._ip2)
 
         try:
-            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S tcpdump -i enp0s3 src 192.168.0.34 and port 434 -c 1 -w fa_reg_rep.pcap\n" % self._pwd],
+            ma_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S tcpdump -i enp0s3 src 192.168.0.33 and port 434 -c 1 -w fa_reg_rep.pcap\n" % self._pwd],
                                     stdin=subprocess.PIPE,
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,

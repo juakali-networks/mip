@@ -16,8 +16,9 @@ class agent_adv():
         # Configs. Change your settings here
         self._user_name = "lubuntu"
         self._pwd = "lubuntu"
-        self._ip1 = "192.168.0.34"
+        self._ip1 = "192.168.0.33"
         self._ip2 = "192.168.0.240"
+
         self._all_host_mcast_addr = "224.0.0.1"
         self._agent_advert_type = "9"
         self._agent_advert_code = "16"
@@ -79,7 +80,7 @@ class agent_adv():
             print("Test Failed")
 
         self.save_syslogs()
-        self.clean_up()
+        #self.clean_up()
 
         return state
 

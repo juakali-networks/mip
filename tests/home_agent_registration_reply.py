@@ -19,10 +19,10 @@ class ha_reg_rep():
         self._pwd = "lubuntu"
         self._user_name = "lubuntu"
        
-        self._ip1 = "192.168.0.34"
+        self._ip1 = "192.168.0.33"
         self._ip2 = "192.168.0.240"
         self._ip3 = "192.168.0.85"
-  
+
         self._rrep_msg_type = 3
         self._dest_port = "434"
         self._dest_addr = self._ip1
@@ -52,24 +52,7 @@ class ha_reg_rep():
         except Exception as err:
             print("Connecting to Home Agent VM with IP %s failed with error %s" % (self._ip3, err))
             return False
-        time.sleep(10)
-    
-        vm_user = "%s@%s" % (self._user_name, self._ip1)
-
-        try:
-            vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -n" % self._pwd],
-                                    stdin=subprocess.PIPE, 
-                                    stdout = subprocess.PIPE,
-                                    universal_newlines=True,
-                                bufsize=0)
-            
-            vm1_process.communicate()
-            vm1_process.kill()
-            
-        except Exception as err:
-            print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
-            return False
-        time.sleep(10)
+        # time.sleep(10)
 
         vm_user = "%s@%s" % (self._user_name, self._ip2)
         try:
@@ -84,9 +67,21 @@ class ha_reg_rep():
         except Exception as err:
             print("Connecting to Mobile Agent VM with IP %s failed with error %s" % (self._ip2, err))
             return False
-        time.sleep(10)
     
-        # print("\nForeign Agent sending Registration Request message with Care of Address to Home Agent\n")
+        vm_user = "%s@%s" % (self._user_name, self._ip1)
+
+        try:
+            vm1_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -n" % self._pwd],
+                                    stdin=subprocess.PIPE, 
+                                    stdout = subprocess.PIPE,
+                                    universal_newlines=True,
+                                bufsize=0)
+            vm1_process.communicate()
+            vm1_process.kill()
+            
+        except Exception as err:
+            print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
+            return False
 
         return True
 
@@ -116,7 +111,7 @@ class ha_reg_rep():
             print("Test Failed")
 
         self.save_syslogs()
-        self.clean_up()
+        # self.clean_up()
 
         return state
 

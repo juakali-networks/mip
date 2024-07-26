@@ -17,10 +17,11 @@ class mn_reg_req():
         # Configs. Change your settings here
         self._pwd = "lubuntu"
         self._user_name = "lubuntu"
-
-        self._ip1 = "192.168.0.34"
+     
+        self._ip1 = "192.168.0.33"
         self._ip2 = "192.168.0.240"
         self._ip3 = "192.168.0.85"
+
 
         self._rreq_msg_type = 1
         self._dest_port = "434"
