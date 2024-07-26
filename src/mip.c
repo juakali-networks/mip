@@ -1778,12 +1778,16 @@ struct timespec tms;
 	client_len = sizeof(client_addr);
         ssize_t bytes_received = recvfrom(sockfd, buff, BUFSIZE, 0,
                                           (struct sockaddr *)&client_addr, &client_len);
-/*** 
+//        for (int index = 0; index <= BUFSIZE; index++) {
+  //           logmsg(LOG_INFO, "index ½d,  buff: %#x\n", index,  buff[index]);
+    //	}
+      //	logmsg(LOG_INFO, "bytes_received %d\n", bytes_received);
        int ind;
-	    for (ind = 1; ind <= 16; ind++) {
+	for (ind = 1; ind <= 16; ind++) {
                 logmsg(LOG_INFO, "auff_after[i] %lx\n", buff[ind]);
         }
-***/
+        logmsg(LOG_INFO, "bytes_received hhhhhhhhhhff  %d\n", bytes_received);
+
         if (bytes_received == -1) {
 
            perror("recvfrom");
@@ -1811,6 +1815,8 @@ void set_global_var(int value) {
 
 }
 
+
+
 void process_rrep_packet_final(int sockfd) {
     unsigned char *buffer = (unsigned char *)malloc(BUF_SIZE);
     struct sockaddr saddr;
@@ -1831,6 +1837,7 @@ void process_rrep_packet_final(int sockfd) {
 
     close(sockfd);
     free(buffer);
+//    return 0;
 }
 void process_packet(unsigned char *buffer, int size) {
     struct iphdr *iph = (struct iphdr *)(buffer);
@@ -1843,9 +1850,19 @@ void process_packet(unsigned char *buffer, int size) {
     src_addr.sin_addr.s_addr = iph->saddr;
     dest_addr.sin_addr.s_addr = iph->daddr;
 
-    if (ntohs(udph->source)==MIP_UDP_PORT){
+    logmsg(LOG_INFO, "Received packet from %s:%d\n", inet_ntoa(src_addr.sin_addr), ntohs(udph->source));
+    logmsg(LOG_INFO,"Destination port: %d\n", ntohs(udph->dest));
+    logmsg(LOG_INFO,"source port: %d\n", ntohs(udph->source));
 
-             faregreply(60, buffer);
+    logmsg(LOG_INFO, "Packet size: %d bytes\n\n", size);
+    if (ntohs(udph->source)==MIP_UDP_PORT){
+            logmsg(LOG_INFO, "WE have reached hererererere\n");
+                    int ind;
+        for (ind = 1; ind <= 16; ind++) {
+                logmsg(LOG_INFO, "bufferkkkk %lx\n", buffer[ind]);
+        }
+ 
+            faregreply(60, buffer);
 
             close(sockfd);
 
@@ -1860,6 +1877,8 @@ faregreply(int lft, unsigned char *buffer)
         int packetlen, i;
         int sock;
         struct iphdr *ip;
+   //     struct sockaddr_in localaddr;
+     //   socklen_t addrlen = sizeof(localaddr);
 
         ip = (struct iphdr *)buffer;
         struct reg_rep  *rrep = (struct reg_rep *)buffer;
@@ -1868,8 +1887,8 @@ faregreply(int lft, unsigned char *buffer)
           perror("socket() error");
                 exit(2);
                 }
-        //logmsg(LOG_INFO, "Source address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-        // logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
+        logmsg(LOG_INFO, "Source address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
+        logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
         memset(&addr, 0, sizeof(addr));
         addr.sin_family = AF_INET;
         addr.sin_port = htons(MIP_UDP_PORT);
@@ -1880,7 +1899,8 @@ faregreply(int lft, unsigned char *buffer)
         rrep->home_addr = htonl(INADDR_ANY);
         rrep-> home_agent = inet_addr(HA_IP);
         rrep->reg_rep_id = get_time();
-	    packetlen = sizeof(struct reg_rep);
+	packetlen = sizeof(struct reg_rep);
+//        logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
 
     if (sendto(sock, buffer, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0){
 
