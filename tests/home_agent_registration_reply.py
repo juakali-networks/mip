@@ -52,7 +52,6 @@ class ha_reg_rep():
         except Exception as err:
             print("Connecting to Home Agent VM with IP %s failed with error %s" % (self._ip3, err))
             return False
-        # time.sleep(10)
 
         vm_user = "%s@%s" % (self._user_name, self._ip2)
         try:
@@ -111,7 +110,7 @@ class ha_reg_rep():
             print("Test Failed")
 
         self.save_syslogs()
-        # self.clean_up()
+        self.clean_up()
 
         return state
 
