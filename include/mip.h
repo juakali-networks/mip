@@ -64,6 +64,7 @@ int forever = 0;	/* Never give up on host. If 0 defer fork until
 int agent_advert;
 int mn_reg_request;
 int fa_reg;
+int fa_rep;
 int ha_reg_reply;
 int sockfd;
 int max_adv_int = MAX_ADV_INT;
@@ -97,8 +98,12 @@ static void registration_request(int lft,  unsigned char *buff);
 static void registration_reply(int lft,  unsigned char *buff, int sockfd, int udp_dest);
 void process_mn_rreg_packet(int sockfd);
 void process_fa_rreg_packet(int socketfd);
-void process_rrep_packet(int sockfd);
+void process_rrep_packet(int socketfd);
 
+void process_rrep_packet_final(int sockfd);
+void faregreply(int lft, unsigned char *buffer);
+void set_global_var(int value); 
+void process_packet(unsigned char *buffer, int size);
 
 int get_time();
 static void prusage(void);
