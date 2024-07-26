@@ -201,59 +201,38 @@ next:
 
     if (fa_reg){
 
-            logmsg(LOG_INFO, "Listening for RREQ UDP messages on port %d or ICMP packet on the Foreign Agent...\n", MIP_UDP_PORT);
-            logmsg(LOG_INFO, "Run fa_req command\n");
-
             if ((socketfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
                         logperror("socket failed");
                         exit(5);
                 }
 
-
             if (socketfd){
-			logmsg(LOG_INFO, "REQ UDP packet on port %d has arrived on the Foreign Agent...\n", MIP_UDP_PORT);
-            process_fa_rreg_packet(socketfd);
+                   process_fa_rreg_packet(socketfd);
                 }
-
               
         }
 
 
        if (fa_rep){
 
-            logmsg(LOG_INFO, "jjj Listening for RREQ UDP messages on port %d or ICMP packet on the Foreign Agent...\n", MIP_UDP_PORT);
-            logmsg(LOG_INFO, "jjjj Run fa_req command\n");
-
             if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_UDP)) < 0) {
                        logperror("socket failed");
                        exit(5);
             }
-            logmsg(LOG_INFO, "ppppppppppppppppppp...\n");
 
-            logmsg(LOG_INFO, "mmmmmmmmmmmmmmmmmm..\n");
 
-                 if (sockfd){
-                                logmsg(LOG_INFO, "ICMP packet has arrived on the Foreign Agent...\n", MIP_UDP_PORT);
-
+        if (sockfd){
                 process_rrep_packet_final(sockfd);
-                        }
+             }
         }
-
-
-
 
 
 	if (mn_reg_request){
 		
-		logmsg(LOG_INFO, "Listening for Agent Advertisement Packet on Mobile Node...\n");
-
-        logmsg(LOG_INFO, "Run mn_reg_request command\n");
-
 		if ((sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) < 0) {
      			logperror("socket failed");
 			exit(5);
     	 	}
-		logmsg(LOG_INFO, "REQ UDP packet on port %d has arrived on the Home Agent...\n", MIP_UDP_PORT);
 		process_mn_rreg_packet(sockfd);
 
 /***
@@ -270,10 +249,7 @@ next:
 	***/
 }
 
-
 	if (ha_reg_reply){
-
-		logmsg(LOG_INFO, "Listening for RREQ UDP messages on port %d on the Home Agent...\n", MIP_UDP_PORT);
 
 		
                if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
@@ -424,8 +400,6 @@ advertise(struct sockaddr_in *sin, int lft)
 		rap->icmp_wpa = 2;
 		rap->icmp_lifetime = htons(lft);
 		packetlen = 8;
-	/*	rap_ext->mip_adv_ext_type = ICMP_REGREQUEST;*/
-
 
 		/*
 		 * TODO handle multiple logical interfaces per
@@ -493,13 +467,12 @@ registration_request(int lft, unsigned char *buff)
 {
   	static unsigned char outpack[MAXPACKET];
 	struct sockaddr_in addr;
-        int packetlen, i;
+    int packetlen, i;
 	int sock;
 	struct iphdr *ip;
-        struct sockaddr_in localaddr;
-        socklen_t addrlen = sizeof(localaddr);
+    struct sockaddr_in localaddr;
+    socklen_t addrlen = sizeof(localaddr);
  
-
 	ip = (struct iphdr *)buff;
 
 	struct reg_req  *rreq = (struct reg_req *)buff;
@@ -514,12 +487,11 @@ registration_request(int lft, unsigned char *buff)
   		}
 	logmsg(LOG_INFO, "Source address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->saddr)));
 	logmsg(LOG_INFO, "Destination address RREQ %s\n", inet_ntoa(*(struct in_addr *)&(ip->daddr)));
-        memset(&addr, 0, sizeof(addr));
+    memset(&addr, 0, sizeof(addr));
  
-        addr.sin_family = AF_INET;
-        addr.sin_port = htons(MIP_UDP_PORT);
-    // addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)&(ip->saddr)));
-	//addr.sin_addr.s_addr = INADDR_ANY;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(MIP_UDP_PORT);
+
 	if (fa_reg)
 		 addr.sin_addr.s_addr = inet_addr(HA_IP);
 
@@ -541,31 +513,11 @@ registration_request(int lft, unsigned char *buff)
 
 	packetlen = sizeof(struct reg_req);
 
-	if (fa_reg)
-		logmsg(LOG_INFO, "Foreign Agent forwared RREQ Packet to Home Agent...\n");
-	if (mn_reg_request)
-		logmsg(LOG_INFO, "Mobile Node sent RREQ Packet to Foreign Agent...\n");
-
     if (sendto(sock, buff, packetlen, 0, (struct sockaddr *)&addr, sizeof(addr)) < 0)
          	{
             perror("sendto()");
             exit(3);
         	}
-      //  if (fa_reg){
-
-
- 
-    //logmsg(LOG_INFO, "hhhhhhhhhhhhhhhh %d.\n");
-
-      // Get the local address and port used
-  //  if (getsockname(sock, (struct sockaddr *)&localaddr, &addrlen) < 0) {
-    //    perror("getsockname failed");
-      //  close(sock);
-   //     exit(EXIT_FAILURE);
-   // }
-    //logmsg(LOG_INFO, "Message sent to destination port %d.\n", ntohs(myaddr.sin_port), ntohs(destaddr.sin_port));
-   // logmsg(LOG_INFO, "Message sent from ephemeral port %d.\n", ntohs(addr.sin_port));
-   // }
 
 	close(sock);
 
