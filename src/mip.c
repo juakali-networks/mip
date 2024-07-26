@@ -604,6 +604,7 @@ registration_reply(int lft, unsigned char *buff, int sockfd, int udp_dest)
 	if (fa_reg)
 		logmsg(LOG_INFO, "Foreign Agent forwarded RREP Packet to Mobile Node...\n");
 	if (ha_reg_reply)
+	//	sleep(1);
 		logmsg(LOG_INFO, "Home Agent sent RREP Packet to Foreign Agent...\n");
 
   
