@@ -1649,12 +1649,10 @@ struct timespec tms;
     struct iphdr *ip_header = (struct iphdr *)buff;
     struct icmphdr *icmp_header = (struct icmphdr *)(buff + sizeof(struct iphdr));
 
-	logmsg(LOG_INFO, "ICMP Router Advertisement message type: %d\n", icmp_header->type);
 
     // Check if it's an ICMP Agent Advertisement message
     if (icmp_header->type == ICMP_ROUTERADVERT) {
 
-		logmsg(LOG_INFO, "Call registration request function after receivng ICMP packet of type %d\n", icmp_header->type);
 
 		registration_request(60, buff);
 		close(sockfd);
@@ -1679,7 +1677,6 @@ struct timespec tms;
         perror("bind");
  
     }
-    logmsg(LOG_INFO, "zzzzzzzzzzzzzzzzzzzzz: \n");
     int ind;
     while (1) {
         // Recieve a packet
@@ -1690,12 +1687,7 @@ struct timespec tms;
     	client_len = sizeof(client_addr);
         ssize_t bytes_received = recvfrom(socketfd, buff, BUFSIZE, 0,
                                           (struct sockaddr *)&client_addr, &client_len);
-    // For loop to print numbers from 1 to 10
-        int ind;
-	for (ind = 1; ind <= 16; ind++) {
-                logmsg(LOG_INFO, "buff_after[i] %lx\n", buff[ind]);
-        }
-	logmsg(LOG_INFO, "bytes_received fffffffffffffhh  %d\n", bytes_received);
+
 
         if (bytes_received == -1) {
 
@@ -1705,13 +1697,9 @@ struct timespec tms;
             exit(EXIT_FAILURE);
         }
 
-       // buf[bytes_received] = '\0';
-
         udp_src = ntohs(client_addr.sin_port);
         logmsg(LOG_INFO, "udp_src %d\n", udp_src);
         set_global_var(udp_src);
-
-	logmsg(LOG_INFO, "Call registration request function on Foreign Agent after binding socket on UDP Port %d\n", MIP_UDP_PORT);
 
         registration_request(60, buff);
 
@@ -1728,7 +1716,6 @@ struct timespec tms;
     char buff[BUFSIZE];
 	int udp_dest;
 
-
     // Prepare server address
     memset(&server_addr, 0, sizeof(server_addr));
     memset(&client_addr, 0, sizeof(client_addr));
@@ -1738,10 +1725,7 @@ struct timespec tms;
 
     if (fa_rep){
 	    sleep(10);  
-//	    server_addr.sin_port = global_var;
             server_addr.sin_port = htons(0);
-	   // logmsg(LOG_INFO, "local_local_local_var.........%d\n", global_var);
-
     }
     else
       {
@@ -1749,10 +1733,6 @@ struct timespec tms;
 
      }
 
-  
-    logmsg(LOG_INFO, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbCalt \n");
-    logmsg(LOG_INFO, "fa_reg %d\n", fa_reg);
-    logmsg(LOG_INFO, "fa_rep %d\n", fa_rep);
 
     // Bind the socket to the specified port
     if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1) {
@@ -1764,8 +1744,6 @@ struct timespec tms;
 
     socklen_t len = sizeof(server_addr);
     getsockname(sockfd, (struct sockaddr *)&server_addr, &len);
-    logmsg(LOG_INFO, "Listening on port 1: %d\n", ntohs(server_addr.sin_port));
-    logmsg(LOG_INFO, "Listening on port 2: %d\n", htons(server_addr.sin_port));
 
 	 }
     int ind;
