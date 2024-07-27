@@ -46,8 +46,8 @@ Run the commands on the VMs in the following order
 On VM_1 (Foreign Agent)
 
 <pre>sudo ./mip/src/mip -m </pre>
+Foreign Agent sends multicast agent advertisement packe to all hosts group multicast address 224.0.0.1
 
-Foreign Agent send Agent Advertisement packet to all hosts group multicats address 224.0.0.1
 
 On VM_3 (Home Agent)
 
@@ -67,6 +67,13 @@ On VM_1 (Foreign Agent)
 
 Enables Foreign Agent to send RREQ packet with care of Address to Home Agent on receiving the RREQ packet from Mobile Node
 
+
+On VM_1 (Foreign Agent)
+
+<pre>sudo ./mip/src/mip -j </pre>
+
+Enables Foreign Agent to send RREQ packet with care of Address to Home Agent on receiving the RREQ packet from Mobile Node
+
 To start the complete process,
 
 On VM_2 (Mobile Node)
@@ -75,7 +82,7 @@ On VM_2 (Mobile Node)
 
 Mobile Node sends a router solicitation packet to the foreign agent
 
-Foreign Agent sends multicast agent advertisement packet
+
 
 
 If you have questions, comments or need any additional support, contact juakali.networks@gmail.com
