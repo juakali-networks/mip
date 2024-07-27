@@ -17,10 +17,10 @@ Rename the file from scp.py to scp
 Install wireshark on your host PC.
 Install pyshark on your host PC.
 
+Clone the mip repository. 
+<pre>git clone https://github.com/juakali-networks/mip.git</pre>
 
-
-Clone the rdisc repository. 
-<pre>git clone https://github.com/juakali-networks/rdisc/tree/master></pre>
+For any additional configurations of the test environment, look in the file test_setup.txt 
 
 # Run tests
 
