@@ -80,7 +80,7 @@ Run the commands on the VMs in the following order
 
 <br>
 
-To start the complete process, send a router solicitation packet from the mobile node to the foreign agent, by running the command below on the Mobile Node.
+To start the complete process, send a router solicitation packet from the mobile node to the foreign agent, by running the cfollowing ommand on the mobile node.
 
 **<h5>VM_2 (Mobile Node)</h5>**
 
