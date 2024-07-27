@@ -89,9 +89,9 @@ int main(int argc, char **argv)
 			case 'r':
 				mn_reg_request = 1;
 				break;
-		        case 'j':
-                                fa_rep = 1;
-                                break;
+		 case 'j':
+                fa_rep = 1;
+                break;
 			case 'a':
 				best_preference = 0;
 				break;
