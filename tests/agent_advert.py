@@ -141,11 +141,11 @@ class agent_adv():
                 icmp_type = packet.layers[2].type
                 icmp_code = packet.layers[2].code
 
-                if dst_addr == self._all_host_mcast_addr:
-                    print("\nForeign agent sent Agent Advert message to Mobile Node on all host multicast IP address %s as expected\n" % dst_addr)
+                if dst_addr == self._ip2:
+                    print("\nForeign agent sent Agent Advert message to Mobile Node IP address %s as expected\n" % dst_addr)
                     state.append(True)
                 else:
-                    print("\nAgent advert message is Not sent to all host multicast IP address %s but to destination address %s\n" % (self._all_host_mcast_addr, dst_addr))
+                    print("\nAgent advert message is not sent to the Mobile Node IP address %s but to address %s\n" % (self._ip2,  dst_addr))
                     state.append(False)
                 if icmp_type == self._agent_advert_type:
                     print("\nAgent Advert message is sent with correct ICMP type number %s\n" % icmp_type)
