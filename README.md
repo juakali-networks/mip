@@ -61,27 +61,29 @@ Run the commands on the VMs in the following order
 
 *enables mobile node to send registration request (RREQ) packet to foreign agent, on receiving the agent advertisement packet.*
 
-**<h5>On VM_1 (Foreign Agent)</h5>**
+**<h5>VM_1 (Foreign Agent)</h5>**
 
 <pre>sudo ./mip/src/mip -n </pre>
 
 *Enables foreign agent to send RREQ packet with care of Address to home agent on receiving the RREQ packet from mobile node.*
 
 
-**<h5>On VM_1 (Foreign Agent)</h5>**
+**<h5>VM_1 (Foreign Agent)</h5>**
 
 <pre>sudo ./mip/src/mip -j </pre>
 
 *enables foreign agent to send RREP packet to mobile nOde on receiving the RREP packet from the home agent.*
 
 
-
+<br>
+<br>
+<br>
 
 
 
 To start the complete process, send a router solicitation packet from the mobile node to the foreign agent, by running the command below on the Mobile Node.
 
-**<h6>On VM_2 (Mobile Node)</h6>**
+**<h5>VM_2 (Mobile Node)</h5>**
 
 <pre>sudo ./mip/src/mip -s </pre>
 
