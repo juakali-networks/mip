@@ -43,7 +43,7 @@ VM_1, VM_2 and VM_3.
 
 Run the commands on the VMs in the following order
 
-**<h6>VM_1 (Foreign Agent)</h6>**
+**<h5>VM_1 (Foreign Agent)</h5>**
 
 <pre>sudo ./mip/src/mip -m </pre>
 *Foreign Agent sends multicast agent advertisement packe to all hosts group multicast address 224.0.0.1*
