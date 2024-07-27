@@ -78,7 +78,7 @@ Run the commands on the VMs in the following order
 
 <br>
 
-
+<br>
 
 To start the complete process, send a router solicitation packet from the mobile node to the foreign agent, by running the command below on the Mobile Node.
 
