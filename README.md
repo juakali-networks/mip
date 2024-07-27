@@ -72,17 +72,13 @@ On VM_1 (Foreign Agent)
 
 <pre>sudo ./mip/src/mip -j </pre>
 
-Enables Foreign Agent to send RREQ packet with care of Address to Home Agent on receiving the RREQ packet from Mobile Node
+Enables Foreign Agent to send RREP packet to Mobile NOde on receiving the RREP packet from the Home Agent
 
-To start the complete process,
+To start the complete process, sends a router solicitation packet from the Mobile Node to the foreign agent, using the command below
 
 On VM_2 (Mobile Node)
 
 <pre>sudo ./mip/src/mip -s </pre>
-
-Mobile Node sends a router solicitation packet to the foreign agent
-
-
 
 
 If you have questions, comments or need any additional support, contact juakali.networks@gmail.com
