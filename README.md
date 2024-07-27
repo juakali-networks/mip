@@ -46,40 +46,40 @@ Run the commands on the VMs in the following order
 **<h5>VM_1 (Foreign Agent)</h5>**
 
 <pre>sudo ./mip/src/mip -m</pre>
-*foreign Agent sends multicast agent advertisement packe to all hosts group multicast address 224.0.0.1*
+*foreign agent sends multicast agent advertisement packe to all hosts group multicast address 224.0.0.1*
 
 
 **<h5>VM_3 (Home Agent)</h5>**
 
 <pre>sudo ./mip/src/mip -q </pre>
 
-*enanbles Home Agent to send Registration Reply (RREP) packet back to Foreign Agent on receiving the RREQ packet.*
+*enanbles home agent to send registration reply (RREP) packet back to foreign agent on receiving the RREQ packet.*
 
 **<h5>VM_2 (Mobile Node)</h5>**
 
 <pre>sudo ./mip/src/mip -r </pre>
 
-*enables Mobile Node to send Registration Request (RREQ) packet to Foreign Agent, on receieving the Agent Advertisement packet.*
+*enables mobile node to send registration request (RREQ) packet to foreign agent, on receiving the agent advertisement packet.*
 
 **<h5>On VM_1 (Foreign Agent)</h5>**
 
 <pre>sudo ./mip/src/mip -n </pre>
 
-*Enables Foreign Agent to send RREQ packet with care of Address to Home Agent on receiving the RREQ packet from Mobile Node.*
+*Enables foreign agent to send RREQ packet with care of Address to home agent on receiving the RREQ packet from mobile node.*
 
 
 **<h5>On VM_1 (Foreign Agent)</h5>**
 
 <pre>sudo ./mip/src/mip -j </pre>
 
-*enables Foreign Agent to send RREP packet to Mobile NOde on receiving the RREP packet from the Home Agent.*
+*enables foreign agent to send RREP packet to mobile nOde on receiving the RREP packet from the home agent.*
 
 
 
 
 
 
-To start the complete process, sends a router solicitation packet from the Mobile Node to the foreign agent, by running the command below on the Mobile Node.
+To start the complete process, send a router solicitation packet from the mobile node to the foreign agent, by running the command below on the Mobile Node.
 
 **<h6>On VM_2 (Mobile Node)</h6>**
 
