@@ -81,6 +81,7 @@ class agent_adv():
             print("Test Failed")
 
         self.save_syslogs()
+        time.sleep(120)
         # self.clean_up()
 
         return state
