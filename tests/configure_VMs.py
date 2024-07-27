@@ -102,11 +102,12 @@ class setup_vm():
         vm_user = "%s@%s" % (self._user_name, vm_ip)
     
         try:
-            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -s" % self._pwd],
+            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -m" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
+
             aa_process.communicate()
 
             aa_process.kill()
@@ -123,9 +124,9 @@ ip1 = "192.168.0.33"
 ip2 = "192.168.0.240"
 ip3 = "192.168.0.85"
 
-setup_vm().step_1(ip1)
-setup_vm().step_1(ip2)
-setup_vm().step_1(ip3)
+# setup_vm().step_1(ip1)
+# setup_vm().step_1(ip2)
+# setup_vm().step_1(ip3)
 setup_vm().step_2(ip1)
 
 
