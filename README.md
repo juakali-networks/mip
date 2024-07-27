@@ -65,7 +65,7 @@ Run the commands on the VMs in the following order
 
 <pre>sudo ./mip/src/mip -n </pre>
 
-*Enables foreign agent to send RREQ packet with care of Address to home agent on receiving the RREQ packet from mobile node.*
+*enables foreign agent to send RREQ packet with care of Address to home agent on receiving the RREQ packet from mobile node.*
 
 
 **<h5>VM_1 (Foreign Agent)</h5>**
@@ -75,8 +75,7 @@ Run the commands on the VMs in the following order
 *enables foreign agent to send RREP packet to mobile nOde on receiving the RREP packet from the home agent.*
 
 
-<br>
-<br>
+
 <br>
 
 
