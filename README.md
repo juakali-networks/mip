@@ -43,27 +43,37 @@ VM_1, VM_2 and VM_3.
 
 Run the commands on the VMs in the following order
 
-On VM_2 (Mobile Node)
-
-<pre>sudo ./mip/src/mip -r </pre>
-
-Mobile Node sends Registration Request (RREQ) packet to Foreign Agent, on receieving the Agent Advertisement packet
-
 On VM_1 (Foreign Agent)
 
-<pre>sudo ./mip/src/mip -n </pre>
+<pre>sudo ./mip/src/mip -m </pre>
 
-Foreign Agent sends RREQ packet with care of Address to Home Agent on receiving the RREQ packet from Mobile Node
+Foreign Agent send Agent Advertisement packet to all hosts group multicats address 224.0.0.1
 
 On VM_3 (Home Agent)
 
 <pre>sudo ./mip/src/mip -q </pre>
 
-Home Agent sends Registration Reply (RREP) packet back to Foreign Agent on receiving the RREQ packet
+Eanbles Home Agent to send Registration Reply (RREP) packet back to Foreign Agent on receiving the RREQ packet
+
+On VM_2 (Mobile Node)
+
+<pre>sudo ./mip/src/mip -r </pre>
+
+Enables Mobile Node to send Registration Request (RREQ) packet to Foreign Agent, on receieving the Agent Advertisement packet
 
 On VM_1 (Foreign Agent)
 
-<pre>sudo ./mip/src/mip -m </pre>
+<pre>sudo ./mip/src/mip -n </pre>
+
+Enables Foreign Agent to send RREQ packet with care of Address to Home Agent on receiving the RREQ packet from Mobile Node
+
+To start the complete process,
+
+On VM_2 (Mobile Node)
+
+<pre>sudo ./mip/src/mip -s </pre>
+
+Mobile Node sends a router solicitation packet to the foreign agent
 
 Foreign Agent sends multicast agent advertisement packet
 
