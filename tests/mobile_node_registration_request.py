@@ -64,7 +64,7 @@ class mn_reg_req():
       
         # Create threads for each command
         thread1 = threading.Thread(target=self.capture_packet)
-        thread2 = threading.Thread(target=self.run_agent_advert)
+        thread2 = threading.Thread(target=self.run_router_solicit)
         
         # Start both threads
         thread1.start()
@@ -193,28 +193,26 @@ class mn_reg_req():
         client.connect(server, port, user, password)
         return client
 
-    def run_agent_advert(self):
-    
-        print("\nForeign Agent sending Agent Advertisement multicast packet\n")
-       
+    def run_router_solicit(self):
+
+        print("\nMobile Node sending router solicitation packet\n")
         vm_user = "%s@%s" % (self._user_name, self._ip2)
     
         try:
-            aa_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -s" % self._pwd],
+            mn_process = subprocess.Popen(['ssh','-tt', vm_user, "echo '%s' | sudo -S ./mip/src/mip -s" % self._pwd],
                                     stdin=subprocess.PIPE, 
                                     stdout = subprocess.PIPE,
                                     universal_newlines=True,
                                 bufsize=0)
-            aa_process.communicate()
+            mn_process.communicate()
 
-            aa_process.kill()
+            mn_process.kill()
             
         except Exception as err:
-            print("Connecting to Foriegn Agent VM with IP %s failed with error %s" % (self._ip1, err))
+            print("Connecting to Mobile Node VM with IP %s failed with error %s" % (self._ip2, err))
             return False
         
         return True
-
 
     def capture_packet(self):
 
