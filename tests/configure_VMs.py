@@ -46,41 +46,6 @@ class setup_vm():
         results_output_bytes = bytes(results_output, 'ascii')    
         print(results_output_bytes)  
         vm_process.kill()
-
-        '''
-        cmd = "rm mip/src/mip"
-        vm_process = subprocess.Popen(['ssh','-tt', vm_user, "%s" % cmd],
-                                    stdin=subprocess.PIPE, 
-                                    stdout = subprocess.PIPE,
-                                    universal_newlines=True,
-                                bufsize=0)
-        results_output, results_error = vm_process.communicate()
-        results_output_bytes = bytes(results_output, 'ascii')    
-        print(results_output_bytes) 
-        vm_process.kill()
- 
-        cmd = "rm mip/src/obj/mip.o"     
-        vm_process = subprocess.Popen(['ssh','-tt', vm_user, "%s" % cmd],
-                                    stdin=subprocess.PIPE, 
-                                    stdout = subprocess.PIPE,
-                                    universal_newlines=True,
-                                bufsize=0)
-        results_output, results_error = vm_process.communicate()
-        results_output_bytes = bytes(results_output, 'ascii')    
-        print(results_output_bytes)  
-        vm_process.kill()
-  
-        cmd = "cd mip/src && make clean"    
-        vm_process = subprocess.Popen(['ssh','-tt', vm_user, "%s" % cmd],
-                                     stdin=subprocess.PIPE, 
-                                     stdout = subprocess.PIPE,
-                                     universal_newlines=True,
-                                 bufsize=0)
-        results_output, results_error = vm_process.communicate()
-        results_output_bytes = bytes(results_output, 'ascii')    
-        print(results_output_bytes)
-        vm_process.kill()
-        '''
         
         cmd = "cd mip/src && make"    
         vm_process = subprocess.Popen(['ssh','-tt', vm_user, "%s" % cmd],
@@ -92,6 +57,7 @@ class setup_vm():
         results_output_bytes = bytes(results_output, 'ascii')[0]
         print(results_output_bytes)
         vm_process.kill()
+        time.sleep(30)
 
         return True
 
