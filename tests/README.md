@@ -29,15 +29,16 @@ Navigate to the tests folder and in the python files, adapt the IP addresses and
 Run the VM configuration script
 <pre>cd tests</pre>
 <pre>python3 configure_VMs.py</pre>
+This also runs the agent advertisement function on the foreign agent. It is a prerequisite before running any of the tests below. 
 
-Run the tests
+Running the tests.
 
-<pre>agent_advert.py</pre>
-<pre>solicit_agent_advert.py</pre>
-<pre>mobile_node_registration_request.py</pre>
-<pre>home_agent_registration_request.py</pre>
-<pre>home_agent_registration_reply.py</pre> 
-<pre>foreign_agent_registration_reply.py</pre>
+<pre>python3 agent_advert.py</pre>
+<pre>python3 solicit_agent_advert.py</pre>
+<pre>python3 mobile_node_registration_request.py</pre>
+<pre>python3 home_agent_registration_request.py</pre>
+<pre>python3 home_agent_registration_reply.py</pre> 
+<pre>python3 foreign_agent_registration_reply.py</pre>
 
 To run the complete chain, run 
 <pre>foreign_agent_registration_reply.py</pre>
