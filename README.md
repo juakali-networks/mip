@@ -49,26 +49,26 @@ Run the commands on the VMs in the following order
 *Foreign Agent sends multicast agent advertisement packe to all hosts group multicast address 224.0.0.1*
 
 
-**<h6>VM_3 (Home Agent)</h6>**
+**<h5>VM_3 (Home Agent)</h5>**
 
 <pre>sudo ./mip/src/mip -q </pre>
 
 *Eanbles Home Agent to send Registration Reply (RREP) packet back to Foreign Agent on receiving the RREQ packet.*
 
-**<h6>VM_2 (Mobile Node)</h6>**
+**<h5>VM_2 (Mobile Node)</h5>**
 
 <pre>sudo ./mip/src/mip -r </pre>
 
 *Enables Mobile Node to send Registration Request (RREQ) packet to Foreign Agent, on receieving the Agent Advertisement packet.*
 
-**<h6>On VM_1 (Foreign Agent)</h6>**
+**<h5>On VM_1 (Foreign Agent)</h5>**
 
 <pre>sudo ./mip/src/mip -n </pre>
 
 *Enables Foreign Agent to send RREQ packet with care of Address to Home Agent on receiving the RREQ packet from Mobile Node.*
 
 
-**<h6>On VM_1 (Foreign Agent)</h6>**
+**<h5>On VM_1 (Foreign Agent)</h5>**
 
 <pre>sudo ./mip/src/mip -j </pre>
 
