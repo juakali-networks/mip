@@ -89,9 +89,9 @@ ip1 = "192.168.0.33"
 ip2 = "192.168.0.240"
 ip3 = "192.168.0.85"
 
-setup_vm().step_1(ip1)
-setup_vm().step_1(ip2)
-setup_vm().step_1(ip3)
+#setup_vm().step_1(ip1)
+#setup_vm().step_1(ip2)
+#setup_vm().step_1(ip3)
 setup_vm().step_2(ip1)
 
 

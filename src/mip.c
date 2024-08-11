@@ -1548,7 +1548,7 @@ void logperror(char *str)
                 (void) fprintf(stderr, "%s: %s\n", str, strerror(errno));
 }
 
-int get_time()
+int64_t get_time()
         {
 
 struct timespec tms;
