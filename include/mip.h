@@ -105,7 +105,7 @@ void faregreply(int lft, unsigned char *buffer);
 void set_global_var(int value); 
 void process_packet(unsigned char *buffer, int size);
 
-int64_t get_time();
+int get_time();
 static void prusage(void);
 static char *pr_name(struct in_addr addr);
 static void pr_pack(char *buf, int cc, struct sockaddr_in *from);
