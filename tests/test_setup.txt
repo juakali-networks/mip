@@ -36,6 +36,9 @@ scp lubuntu@192.168.0.34:/home/lubuntu/mip/src/kkkk.pcap/home/dancer
 clear syslog
 truncate -s 0 /var/log/syslog
 
+python3 -m venv myenv
+source myenv/bin/activate
+
 
 # git repositories
 Install git
