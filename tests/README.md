@@ -13,7 +13,7 @@ on Host PC, install SCP
 Where the "x" in "python3.x" is your python sub version 
 <pre>sudo git clone https://github.com/jbardin/scp.py</pre>
 Rename the file from scp.py to scp
-<pre>mv scp.py scp</pre>
+<pre>sudo mv scp.py scp</pre>
 
 Install wireshark on your host PC.
 Install pyshark on your host PC.
