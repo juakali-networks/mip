@@ -9,10 +9,11 @@ On Host PC, enable logging in without password by running the following commands
 <pre>ssh-copy-id vm_username@vm_IP</pre>
 
 on Host PC, install SCP
-<pre>cd /usr/local/lib/python3.8/dist-packages</pre>
+<pre>cd /usr/local/lib/python3.x/dist-packages</pre>
+Where the "x" in "python3.x" is your python sub version 
 <pre>sudo git clone https://github.com/jbardin/scp.py</pre>
 Rename the file from scp.py to scp
-<pre>mv scp.py scp</pre>
+<pre>sudo mv scp.py scp</pre>
 
 Install wireshark on your host PC.
 Install pyshark on your host PC.
