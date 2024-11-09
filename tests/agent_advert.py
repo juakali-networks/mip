@@ -19,7 +19,7 @@ class agent_adv():
         self._pwd = "lubuntu"
 
         self._ip1 = "192.168.0.33"
-        self._ip2 = "192.168.0.240"
+        self._ip2 = "192.168.0.242"
 
         self._all_host_mcast_addr = "224.0.0.1"
         self._agent_advert_type = "9"

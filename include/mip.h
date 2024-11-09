@@ -13,8 +13,8 @@
 
 
 /* Hardcoded IPS*/
-#define MN_IP		"192.168.0.240"  // This will be late picked from the agent solicitation message
-#define HA_IP		"192.168.0.85"
+#define MN_IP		"192.168.0.242"  // This will be late picked from the agent solicitation message
+#define HA_IP		"192.168.0.30"
 
 /* Types for Router Discovery*/
 #define ICMP_ROUTERSOLICIT          10       /* ICMP Router Solicitation */

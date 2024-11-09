@@ -30,7 +30,7 @@
 #include <linux/udp.h>
 #include <stdint.h>
 #include <time.h>
-
+#include <inttypes.h>
 
 #define BUFSIZE 8192
 #define BUF_SIZE 65536
@@ -1554,9 +1554,11 @@ int get_time()
 struct timespec tms;
 
 /* POSIX.1-2008 way */
-    if (clock_gettime(CLOCK_REALTIME,&tms)) {
+    if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&tms)) {
         return -1;
     }
+	logmsg(LOG_INFO, "timememememeee %d \n", tms.tv_sec);
+
     /* seconds, multiplied with 1 million */
     int64_t micros = tms.tv_sec * 1000000;
     /* Add full microseconds */
@@ -1565,6 +1567,7 @@ struct timespec tms;
     if (tms.tv_nsec % 1000 >= 500) {
         ++micros;
     }
+    logmsg(LOG_INFO, "xxxxxxxxxxxxxxxxxxx %" PRId64 "\n", micros);
 
     return micros;
  }

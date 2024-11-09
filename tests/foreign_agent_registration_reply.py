@@ -20,8 +20,8 @@ class fa_reg_req():
         self._user_name = "lubuntu"
 
         self._ip1 = "192.168.0.33"
-        self._ip2 = "192.168.0.240"
-        self._ip3 = "192.168.0.85"
+        self._ip2 = "192.168.0.242"
+        self._ip3 = "192.168.0.30"
 
         self._rrep_msg_type = 3
         self._dest_port = "434"
