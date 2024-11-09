@@ -89,6 +89,7 @@ ip1 = "192.168.0.33"
 ip2 = "192.168.0.242"
 ip3 = "192.168.0.30"
 
+
 setup_vm().step_1(ip1)
 setup_vm().step_1(ip2)
 setup_vm().step_1(ip3)
